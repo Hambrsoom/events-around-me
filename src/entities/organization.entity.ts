@@ -4,7 +4,6 @@ import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { Address, AddressInput } from "./address.entity";
 import { Event } from "./event.entity";
 
-
 @ObjectType()
 @Entity()
 @Unique(["name"])
