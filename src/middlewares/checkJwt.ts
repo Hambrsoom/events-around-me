@@ -17,7 +17,6 @@ export const checkJwt: MiddlewareFn<MyContext> = ({ context }, next) => {
   }
 
   try {
-
     const payload = verify(authorization, config.jwtSecret);
     context.payload = payload as any;
   } catch (err) {

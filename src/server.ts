@@ -9,11 +9,11 @@ import { createConnection } from "typeorm";
 
 import { OrganizationResolver } from './resolvers/organization.resolver'
 import { AuthResolver } from './resolvers/auth.resolver';
-import { AddressResolver } from './resolvers/address.resolver';
+import { EventResolver } from './resolvers/event.resolver';
 
 async function main() {
   const schema = await buildSchema({
-    resolvers: [OrganizationResolver, AuthResolver, AddressResolver],
+    resolvers: [OrganizationResolver, AuthResolver, EventResolver],
     emitSchemaFile: true,
   })
 

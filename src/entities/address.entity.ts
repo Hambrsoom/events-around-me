@@ -37,7 +37,7 @@ export class Address extends BaseEntity {
 
 @InputType()
 export class AddressInput extends Address implements Partial<Address>  {
-    @Field()
+    @Field({nullable: true})
     id: number
 
     @Field({nullable: true})

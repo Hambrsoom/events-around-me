@@ -12,15 +12,30 @@ type Address {
 
 input AddressInput {
   appartmentNumber: Float
-  id: Float!
+  id: Float
   street: String
   zipCode: String
 }
 
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
 type Event {
   address: Address!
+  date: DateTime!
   id: ID!
   organizer: Organization!
+  title: String!
+  url: String!
+}
+
+input EventInput {
+  address: AddressInput!
+  date: DateTime
+  id: Float
+  organizerID: Float!
   title: String!
   url: String!
 }
@@ -32,13 +47,15 @@ type LoginResponse {
 type Mutation {
   Login(password: String!, username: String!): LoginResponse!
   Register(password: String!, username: String!): Boolean!
+  addEvent(event: EventInput!): Event!
   addOrganization(Organization: OrganizationInput!): Organization!
+  editEvent(Event: EventInput!): Event!
   editOrganization(Organization: OrganizationInput!): Organization!
 }
 
 type Organization {
   address: Address!
-  events: Event!
+  events: [Event!]!
   id: ID!
   name: String!
   url: String!
@@ -52,7 +69,9 @@ input OrganizationInput {
 }
 
 type Query {
-  getAddrese: Address!
+  getAllEvents: [Event!]!
+  getAllEventsForOrganization(OrganizationID: Float!): [Event!]!
+  getEventByID(id: Float!): Event!
   getOrganizationByID(id: Float!): Organization!
   getOrganizations: [Organization!]!
 }

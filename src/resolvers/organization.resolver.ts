@@ -25,7 +25,6 @@ export class OrganizationResolver {
       });
       return organization;
     } catch(err){
-      console.log(err);
       throw new Error(`Didn't find the organization with the ID `)
     }
   }
