@@ -9,7 +9,6 @@ export interface MyContext {
   payload?: { userId: string };
 }
 
-
 export const checkJwt: MiddlewareFn<MyContext> = ({ context }, next) => {
   const authorization = context.req.headers["authorization"];
 

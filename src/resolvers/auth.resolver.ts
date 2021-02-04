@@ -25,16 +25,6 @@ import config from "../../config/config";
   
   @Resolver()
   export class AuthResolver {
-    @Query(() => String)
-    async hello() {
-      return "Hello World";
-    }
-  
-    @Query(() => String)
-    @UseMiddleware(checkJwt)
-    async Me(@Ctx() { payload }: Context) {
-      return `Your user id : ${payload!.userId}`;
-    }
   
     @Mutation(() => Boolean)
     async Register(

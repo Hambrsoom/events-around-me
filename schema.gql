@@ -3,6 +3,28 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Address {
+  appartmentNumber: Float!
+  id: ID!
+  street: String!
+  zipCode: String!
+}
+
+input AddressInput {
+  appartmentNumber: Float
+  id: Float!
+  street: String
+  zipCode: String
+}
+
+type Event {
+  address: Address!
+  id: ID!
+  organizer: Organization!
+  title: String!
+  url: String!
+}
+
 type LoginResponse {
   accessToken: String!
 }
@@ -10,23 +32,27 @@ type LoginResponse {
 type Mutation {
   Login(password: String!, username: String!): LoginResponse!
   Register(password: String!, username: String!): Boolean!
-  addTodo(todoInput: TodoInput!): Todo!
+  addOrganization(Organization: OrganizationInput!): Organization!
+  editOrganization(Organization: OrganizationInput!): Organization!
+}
+
+type Organization {
+  address: Address!
+  events: Event!
+  id: ID!
+  name: String!
+  url: String!
+}
+
+input OrganizationInput {
+  addressInput: AddressInput
+  id: ID
+  name: String
+  url: String
 }
 
 type Query {
-  Me: String!
-  getTodos: [Todo!]
-  hello: String!
-}
-
-type Todo {
-  description: String!
-  id: Float!
-  status: Boolean!
-  title: String!
-}
-
-input TodoInput {
-  description: String!
-  title: String!
+  getAddrese: Address!
+  getOrganizationByID(id: Float!): Organization!
+  getOrganizations: [Organization!]!
 }

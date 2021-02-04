@@ -7,12 +7,13 @@ import * as jwt from "express-jwt";
 import { createConnection } from "typeorm";
 
 
-import { TodoResolver } from './resolvers/todoResolver'
+import { OrganizationResolver } from './resolvers/organization.resolver'
 import { AuthResolver } from './resolvers/auth.resolver';
+import { AddressResolver } from './resolvers/address.resolver';
 
 async function main() {
   const schema = await buildSchema({
-    resolvers: [TodoResolver, AuthResolver],
+    resolvers: [OrganizationResolver, AuthResolver, AddressResolver],
     emitSchemaFile: true,
   })
 
