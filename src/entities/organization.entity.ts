@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn, OneToMany } from "typeorm";
-import { Length } from "class-validator";
+import { Length, MaxLength } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { Address, AddressInput } from "./address.entity";
 import { Event } from "./event.entity";
@@ -15,12 +15,10 @@ export class Organization extends BaseEntity {
 
     @Field()
     @Column()
-    @Length(4, 50)
     name!: string;
 
     @Field()
     @Column()
-    @Length(4, 100)
     url!: string;
 
     @Field(() => Address)
@@ -37,13 +35,15 @@ export class Organization extends BaseEntity {
 
 @InputType()
 export class OrganizationInput implements Partial<Organization> {
-    @Field(() => ID, {nullable: true} )
+    @Field({nullable: true})
     id: number;
 
     @Field({nullable: true})
+    @MaxLength(30)
     name: string;
 
     @Field({nullable: true})
+    @MaxLength(100)
     url: string;
 
     @Field(() => AddressInput, {nullable: true})

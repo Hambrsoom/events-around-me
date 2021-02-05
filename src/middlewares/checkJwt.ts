@@ -1,15 +1,10 @@
 import { MiddlewareFn } from "type-graphql";
 import { verify } from "jsonwebtoken";
-import { Request, Response } from "express";
 import config from "../../config/config";
+import { Context } from "../types/context";
 
-export interface MyContext {
-  req: Request;
-  res: Response;
-  payload?: { userId: string };
-}
 
-export const checkJwt: MiddlewareFn<MyContext> = ({ context }, next) => {
+export const checkJwt: MiddlewareFn<Context> = ({ context }, next) => {
   const authorization = context.req.headers["authorization"];
 
   if (!authorization) {

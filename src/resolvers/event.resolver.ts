@@ -37,7 +37,7 @@ export class EventResolver {
       });
       return event;
     } catch(err){
-      throw new Error(`Didn't find the event with the ${id}`)
+      throw new Error(`Didn't find the event with id ${id}`)
     }
   }
 

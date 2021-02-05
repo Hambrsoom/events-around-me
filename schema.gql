@@ -26,6 +26,7 @@ type Event {
   address: Address!
   date: DateTime!
   id: ID!
+  images: [Image!]!
   organizer: Organization!
   title: String!
   url: String!
@@ -40,15 +41,22 @@ input EventInput {
   url: String!
 }
 
+type Image {
+  event: Event!
+  id: ID!
+  path: String!
+}
+
 type LoginResponse {
   accessToken: String!
 }
 
 type Mutation {
   Login(password: String!, username: String!): LoginResponse!
-  Register(password: String!, username: String!): Boolean!
+  Register(user: UserInput!): Boolean!
   addEvent(event: EventInput!): Event!
   addOrganization(Organization: OrganizationInput!): Organization!
+  addProfilePicture(eventID: Float!, picture: Upload!): Boolean!
   editEvent(Event: EventInput!): Event!
   editOrganization(Organization: OrganizationInput!): Organization!
 }
@@ -63,7 +71,7 @@ type Organization {
 
 input OrganizationInput {
   addressInput: AddressInput
-  id: ID
+  id: Float
   name: String
   url: String
 }
@@ -74,4 +82,12 @@ type Query {
   getEventByID(id: Float!): Event!
   getOrganizationByID(id: Float!): Organization!
   getOrganizations: [Organization!]!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UserInput {
+  password: String!
+  username: String!
 }

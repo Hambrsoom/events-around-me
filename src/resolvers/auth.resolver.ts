@@ -10,9 +10,8 @@ import {
   } from "type-graphql";
   import { sign } from "jsonwebtoken";
   import { hash, compare, salt } from "bcryptjs";
-  import { User } from "../entities/user.entity";
+  import { User, UserInput } from "../entities/user.entity";
   import { checkJwt } from "../middlewares/checkJwt";
-  import { Context } from "../entities/context";
   import * as bcrypt from "bcrypt";
 import config from "../../config/config";
 
@@ -27,14 +26,12 @@ import config from "../../config/config";
   export class AuthResolver {
   
     @Mutation(() => Boolean)
-    async Register(
-      @Arg("username") username: string,
-      @Arg("password") password: string
+    async Register(@Arg("user") userInput: UserInput
     ) {
     
         let user:User = new User();
-        user.username = username;
-        user.password = password;
+        user.username = userInput.username;
+        user.password = userInput.password;
 
     const salt:any = await bcrypt.genSalt();
     user.salt = salt;

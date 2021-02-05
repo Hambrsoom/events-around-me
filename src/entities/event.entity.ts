@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn, ManyToOne, Tree } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn, ManyToOne, Tree, OneToMany } from "typeorm";
 import { Length } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { Address, AddressInput } from "./address.entity";
 import { Organization } from "./organization.entity";
+import { Image } from "./image.entity";
 
 @ObjectType()
 @Entity()
@@ -35,8 +36,11 @@ export class Event extends BaseEntity {
     @Field(() => Organization)
     @ManyToOne(() => Organization, organization => organization.events)
     organizer: Organization;
-}
 
+    @Field(()=> [Image])
+    @OneToMany(()=> Image, image => image.event)
+    images?: Image[];
+}
 
 @InputType()
 export class EventInput implements Partial<Event> {

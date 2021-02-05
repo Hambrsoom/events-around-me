@@ -3,17 +3,19 @@ import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-express';
 import Express from 'express';
 import { buildSchema } from 'type-graphql';
-import * as jwt from "express-jwt";
 import { createConnection } from "typeorm";
+
 
 
 import { OrganizationResolver } from './resolvers/organization.resolver'
 import { AuthResolver } from './resolvers/auth.resolver';
 import { EventResolver } from './resolvers/event.resolver';
+import { ProfilePictureResolver } from './resolvers/image.resolver';
+
 
 async function main() {
   const schema = await buildSchema({
-    resolvers: [OrganizationResolver, AuthResolver, EventResolver],
+    resolvers: [OrganizationResolver, AuthResolver, EventResolver, ProfilePictureResolver],
     emitSchemaFile: true,
   })
 
@@ -34,4 +36,4 @@ async function main() {
   
 }
 
-main()
+main();
