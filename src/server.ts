@@ -11,20 +11,20 @@ import { OrganizationResolver } from './resolvers/organization.resolver'
 import { AuthResolver } from './resolvers/auth.resolver';
 import { EventResolver } from './resolvers/event.resolver';
 import { ProfilePictureResolver } from './resolvers/image.resolver';
-
+import { SearchResolver } from './resolvers/search.resolver';
 
 async function main() {
   const schema = await buildSchema({
-    resolvers: [OrganizationResolver, AuthResolver, EventResolver, ProfilePictureResolver],
-    emitSchemaFile: true,
+    resolvers: [OrganizationResolver, AuthResolver, EventResolver, ProfilePictureResolver, SearchResolver],
+    emitSchemaFile: true
   })
 
   const app = Express()
 
   const server = new ApolloServer({
     schema,
-    context: ({ req, res }) => ({ req, res })
-  })
+    context: ({ req, res }) => ({ req, res }) 
+   })
 
   server.applyMiddleware({ app })
 

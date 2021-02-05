@@ -6,7 +6,6 @@ import { Event } from "./event.entity";
 
 @ObjectType()
 @Entity()
-@Unique(["name"])
 export class Organization extends BaseEntity {
 
     @Field(() => ID)
@@ -14,7 +13,7 @@ export class Organization extends BaseEntity {
     id?: number;
 
     @Field()
-    @Column()
+    @Column({unique: true})
     name!: string;
 
     @Field()

@@ -82,6 +82,7 @@ type Query {
   getEventByID(id: Float!): Event!
   getOrganizationByID(id: Float!): Organization!
   getOrganizations: [Organization!]!
+  searchForEvents(text: String!): [Event!]!
 }
 
 """The `Upload` scalar type represents a file upload."""

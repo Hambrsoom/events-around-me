@@ -5,6 +5,12 @@ import * as bcrypt from "bcryptjs";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { IsUsernameAlreadyExist } from "../validators/isUsernameExist";
 
+export enum Role {
+  admin = "ADMIN",
+  organizer = "ORGANIZER",
+  regular = "REGULAR"
+}
+
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
@@ -24,6 +30,9 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     salt: string;
 
+    @Column({default: Role.regular})
+    role: Role;
+
     hashPassword(): void {
         this.password = bcrypt.hashSync(this.password, this.salt);
     }
@@ -33,7 +42,6 @@ export class User extends BaseEntity {
       return hash === this.password;
     }
 }
-
 
 @InputType()
 
