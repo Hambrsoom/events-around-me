@@ -1,14 +1,13 @@
 import { Query, Resolver, Mutation, Arg, UseMiddleware, Authorized } from 'type-graphql'
 import { Address } from '../entities/address.entity';
 import { Organization, OrganizationInput } from '../entities/organization.entity'
-import { checkJwt } from '../middlewares/checkJwt';
-import { isAdmin } from '../middlewares/isAdmin';
+import { Role } from '../entities/user.entity';
 
 @Resolver((of) => Organization)
 export class OrganizationResolver {
 
   @Query(() => [Organization])
-  @UseMiddleware(isAdmin)
+  @Authorized([Role.admin, Role.organizer])
   async getOrganizations(): Promise<Organization[]> {
     return await Organization.find({
       relations: ["address", "events"]  
@@ -16,7 +15,6 @@ export class OrganizationResolver {
   }
 
   @Query(() => Organization)
-  @UseMiddleware(checkJwt)
   async getOrganizationByID(
     @Arg('id') id : number
   ): Promise<Organization> {
