@@ -57,6 +57,7 @@ type Mutation {
   addEvent(event: EventInput!): Event!
   addImageToEvent(eventId: Float!, pictures: [Upload!]!): Boolean!
   addOrganization(Organization: OrganizationInput!): Organization!
+  deleteImage(listOfImageIds: [Float!]!): Boolean!
   editEvent(Event: EventInput!): Event!
   editOrganization(Organization: OrganizationInput!): Organization!
 }

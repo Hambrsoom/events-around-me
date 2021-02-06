@@ -1,14 +1,17 @@
-import { Resolver, Mutation, Arg } from "type-graphql";
+import { Resolver, Mutation, Arg, Authorized, UseMiddleware } from "type-graphql";
 import { GraphQLUpload } from "apollo-server-express";
 import { createWriteStream } from "fs";
 
 import { Upload } from "../types/Upload";
 import { isImage } from "../utilities/isImage";
 import { ImageService } from "../services/image.service";
+import { Role } from '../entities/user.entity';
+import { isOwner } from "../middlewares/isOwner";
 
 @Resolver()
 export class ImageResolver {
   @Mutation(() => Boolean)
+  // @Authorized([Role.admin, Role.organizer])
   async addImageToEvent(@Arg("pictures", () => [GraphQLUpload])
   pictures: Upload[], @Arg("eventId") eventId : number): Promise<boolean> {
 
@@ -30,6 +33,15 @@ export class ImageResolver {
         );
       }
     }
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @Authorized([Role.admin, Role.organizer])
+  @UseMiddleware(isOwner)
+  async deleteImage(@Arg("listOfImageIds", () => [Number]) listOfImageIds: number[]): Promise<boolean> {
+    console.log("Hello there")
+    await ImageService.deleteImages(listOfImageIds);
     return true;
   }
 }

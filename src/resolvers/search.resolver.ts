@@ -1,7 +1,6 @@
 import { Query, Resolver, Mutation, Arg, UseMiddleware } from 'type-graphql'
 import { Address } from '../entities/address.entity';
-import { Event, EventInput } from '../entities/event.entity';
-import { Organization, OrganizationInput } from '../entities/organization.entity'
+import { Event } from '../entities/event.entity';
 
 @Resolver()
 export class SearchResolver {
