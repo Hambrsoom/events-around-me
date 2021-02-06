@@ -1,7 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, BaseEntity } from "typeorm";
-import { Length } from "class-validator";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from "typeorm";
 import { Event } from "./event.entity";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 
 @ObjectType()
 @Entity()

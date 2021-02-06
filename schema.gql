@@ -55,8 +55,8 @@ type Mutation {
   Login(password: String!, username: String!): LoginResponse!
   Register(user: UserInput!): Boolean!
   addEvent(event: EventInput!): Event!
+  addImageToEvent(eventId: Float!, pictures: [Upload!]!): Boolean!
   addOrganization(Organization: OrganizationInput!): Organization!
-  addProfilePicture(eventID: Float!, picture: Upload!): Boolean!
   editEvent(Event: EventInput!): Event!
   editOrganization(Organization: OrganizationInput!): Organization!
 }

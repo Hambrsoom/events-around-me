@@ -11,7 +11,6 @@ export function isImage(filename: string): boolean {
 };
 
 function getExtension(filename) {
-  console.log(filename);
   var parts = filename.split('.');
   return parts[parts.length - 1];
 }

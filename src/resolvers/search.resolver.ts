@@ -7,14 +7,13 @@ import { Organization, OrganizationInput } from '../entities/organization.entity
 export class SearchResolver {
 
   @Query(() => [Event])
-  // @UseMiddleware(checkJwt)
   async searchForEvents(
     @Arg('text') text : string
   ): Promise<Event[]> {
     return await Event.createQueryBuilder()
             .select()
-            .where("(title LIKE :text)",
+            .where("(title LIKE :text)", 
             {text: `%${text}%`})
             .getMany();
-        }
+    }
 }

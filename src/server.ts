@@ -9,13 +9,19 @@ import { createConnection } from "typeorm";
 import { OrganizationResolver } from './resolvers/organization.resolver'
 import { AuthResolver } from './resolvers/auth.resolver';
 import { EventResolver } from './resolvers/event.resolver';
-import { ProfilePictureResolver } from './resolvers/image.resolver';
+import { ImageResolver } from './resolvers/image.resolver';
 import { SearchResolver } from './resolvers/search.resolver';
 import { customAuthChecker } from './utilities/authChecker';
 
 async function main() {
   const schema = await buildSchema({
-    resolvers: [OrganizationResolver, AuthResolver, EventResolver, ProfilePictureResolver, SearchResolver],
+    resolvers: [
+      OrganizationResolver,
+      AuthResolver,
+      EventResolver,
+      ImageResolver,
+      SearchResolver
+    ],
     emitSchemaFile: true,
     authChecker: customAuthChecker
   })
