@@ -29,6 +29,7 @@ export class Organization extends BaseEntity {
 
     @Field(()=> [Event])
     @OneToMany(() => Event, event => event.organizer, { cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE"})
+    @JoinColumn()
     events?: Event[];
 }
 

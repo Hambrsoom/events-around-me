@@ -33,12 +33,12 @@ type Event {
 }
 
 input EventInput {
-  address: AddressInput!
+  address: AddressInput
   date: DateTime
   id: Float
-  organizerID: Float!
-  title: String!
-  url: String!
+  organizerId: Float
+  title: String
+  url: String
 }
 
 type Image {
@@ -58,8 +58,8 @@ type Mutation {
   addImageToEvent(eventId: Float!, pictures: [Upload!]!): Boolean!
   addOrganization(Organization: OrganizationInput!): Organization!
   deleteImage(listOfImageIds: [Float!]!): Boolean!
-  editEvent(Event: EventInput!): Event!
-  editOrganization(Organization: OrganizationInput!): Organization!
+  editEvent(event: EventInput!): Event!
+  editOrganization(organization: OrganizationInput!): Organization!
 }
 
 type Organization {
@@ -79,7 +79,7 @@ input OrganizationInput {
 
 type Query {
   getAllEvents: [Event!]!
-  getAllEventsForOrganization(OrganizationID: Float!): [Event!]!
+  getAllEventsForOrganization(organizationId: Float!): [Event!]!
   getEventByID(id: Float!): Event!
   getOrganizationByID(id: Float!): Organization!
   getOrganizations: [Organization!]!

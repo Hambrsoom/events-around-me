@@ -1,8 +1,7 @@
 import { Resolver, Mutation, Arg, ObjectType, Field } from "type-graphql";
-import { sign } from "jsonwebtoken";
 import { Role, User, UserInput } from "../entities/user.entity";
 import * as bcrypt from "bcrypt";
-import config from "../../config/config";
+import { UserService } from "../services/user.service";
 
 @ObjectType()
 class LoginResponse {
@@ -13,7 +12,10 @@ class LoginResponse {
 @Resolver()
 export class AuthResolver {  
   @Mutation(() => Boolean)
-  async Register(@Arg("user") userInput: UserInput) {
+  async Register(
+    @Arg("user") userInput: UserInput
+    ): Promise<boolean> {
+
     let user:User = new User();
     user.username = userInput.username;
     user.password = userInput.password;
@@ -24,19 +26,14 @@ export class AuthResolver {
 
     user.hashPassword();
 
-    try {
-      await User.insert(user);
-    } catch (err) {
-      throw new Error("Failed in storing the user");
-    }
-  
     return true;
   }
   
   @Mutation(() => LoginResponse)
   async Login(
     @Arg("username") username: string, 
-    @Arg("password") password: string) {
+    @Arg("password") password: string
+    ): Promise<any> {
       
     const user = await User.findOne({ where: { username } });
       
@@ -49,12 +46,6 @@ export class AuthResolver {
       throw new Error("Either your username or password is incorrect");
     }
 
-    return {
-      accessToken: sign(
-        { userId: user.id, username: user.username },
-        config.jwtSecret, 
-        { expiresIn: "1h"}
-      )
-    };
+    return UserService.getJwt(user.username, user.id)
   }
 }

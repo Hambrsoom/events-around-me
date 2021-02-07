@@ -1,125 +1,85 @@
-import { Query, Resolver, Mutation, Arg, UseMiddleware } from 'type-graphql'
+import { Query, Resolver, Mutation, Arg, UseMiddleware, Authorized } from 'type-graphql'
 import { Address } from '../entities/address.entity';
 import { Event, EventInput } from '../entities/event.entity';
-import { Organization, OrganizationInput } from '../entities/organization.entity'
+import { Role } from '../entities/user.entity';
+import { isEventOwner } from '../middlewares/isOwner';
 
-@Resolver((of) => Event)
+import { EventService } from '../services/event.service';
+import { OrganizationService } from '../services/organization.service';
+
+@Resolver(() => Event)
 export class EventResolver {
 
   @Query(() => [Event])
-  // @UseMiddleware(checkJwt)
-  async getAllEvents(): Promise<Event[]> {
+  @Authorized()
+  async getAllEvents()
+    : Promise<Event[]> {
+    
     return await Event.find({
-        relations: ["address"]
+        relations: ["address", "images"]
     });
   }
 
   @Query(() => [Event])
-  // @UseMiddleware(checkJwt)
+  @Authorized()
   async getAllEventsForOrganization(
-      @Arg('OrganizationID') organizationID: number
-  ): Promise<Event[]> {
+    @Arg('organizationId') OrganizationId: number
+    ): Promise<Event[]> {
+
     return await Event.find({
-        where: { organizer: organizationID }
+        where: { organizer: OrganizationId },
+        relations: ["address", "images"]
     });
   }
 
 
   @Query(() => Event)
-  // @UseMiddleware(checkJwt)
+  @Authorized()
   async getEventByID(
     @Arg('id') id : number
-  ): Promise<Event> {
-    try {
-      const event: Event = await Event.findOneOrFail({
-        where: { id },
-        relations: ["address"]  
-      });
-      return event;
-    } catch(err){
-      throw new Error(`Didn't find the event with id ${id}`)
-    }
+    ): Promise<Event> {
+
+    return await EventService.getEventById(id);
   }
 
 
-  @Mutation(() => Event)  
+  @Mutation(() => Event)
+  @Authorized([Role.organizer])  
   async addEvent(
-    @Arg('event') { title, url, date, address, organizerID }: EventInput
-  ): Promise<Event> {
-    let organization = new Organization();
-    try {
-        organization = await Organization.findOne({ 
-            where: {id: organizerID}
-        })
-    } catch(err){
-        throw new Error("Organization doesn't exist");
-    }
-    
+    @Arg('event') { title, url, date, address, organizerId }: EventInput
+    ): Promise<Event> {
+
     let event = new Event();
     event.title = title;
     event.url = url;
     event.address = address;
     event.date = date;
-    event.organizer = organization;
+    event.organizer = await OrganizationService.getOrganizationById(organizerId);
 
-
-    try {
-        console.log(event);
-      return await Event.save(event);
-    } catch(err) {
-        console.log(err);
-      throw new Error("Event already exists");
-    }
+    return EventService.saveEvent(event);
   }
 
   @Mutation(()=> Event)
+  @Authorized([Role.organizer])  
+  @UseMiddleware(isEventOwner)
   async editEvent(
-    @Arg('Event') { id,  title, url, date, address, organizerID  }: EventInput
-  ): Promise<Event> {
-    let event: Event = new Event();
+    @Arg('event') { id,  title, url, date, address, organizerId }: EventInput
+    ): Promise<Event> {
 
-    try {
-        event = await Event.findOne({
-          where: {id},
-          relations: ["address"]  
-        })        
-    } catch(err){
-      throw new Error("Couldn't find the event");
-    }
+    let event: Event = await EventService.getEventById(id);
 
-    if (title) {
-      event.title = title;
-    } 
-    if (url) {
-      event.url = url;
-    }
+    if (title) { event.title = title; } 
+    if (url) { event.url = url; }
+    if (date) { event.date = date; }        
 
-    if(date) {
-        event.date = date;
-    }        
-
-    if(organizerID){
-    try {
-        const organization: Organization = await Organization.findOne({ 
-            where: {organizerID}
-        })
-        event.organizer = organization;
-    } catch(err){
-        console.log(err);
-        throw new Error("Organization doesn't exist");
-    }
+    if(organizerId) {
+      event.organizer = await OrganizationService.getOrganizationById(organizerId);
     }
   
-    if (address && !event.address.equal(address)){
-        const newAddress = address;
-        Address.save(newAddress);
+    if (address && !event.address.equal(address)) {
+        event.address = address;
     }
     
-    try {
-      console.log(event);
-      return await Event.save(event);
-    } catch(err) {
-      throw new Error("Couldn't update organization")
-    }
+    return EventService.saveEvent(event);
   }
 }

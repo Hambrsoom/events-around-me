@@ -1,8 +1,32 @@
+import { sign } from "jsonwebtoken";
+
 import { Event } from "../entities/event.entity";
 import { Organization } from "../entities/organization.entity";
 import { User } from "../entities/user.entity";
+import config from "../../config/config";
 
 export class UserService {
+    public static async getJwt(
+        username: string,
+        userId: number
+        ): Promise<any> {
+            return {
+                accessToken: sign(
+                  { userId: userId, username: username },
+                  config.jwtSecret, 
+                  { expiresIn: "1h"}
+                )
+              };
+        }
+
+    public static async saveUser(user: User): Promise<void> {   
+        try {
+            await User.insert(user);
+        } catch (err) {
+            throw new Error("Failed in storing the user");
+        }
+    }
+
     public static async getUserByID(userID: number): Promise<User> {
         try {
             return await User.findOneOrFail(userID, {
@@ -10,19 +34,6 @@ export class UserService {
             });
         } catch(err) {
             throw new Error(`Could not find a user with id ${userID}`);
-        }
-    }
-
-    public static async getAllEventsOfUser(userId: number): Promise<Event[]> {
-        const user: User = await UserService.getUserByID(userId);
-        
-        try {
-            const organization: Organization = await Organization.findOne(user.organization.id, {
-                relations: ["events"]
-            });
-            return organization.events
-        } catch(err){
-            throw new Error(`Could not find an organization with id ${user.organization.id}`);
         }
     }
 }

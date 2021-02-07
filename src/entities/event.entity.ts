@@ -47,18 +47,18 @@ export class EventInput implements Partial<Event> {
     @Field({nullable: true})
     id: number;
 
-    @Field()
+    @Field({nullable: true})
     title: string;
 
-    @Field()
+    @Field({nullable: true})
     url: string;
 
     @Field({nullable: true})
     date: Date;
 
-    @Field(() =>  AddressInput)
+    @Field(() =>  AddressInput, {nullable: true})
     address: AddressInput;
 
-    @Field()
-    organizerID: number;
+    @Field({nullable: true})
+    organizerId: number;
 }

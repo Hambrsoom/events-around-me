@@ -12,7 +12,7 @@ export const customAuthChecker: AuthChecker<Context> = async(
     const decodedUserID =  checkJwt(autherization)["userId"];
     const user: User = await User.findOne({ where: {id: decodedUserID}});
   
-    if(!roles.includes(user.role)){
+    if(roles.length > 0 && !roles.includes(user.role)){
       throw new Error("Not Authorized");
     }
     return true; 

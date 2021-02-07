@@ -6,12 +6,12 @@ import { Upload } from "../types/Upload";
 import { isImage } from "../utilities/isImage";
 import { ImageService } from "../services/image.service";
 import { Role } from '../entities/user.entity';
-import { isOwner } from "../middlewares/isOwner";
+import { isImageOwner } from "../middlewares/isOwner";
 
 @Resolver()
 export class ImageResolver {
   @Mutation(() => Boolean)
-  // @Authorized([Role.admin, Role.organizer])
+  @Authorized([Role.admin, Role.organizer])
   async addImageToEvent(@Arg("pictures", () => [GraphQLUpload])
   pictures: Upload[], @Arg("eventId") eventId : number): Promise<boolean> {
 
@@ -38,9 +38,8 @@ export class ImageResolver {
 
   @Mutation(() => Boolean)
   @Authorized([Role.admin, Role.organizer])
-  @UseMiddleware(isOwner)
+  @UseMiddleware(isImageOwner)
   async deleteImage(@Arg("listOfImageIds", () => [Number]) listOfImageIds: number[]): Promise<boolean> {
-    console.log("Hello there")
     await ImageService.deleteImages(listOfImageIds);
     return true;
   }
