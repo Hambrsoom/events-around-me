@@ -20,8 +20,8 @@ export class OrganizationService {
         ): Promise<Organization> {
           
         try {
-            // To update the address, it is important to pass the id of the address related to this organization,
-            // Otherwise, it will create a new row.
+        // To update the organization and the address, it is important to pass the id of organization and the address related to this organization,
+        // Otherwise, it will create a new row.
           return await Organization.save(organization);
         } catch(err) {
           throw new Error("Failed in saving the organization");

@@ -6,7 +6,7 @@ import { User } from '../entities/user.entity';
 
 
 export const customAuthChecker: AuthChecker<Context> = async(
-    { context }, roles) => {
+  { context }, roles) => {
     const autherization =  context.req.headers["authorization"];
     context.payload = checkJwt(autherization);
     const decodedUserID =  checkJwt(autherization)["userId"];

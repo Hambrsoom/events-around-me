@@ -1,4 +1,4 @@
-import { Query, Resolver, Mutation, Arg, UseMiddleware, Authorized } from 'type-graphql'
+import { Query, Resolver, Arg, Authorized } from 'type-graphql'
 import { Event } from '../entities/event.entity';
 
 @Resolver()
@@ -11,9 +11,9 @@ export class SearchResolver {
     ): Promise<Event[]> {
 
     return await Event.createQueryBuilder()
-            .select()
-            .where("(title LIKE :text)", 
-            {text: `%${text}%`})
-            .getMany();
-    }
+      .select()
+      .where("(title LIKE :text)", 
+      {text: `%${text}%`})
+      .getMany();
+  }
 }

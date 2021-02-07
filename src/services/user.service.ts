@@ -1,7 +1,4 @@
 import { sign } from "jsonwebtoken";
-
-import { Event } from "../entities/event.entity";
-import { Organization } from "../entities/organization.entity";
 import { User } from "../entities/user.entity";
 import config from "../../config/config";
 
@@ -10,6 +7,7 @@ export class UserService {
         username: string,
         userId: number
         ): Promise<any> {
+
             return {
                 accessToken: sign(
                   { userId: userId, username: username },
@@ -17,7 +15,7 @@ export class UserService {
                   { expiresIn: "1h"}
                 )
               };
-        }
+    }
 
     public static async saveUser(user: User): Promise<void> {   
         try {
