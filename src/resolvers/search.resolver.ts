@@ -1,5 +1,6 @@
 import { Query, Resolver, Arg, Authorized } from 'type-graphql'
 import { Event } from '../entities/event.entity';
+import { SearchService } from '../services/search.service';
 
 @Resolver()
 export class SearchResolver {
@@ -10,10 +11,6 @@ export class SearchResolver {
     @Arg('text') text : string
     ): Promise<Event[]> {
 
-    return await Event.createQueryBuilder()
-      .select()
-      .where("(title LIKE :text)", 
-      {text: `%${text}%`})
-      .getMany();
+    return SearchService.getEventsByTitle(text);
   }
 }

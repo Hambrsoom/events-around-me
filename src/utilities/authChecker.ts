@@ -19,16 +19,17 @@ export const customAuthChecker: AuthChecker<Context> = async(
 };
 
 
-const checkJwt: any = (authorization) => {
-  if (!authorization) {
-    throw new Error("Not authenticated");
-  }
+const checkJwt: any = 
+  (authorization) => {
+    if (!authorization) {
+      throw new Error("Not authenticated");
+    }
 
-  let payload: any;
-  try {
-    payload = verify(authorization, config.jwtSecret);
-  } catch (err) {
-    throw new Error("Not authenticated");
-  }
-    return payload as any;
+    let payload: any;
+    try {
+      payload = verify(authorization, config.jwtSecret);
+    } catch (err) {
+      throw new Error("Not authenticated");
+    }
+      return payload as any;
 };

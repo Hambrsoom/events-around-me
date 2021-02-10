@@ -1,5 +1,4 @@
 import { Query, Resolver, Mutation, Arg, Authorized } from 'type-graphql'
-import { Address } from '../entities/address.entity';
 import { Organization, OrganizationInput } from '../entities/organization.entity'
 import { Role } from '../entities/user.entity';
 import { OrganizationService } from '../services/organization.service';

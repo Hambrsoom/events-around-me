@@ -17,7 +17,10 @@ export class UserService {
               };
     }
 
-    public static async saveUser(user: User): Promise<void> {   
+    public static async saveUser(
+        user: User
+        ): Promise<void> {   
+        
         try {
             await User.insert(user);
         } catch (err) {
@@ -25,7 +28,10 @@ export class UserService {
         }
     }
 
-    public static async getUserByID(userID: number): Promise<User> {
+    public static async getUserByID(
+        userID: number
+        ): Promise<User> {
+        
         try {
             return await User.findOneOrFail(userID, {
                 relations: ["organization"]

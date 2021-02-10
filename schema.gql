@@ -52,14 +52,14 @@ type LoginResponse {
 }
 
 type Mutation {
-  Login(password: String!, username: String!): LoginResponse!
-  Register(user: UserInput!): Boolean!
   addEvent(event: EventInput!): Event!
   addImageToEvent(eventId: Float!, pictures: [Upload!]!): Boolean!
   addOrganization(Organization: OrganizationInput!): Organization!
   deleteImage(listOfImageIds: [Float!]!): Boolean!
   editEvent(event: EventInput!): Event!
   editOrganization(organization: OrganizationInput!): Organization!
+  login(password: String!, username: String!): LoginResponse!
+  register(user: UserInput!): Boolean!
 }
 
 type Organization {

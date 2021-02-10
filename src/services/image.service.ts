@@ -1,4 +1,3 @@
-import { getRepository, In } from "typeorm";
 import { Event } from "../entities/event.entity";
 import { Image } from "../entities/image.entity";
 import { EventService } from "./event.service";
@@ -6,7 +5,11 @@ import { EventService } from "./event.service";
 const fs:any = require("fs");
 
 export class ImageService {
-    public static async addSingleImageToEvent(path: string, eventId: number): Promise<Image> {
+    public static async addSingleImageToEvent(
+        path: string,
+        eventId: number
+        ): Promise<Image> {
+
         let image: Image = new Image();
         const event: Event = await EventService.getEventById(eventId);
         try {
@@ -18,7 +21,10 @@ export class ImageService {
         }
     }
 
-    public static async deleteImages(listOfImageIds: number[]): Promise<void> {
+    public static async deleteImages(
+        listOfImageIds: number[]
+        ): Promise<void> {
+            
         const path = process.cwd() + "\\images\\ + filename";
         let images:Image[];
         try {
@@ -38,7 +44,10 @@ export class ImageService {
         .execute()
     }
 
-    public static async deletePhysicalImage(path: string): Promise<void> {
+    public static async deletePhysicalImage(
+        path: string)
+        : Promise<void> {
+
         await fs.unlink(path, (err) => {
             if (err) {
                 throw new Error(`Could not delete the image with path ${path}`);
@@ -47,8 +56,11 @@ export class ImageService {
         });
     }
 
+    public static async isOwnerOfImage(
+        eventIds: number[],
+        imageId: number)
+        : Promise<boolean> {
 
-    public static async isOwnerOfImage(eventIds: number[], imageId: number): Promise<boolean> {
         try {
             const image: Image = await Image.createQueryBuilder()
             .select()
@@ -59,5 +71,4 @@ export class ImageService {
             return false;
         }
     }
-
 }

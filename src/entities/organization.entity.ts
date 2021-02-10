@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn, OneToMany } from "typeorm";
-import { Length, MaxLength } from "class-validator";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, OneToMany } from "typeorm";
+import { MaxLength } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { Address, AddressInput } from "./address.entity";
 import { Event } from "./event.entity";

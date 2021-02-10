@@ -1,15 +1,25 @@
 import { Event } from "../entities/event.entity";
 import { Organization } from "../entities/organization.entity";
 import { User } from "../entities/user.entity";
+import { CashingService } from "./caching.service";
 import { UserService } from "./user.service";
 
 export class EventService {
   public static async getAllEvents()
   : Promise<Event[]> {
+    
+    let events: Event[] = await CashingService.getEvents();
 
-    return await Event.find({
-      relations:["address", "images"]       
-    });
+    if(events != undefined && events.length > 0) {
+        return events;
+    } else {
+      events = await Event.find({
+        relations:["address", "images"]       
+      });
+
+      CashingService.setEvents(events);
+      return events;
+    } 
   }
 
   public static async getEventById(
@@ -17,10 +27,20 @@ export class EventService {
     ): Promise <Event> {
       
     try{
-      return await Event.findOne({
-        where: { id: eventId },
-        relations:["address", "images"]
-      })
+      let event = await CashingService.getEventById(eventId);
+      if(event != undefined) {
+        return event
+      } else {
+        event = await Event.findOneOrFail({
+          where: { id: eventId },
+          relations:["address", "images"]
+        });
+
+        // The cache is not up to date, thus we need to empty the cache. It will be populated again when the user request to get all the events.
+        CashingService.setNotValid();
+
+        return event;
+      }
     } catch(err){
       throw new Error(`Could not find the event with id ${eventId}`);
     }
@@ -33,7 +53,13 @@ export class EventService {
     try {
       // To update the event and the address, it is important to pass the id of event and the address related to this event,
       // Otherwise, it will create a new row.
-      return await Event.save(event);
+      const newEvent: Event = await Event.save(event);
+
+      // The cache is not up to date anymore, thus we need to empty the cache. 
+      // It will be populated again when the user request to get all the events.
+      CashingService.setNotValid();
+
+      return newEvent;
     } catch(err) {
       throw new Error("Failed in saving the event");
     }

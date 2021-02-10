@@ -12,7 +12,7 @@ class LoginResponse {
 @Resolver()
 export class AuthResolver {  
   @Mutation(() => Boolean)
-  async Register(
+  async register(
     @Arg("user") userInput: UserInput
     ): Promise<boolean> {
 
@@ -30,7 +30,7 @@ export class AuthResolver {
   }
   
   @Mutation(() => LoginResponse)
-  async Login(
+  async login(
     @Arg("username") username: string, 
     @Arg("password") password: string
     ): Promise<any> {

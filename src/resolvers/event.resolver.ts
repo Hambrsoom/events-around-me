@@ -1,5 +1,4 @@
 import { Query, Resolver, Mutation, Arg, UseMiddleware, Authorized } from 'type-graphql'
-import { Address } from '../entities/address.entity';
 import { Event, EventInput } from '../entities/event.entity';
 import { Role } from '../entities/user.entity';
 import { isEventOwner } from '../middlewares/isOwner';
@@ -14,10 +13,7 @@ export class EventResolver {
   @Authorized()
   async getAllEvents()
     : Promise<Event[]> {
-    
-    return await Event.find({
-        relations: ["address", "images"]
-    });
+    return await EventService.getAllEvents();
   }
 
   @Query(() => [Event])
@@ -67,19 +63,17 @@ export class EventResolver {
     ): Promise<Event> {
 
     let event: Event = await EventService.getEventById(id);
+    if (title != null) { event.title = title; } 
+    if (url != null) { event.url = url; }
+    if (date != null) { event.date = date; }        
 
-    if (title) { event.title = title; } 
-    if (url) { event.url = url; }
-    if (date) { event.date = date; }        
-
-    if(organizerId) {
+    if(organizerId !=null) {
       event.organizer = await OrganizationService.getOrganizationById(organizerId);
     }
   
     if (address && !event.address.equal(address)) {
         event.address = address;
     }
-    
     return EventService.saveEvent(event);
   }
 }

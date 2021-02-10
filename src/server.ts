@@ -2,31 +2,20 @@
 import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-express';
 import Express from 'express';
-import { buildSchema } from 'type-graphql';
 import { createConnection } from "typeorm";
 
+import { createSchema } from './utilities/createSechema';
+import redis from "redis";
 
-import { OrganizationResolver } from './resolvers/organization.resolver'
-import { AuthResolver } from './resolvers/auth.resolver';
-import { EventResolver } from './resolvers/event.resolver';
-import { ImageResolver } from './resolvers/image.resolver';
-import { SearchResolver } from './resolvers/search.resolver';
-import { customAuthChecker } from './utilities/authChecker';
+// redis port number: 6379
+
+export const redisClient = redis.createClient(6379, "127.0.0.1");
 
 async function main() {
-  const schema = await buildSchema({
-    resolvers: [
-      OrganizationResolver,
-      AuthResolver,
-      EventResolver,
-      ImageResolver,
-      SearchResolver
-    ],
-    emitSchemaFile: true,
-    authChecker: customAuthChecker
-  })
-
+  const schema = await createSchema()
   const app = Express()
+
+  app.use(Express.static('images'));
 
   const server = new ApolloServer({
     schema,
@@ -40,6 +29,10 @@ async function main() {
     console.log('Server is running on http://localhost:4000/graphql')
     )
     });
+
+    redisClient.on('connect', function() {
+      console.log('connected');
+  });
 }
 
 main();
