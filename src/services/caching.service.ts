@@ -34,7 +34,7 @@ export class CashingService {
 
     public static async isValid()
         : Promise<boolean> {
-        
+
         const getAsync = promisify(redisClient.get).bind(redisClient);
         return await getAsync("valid") === true;
     }
@@ -70,4 +70,5 @@ export class CashingService {
             } 
         }
     }
+
 }

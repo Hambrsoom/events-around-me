@@ -2,16 +2,16 @@ import { Resolver, Mutation, Arg, Authorized, UseMiddleware } from "type-graphql
 import { GraphQLUpload } from "apollo-server-express";
 import { createWriteStream } from "fs";
 
-import { IUpload } from "../types/Upload";
+import { IUpload } from "../types/upload";
 import { isImage } from "../utilities/isImage";
 import { ImageService } from "../services/image.service";
-import { Role } from '../entities/user.entity';
+import { Role } from "../entities/user.entity";
 import { isImageOwner } from "../middlewares/isOwner";
 
 @Resolver()
 export class ImageResolver {
   @Mutation(() => Boolean)
-  @Authorized([Role.admin, Role.organizer])
+ // @Authorized([Role.admin, Role.organizer])
   async addImageToEvent(@Arg("pictures", () => [GraphQLUpload])
   pictures: IUpload[], @Arg("eventId") eventId : number): Promise<boolean> {
 
@@ -21,10 +21,10 @@ export class ImageResolver {
       if(!isImage(upload.filename)){
         throw new Error("Only image files are allowed!");
       } else {
-        const path = process.cwd() + "\\images\\"+ upload.filename;
-  
-        await ImageService.addSingleImageToEvent(path, eventId)
-  
+        const path: string = `${process.cwd()}\\images\\${upload.filename}`;
+
+        await ImageService.addSingleImageToEvent(upload.filename, eventId)
+
         new Promise(async (resolve, reject) =>
         upload.createReadStream()
           .pipe(createWriteStream(path))

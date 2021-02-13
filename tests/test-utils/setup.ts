@@ -1,4 +1,3 @@
-import { testConn } from "../../testConnection";
+import { testConn } from "./testConn";
 
-
-testConn(true).then(()=> console.log("It worked"));
+testConn(true).then(() => process.exit());

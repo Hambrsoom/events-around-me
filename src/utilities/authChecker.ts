@@ -1,11 +1,11 @@
 import { AuthChecker } from "type-graphql";
 import { verify } from "jsonwebtoken";
 import config from "../../config/config";
-import { Context } from "../types/context";
+import { IContext } from "../types/context";
 import { User } from '../entities/user.entity';
 
 
-export const customAuthChecker: AuthChecker<Context> = async(
+export const customAuthChecker: AuthChecker<IContext> = async(
   { context }, roles) => {
     const autherization =  context.req.headers["authorization"];
     context.payload = checkJwt(autherization);
@@ -27,7 +27,7 @@ const checkJwt: any =
 
     let payload: any;
     try {
-      payload = verify(authorization, config.jwtSecret);
+      payload = verify(authorization, config.accessTokenSecretKey);
     } catch (err) {
       throw new Error("Not authenticated");
     }

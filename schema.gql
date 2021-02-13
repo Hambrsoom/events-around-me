@@ -49,6 +49,7 @@ type Image {
 
 type LoginResponse {
   accessToken: String!
+  refreshToken: String!
 }
 
 type Mutation {
@@ -58,6 +59,7 @@ type Mutation {
   deleteImage(listOfImageIds: [Float!]!): Boolean!
   editEvent(event: EventInput!): Event!
   editOrganization(organization: OrganizationInput!): Organization!
+  getNewAccessToken(refreshToken: String!): LoginResponse!
   login(password: String!, username: String!): LoginResponse!
   register(user: UserInput!): Boolean!
 }

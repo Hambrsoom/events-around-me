@@ -7,13 +7,14 @@ import { EventResolver } from '../resolvers/event.resolver';
 import { ImageResolver } from '../resolvers/image.resolver';
 import { SearchResolver } from '../resolvers/search.resolver';
 
-export const createSchema = async() => {
-    return await buildSchema({
+export const createSchema = () => {
+    return buildSchema({
         resolvers: [ OrganizationResolver,
             AuthResolver,
             EventResolver,
             ImageResolver,
-            SearchResolver],
+            SearchResolver
+        ],
         emitSchemaFile: true,
         authChecker: customAuthChecker
     })

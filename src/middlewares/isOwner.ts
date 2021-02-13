@@ -1,7 +1,7 @@
 import jwt_decode from "jwt-decode";
 import { ImageService } from "../services/image.service";
 import { MiddlewareFn } from "type-graphql";
-import { Context } from "../types/context";
+import { IContext } from "../types/context";
 
 import { UserService } from "../services/user.service";
 import { Event } from "../entities/event.entity";
@@ -10,7 +10,7 @@ import { EventService } from "../services/event.service";
 import { Organization } from "../entities/organization.entity";
 import { OrganizationService } from "../services/organization.service";
 
-export const isImageOwner: MiddlewareFn<Context> = async ({ context, args }, next) => {
+export const isImageOwner: MiddlewareFn<IContext> = async ({ context, args }, next) => {
     const decoded = jwt_decode(context.req.headers["authorization"]);
     const userId: number = Number(decoded["userId"]);
     const user = await UserService.getUserByID(userId)
@@ -31,7 +31,7 @@ export const isImageOwner: MiddlewareFn<Context> = async ({ context, args }, nex
 }
 
 
-export const isEventOwner: MiddlewareFn<Context> = async ({ context, args }, next) => {
+export const isEventOwner: MiddlewareFn<IContext> = async ({ context, args }, next) => {
     const decoded = jwt_decode(context.req.headers["authorization"]);
     const userId: number = Number(decoded["userId"]);
 
