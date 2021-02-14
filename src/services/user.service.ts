@@ -11,7 +11,7 @@ export class UserService {
             return sign(
                   { userId: userId, username: username },
                   config.accessTokenSecretKey,
-                  { expiresIn: "10s"}
+                  { expiresIn: "1h"}
             );
     }
 
@@ -31,7 +31,7 @@ export class UserService {
         ): Promise<void> {
 
         try {
-            await User.insert(user);
+            await User.save(user);
         } catch (err) {
             throw new Error("Failed in storing the user");
         }
@@ -51,7 +51,6 @@ export class UserService {
     }
 
     public static async logout(
-        refreshToken: string
     ): Promise<void> {
         
     }

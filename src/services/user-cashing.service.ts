@@ -8,11 +8,11 @@ interface IUserToken {
 
 export class UserCashingService {
     public static async getUsers()
-        : Promise<IUserToken[]> {
+    : Promise<Map<number,string>> {
 
         const getAsync: any = promisify(redisClient.get).bind(redisClient);
         const users: string = await getAsync("users");
-        return users? JSON.parse(users): [];
+        return users? JSON.parse(users): {};
     }
 
     public static async addUser(
@@ -20,32 +20,27 @@ export class UserCashingService {
         userId: number
         ): Promise<void> {
 
-        const user: IUserToken = {
-            userId: userId,
-            refreshToken: refreshToken
-        };
+        let users: Map<number,string> = await UserCashingService.getUsers();
 
-        let users: IUserToken[] = await UserCashingService.getUsers();
+        users[userId] = refreshToken;
 
-        users.push(user);
-
-        console.log(users);
-
-        if(users.includes(user)) {
-            throw new Error("User is already logged in, You need to logout first.");
-        } else {
-            const setAsync: any = promisify(redisClient.set).bind(redisClient);
-            await setAsync("users", JSON.stringify(users));
-        }
+        const setAsync: any = promisify(redisClient.set).bind(redisClient);
+        await setAsync("users", JSON.stringify(users));
     }
 
     public static async removeUser(
         userId: number
     ): Promise<boolean> {
-        let users: IUserToken[] = await UserCashingService.getUsers();
-        users = users.filter(user => user.userId === userId);
-        const setAsync: any = promisify(redisClient.set).bind(redisClient);
-        await setAsync("users", JSON.stringify(users));
-        return true;
+        let users: Map<number,string> = await UserCashingService.getUsers();
+
+        try {
+            users.delete(userId);
+
+            const setAsync: any = promisify(redisClient.set).bind(redisClient);
+            await setAsync("users", JSON.stringify(users));
+            return true;
+        } catch (err) {
+            throw new Error("User is not logged in");
+        }
     }
 }

@@ -1,21 +1,21 @@
 export function isImage(
   filename: string)
   : boolean {
-  const extension = getExtension(filename);
+  const extension: string = getExtension(filename);
   switch (extension.toLowerCase()) {
-    case 'jpg':
-    case 'gif':
-    case 'bmp':
-    case 'png':
+    case "jpg":
+    case "gif":
+    case "bmp":
+    case "png":
       return true;
   }
   return false;
 };
 
 function getExtension(
-  filename)
+  filename: string)
   : string {
-  
-  var parts = filename.split('.');
+
+  var parts: string[] = filename.split(".");
   return parts[parts.length - 1];
 }

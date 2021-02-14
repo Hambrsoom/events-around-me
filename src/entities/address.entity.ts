@@ -1,3 +1,4 @@
+"use strict";
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { Length } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
@@ -21,7 +22,7 @@ export class Address extends BaseEntity {
     zipCode!: string;
 
     @Field()
-    @Column()
+    @Column({nullable: true})
     appartmentNumber?: number;
     
     equal(address: Address): boolean {
@@ -35,7 +36,7 @@ export class Address extends BaseEntity {
 }
 
 @InputType()
-export class AddressInput extends Address implements Partial<Address>  {
+export class AddressInput extends Address {
     @Field({nullable: true})
     id: number
 

@@ -18,7 +18,7 @@ async function main() {
   const schema = await createSchema()
   const app = Express()
 
-  app.use('/images', Express.static('images'));
+  app.use("/images", Express.static("images"));
 
   const server = new ApolloServer({
     schema,

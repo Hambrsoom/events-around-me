@@ -25,7 +25,7 @@ export class ImageService {
     public static async deleteImages(
         listOfImageIds: number[]
         ): Promise<void> {
-            
+
         const path = process.cwd() + "\\images\\ + filename";
         let images:Image[];
         try {
@@ -41,7 +41,7 @@ export class ImageService {
         await Image.createQueryBuilder()
         .delete()
         .from(Image)
-        .where('id IN (:...ids)', { ids: listOfImageIds })
+        .where("id IN (:...ids)", { ids: listOfImageIds })
         .execute()
     }
 
@@ -65,7 +65,7 @@ export class ImageService {
         try {
             const image: Image = await Image.createQueryBuilder()
             .select()
-            .where('id = :id and event_id IN (:...ids)', { id: imageId, ids: eventIds })
+            .where("id = :id and event_id IN (:...ids)", { id: imageId, ids: eventIds })
             .getOne()
             return true;
         } catch (err) {

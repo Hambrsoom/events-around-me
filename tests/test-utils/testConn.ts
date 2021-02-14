@@ -1,8 +1,8 @@
 import { createConnection } from "typeorm";
-const typeormNamingStrategies = require('typeorm-naming-strategies');
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
-export const testConn = (drop: boolean = false) => {
-  return createConnection({
+export const testConn = async(drop = false) => {
+  return await createConnection({
     name: "default",
     type: "mysql",
     host: "localhost",
@@ -13,6 +13,6 @@ export const testConn = (drop: boolean = false) => {
     synchronize: drop,
     dropSchema: drop,
     entities: ["./src/entities/*.*"],
-    namingStrategy: new typeormNamingStrategies.SnakeNamingStrategy()
+    namingStrategy:  new SnakeNamingStrategy()
   });
 };

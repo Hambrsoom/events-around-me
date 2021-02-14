@@ -1,7 +1,7 @@
-import { Query, Resolver, Mutation, Arg, Authorized } from 'type-graphql'
-import { Organization, OrganizationInput } from '../entities/organization.entity'
-import { Role } from '../entities/user.entity';
-import { OrganizationService } from '../services/organization.service';
+import { Query, Resolver, Mutation, Arg, Authorized } from "type-graphql"
+import { Organization, OrganizationInput } from "../entities/organization.entity"
+import { Role } from "../entities/user.entity";
+import { OrganizationService } from "../services/organization.service";
 
 @Resolver(() => Organization)
 export class OrganizationResolver {
@@ -11,22 +11,22 @@ export class OrganizationResolver {
   async getOrganizations()
     : Promise<Organization[]> {
     return await Organization.find({
-      relations: ["address", "events"]  
+      relations: ["address", "events"]
     });
   }
 
   @Query(() => Organization)
   @Authorized()
-  async getOrganizationByID(
-    @Arg('id') id : number
+  async getOrganizationById(
+    @Arg("id") id : number
   ): Promise<Organization> {
     return OrganizationService.getOrganizationById(id);
   }
 
   @Mutation(() => Organization)
-  @Authorized([Role.admin])  
+  @Authorized([Role.admin])
   async addOrganization(
-    @Arg('Organization') { name, url, addressInput }: OrganizationInput
+    @Arg("organization") { name, url, addressInput }: OrganizationInput
     ): Promise<Organization> {
 
     let organization = new Organization();
@@ -38,19 +38,18 @@ export class OrganizationResolver {
   }
 
   @Mutation(()=> Organization)
-  @Authorized([Role.admin])  
+  @Authorized([Role.admin])
   async editOrganization(
-    @Arg('organization') { id, name, url, addressInput }: OrganizationInput
+    @Arg("organization") { id, name, url, addressInput }: OrganizationInput
     ): Promise<Organization> {
     let organization: Organization = await OrganizationService.getOrganizationById(id);
 
-    if (name) { organization.name = name; } 
+    if (name) { organization.name = name; }
     if (url) { organization.url = url; }
-  
     if (addressInput && !organization.address.equal(addressInput)){
       organization.address = addressInput;
     }
-    
+
     return OrganizationService.saveOrganization(organization);
   }
 }

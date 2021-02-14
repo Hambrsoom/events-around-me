@@ -1,3 +1,4 @@
+"use strict";
 import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn } from "typeorm";
 import { Length } from "class-validator";
 import * as bcrypt from "bcryptjs";
@@ -52,8 +53,6 @@ export class User extends BaseEntity {
       return hash === this.password;
     }
 }
-
-@InputType()
 
 @InputType()
 export class UserInput implements Partial<User> {

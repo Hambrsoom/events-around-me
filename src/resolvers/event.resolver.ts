@@ -1,10 +1,10 @@
-import { Query, Resolver, Mutation, Arg, UseMiddleware, Authorized } from 'type-graphql'
-import { Event, EventInput } from '../entities/event.entity';
-import { Role } from '../entities/user.entity';
-import { isEventOwner } from '../middlewares/isOwner';
+import { Query, Resolver, Mutation, Arg, UseMiddleware, Authorized } from "type-graphql"
+import { Event, EventInput } from "../entities/event.entity";
+import { Role } from "../entities/user.entity";
+import { isEventOwner } from "../middlewares/isOwner";
 
-import { EventService } from '../services/event.service';
-import { OrganizationService } from '../services/organization.service';
+import { EventService } from "../services/event.service";
+import { OrganizationService } from "../services/organization.service";
 
 @Resolver(() => Event)
 export class EventResolver {
@@ -19,7 +19,7 @@ export class EventResolver {
   @Query(() => [Event])
   @Authorized()
   async getAllEventsForOrganization(
-    @Arg('organizationId') OrganizationId: number
+    @Arg("organizationId") OrganizationId: number
     ): Promise<Event[]> {
 
     return await Event.find({
@@ -31,8 +31,8 @@ export class EventResolver {
 
   @Query(() => Event)
   @Authorized()
-  async getEventByID(
-    @Arg('id') id : number
+  async getEventById(
+    @Arg("id") id : number
     ): Promise<Event> {
 
     return await EventService.getEventById(id);
@@ -40,9 +40,9 @@ export class EventResolver {
 
 
   @Mutation(() => Event)
-  @Authorized([Role.organizer])  
+  @Authorized([Role.organizer])
   async addEvent(
-    @Arg('event') { title, url, date, address, organizerId }: EventInput
+    @Arg("event") { title, url, date, address, organizerId }: EventInput
     ): Promise<Event> {
 
     let event = new Event();
@@ -51,21 +51,21 @@ export class EventResolver {
     event.address = address;
     event.date = date;
     event.organizer = await OrganizationService.getOrganizationById(organizerId);
-
+      console.log(event.organizer);
     return EventService.saveEvent(event);
   }
 
   @Mutation(()=> Event)
-  @Authorized([Role.organizer])  
+  @Authorized([Role.organizer])
   @UseMiddleware(isEventOwner)
   async editEvent(
-    @Arg('event') { id,  title, url, date, address, organizerId }: EventInput
+    @Arg("event") { id,  title, url, date, address, organizerId }: EventInput
     ): Promise<Event> {
 
     let event: Event = await EventService.getEventById(id);
-    if (title != null) { event.title = title; } 
+    if (title != null) { event.title = title; }
     if (url != null) { event.url = url; }
-    if (date != null) { event.date = date; }        
+    if (date != null) { event.date = date; }
 
     if(organizerId !=null) {
       event.organizer = await OrganizationService.getOrganizationById(organizerId);

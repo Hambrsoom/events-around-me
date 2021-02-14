@@ -55,7 +55,7 @@ type LoginResponse {
 type Mutation {
   addEvent(event: EventInput!): Event!
   addImageToEvent(eventId: Float!, pictures: [Upload!]!): Boolean!
-  addOrganization(Organization: OrganizationInput!): Organization!
+  addOrganization(organization: OrganizationInput!): Organization!
   deleteImage(listOfImageIds: [Float!]!): Boolean!
   editEvent(event: EventInput!): Event!
   editOrganization(organization: OrganizationInput!): Organization!
@@ -82,8 +82,8 @@ input OrganizationInput {
 type Query {
   getAllEvents: [Event!]!
   getAllEventsForOrganization(organizationId: Float!): [Event!]!
-  getEventByID(id: Float!): Event!
-  getOrganizationByID(id: Float!): Organization!
+  getEventById(id: Float!): Event!
+  getOrganizationById(id: Float!): Organization!
   getOrganizations: [Organization!]!
   searchForEvents(text: String!): [Event!]!
 }

@@ -1,6 +1,6 @@
 import { Resolver, Mutation, Arg, ObjectType, Field } from "type-graphql";
 import { Role, User, UserInput } from "../entities/user.entity";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import { UserService } from "../services/user.service";
 import { UserCashingService } from "../services/user-cashing.service";
 import jwt_decode from "jwt-decode";
@@ -31,23 +31,25 @@ export class AuthResolver {
 
     user.hashPassword();
 
+    await UserService.saveUser(user);
+
     return true;
   }
 
   @Mutation(() => LoginResponse)
   async login(
-    @Arg("username") username: string, 
+    @Arg("username") username: string,
     @Arg("password") password: string
     ): Promise<any> {
 
-    const user = await User.findOne({ where: { username } });
+    const user: User = await User.findOne({ where: { username } });
 
     if (!user) {
-      throw new Error("Could not find user");
+      throw new Error("Either your username or password is incorrect");
     }
 
     const isPasswordValid: boolean = await user.validatePassword(password)
-    if (!isPasswordValid) {
+    if (!(user && isPasswordValid)) {
       throw new Error("Either your username or password is incorrect");
     }
 
@@ -80,4 +82,12 @@ export class AuthResolver {
 
       return UserService.getAccessToken(username, userId);
   }
+
+  // @Mutation(()=> Boolean)
+  // async logout(
+  //   @Arg("accessToken") accessToken: string
+  // ): Promise<boolean> {
+  //   const userId: number = Number(jwt_decode(accessToken)["userId"]);
+  //   UserService.logout(userId);
+  // }
 }

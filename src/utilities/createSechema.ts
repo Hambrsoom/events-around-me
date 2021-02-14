@@ -1,14 +1,13 @@
-import { buildSchema } from 'type-graphql';
+import { buildSchema } from "type-graphql";
 
-import { customAuthChecker } from './authChecker';
-import { OrganizationResolver } from '../resolvers/organization.resolver'
-import { AuthResolver } from '../resolvers/auth.resolver';
-import { EventResolver } from '../resolvers/event.resolver';
-import { ImageResolver } from '../resolvers/image.resolver';
-import { SearchResolver } from '../resolvers/search.resolver';
+import { customAuthChecker } from "./authChecker";
+import { OrganizationResolver } from "../resolvers/organization.resolver"
+import { AuthResolver } from "../resolvers/auth.resolver";
+import { EventResolver } from "../resolvers/event.resolver";
+import { ImageResolver } from "../resolvers/image.resolver";
+import { SearchResolver } from "../resolvers/search.resolver";
 
-export const createSchema = () => {
-    return buildSchema({
+export const createSchema = async() => await buildSchema({
         resolvers: [ OrganizationResolver,
             AuthResolver,
             EventResolver,
@@ -18,4 +17,3 @@ export const createSchema = () => {
         emitSchemaFile: true,
         authChecker: customAuthChecker
     })
-}

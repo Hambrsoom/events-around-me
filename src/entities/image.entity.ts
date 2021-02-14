@@ -1,3 +1,4 @@
+"use strict";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from "typeorm";
 import { Event } from "./event.entity";
 import { Field, ID, ObjectType } from "type-graphql";

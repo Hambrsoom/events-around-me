@@ -1,3 +1,4 @@
+"use strict";
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, OneToMany } from "typeorm";
 import { MaxLength } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
