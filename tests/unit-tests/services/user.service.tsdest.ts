@@ -2,7 +2,7 @@ import { Connection } from "typeorm";
 import { testConn } from "../../test-utils/testConn";
 import jwt_decode from "jwt-decode";
 import { registerUser } from "../../test-utils/user-helper-methods";
-import { UserService } from "../../../src/services/user.service";
+import { UserService } from "../../../src/services/user/user.service";
 import { User } from "../../../src/entities/user/user.entity";
 import { Role } from "../../../src/entities/user/user-role.enum";
 import bcrypt from "bcrypt";

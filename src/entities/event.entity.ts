@@ -4,6 +4,8 @@ import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { Address, AddressInput } from "./address.entity";
 import { Organization } from "./organization.entity";
 import { Image } from "./image.entity";
+import { type } from "os";
+import { CustomDate } from "../types/date-scalar";
 
 @ObjectType()
 @Entity()

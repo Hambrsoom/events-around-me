@@ -6,7 +6,7 @@ import { IContext } from "../types/context";
 import { UserService } from "../services/user/user.service";
 import { Event } from "../entities/event.entity";
 import { Role } from "../entities/user/user-role.enum";
-import { EventService } from "../services/event.service";
+import { EventService } from "../services/event/event.service";
 import { Organization } from "../entities/organization.entity";
 import { OrganizationService } from "../services/organization.service";
 import { User } from "../entities/user/user.entity";
@@ -16,12 +16,12 @@ export const isImageOwner: MiddlewareFn<IContext> = async ({ context, args }, ne
     const user: User = await UserService.getUserByID(userId);
 
     if(user.role === Role.organizer) {
-        const events: Event[] = await EventService.getAllEventsOfUser(userId);
-        let listOfEventIds: number[] = [];
-        events.forEach(event => listOfEventIds.push(event.id));
-
-        for(let imageID of args.listOfImageIds) {
-            if(!ImageService.isOwnerOfImage(listOfEventIds, Number(imageID))) {
+        const eventsOfUser: Event[] = await EventService.getAllEventsOfUser(userId);
+        let eventIds: number[] = [];
+        eventsOfUser.forEach(event => eventIds.push(event.id));
+        console.log(args.imageIds);
+        for(let imageID of args.imageIds) {
+            if(!ImageService.isOwnerOfImage(eventIds, Number(imageID))) {
                 throw new Error(`User is not authorized to delete this picture ${imageID}`);
             }
         }

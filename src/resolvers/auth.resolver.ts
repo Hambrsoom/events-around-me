@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import { UserService } from "../services/user/user.service";
 import { UserCashingService } from "../services/user/user-cashing.service";
 import jwt_decode from "jwt-decode";
-import { CashingService } from "../services/caching.service";
 
 @ObjectType()
 class LoginResponse {

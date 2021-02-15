@@ -59,7 +59,7 @@ type Mutation {
   addEvent(event: EventInput!): Event!
   addImageToEvent(eventId: Float!, pictures: [Upload!]!): Boolean!
   addOrganization(organization: OrganizationInput!): Organization!
-  deleteImage(listOfImageIds: [Float!]!): Boolean!
+  deleteImages(imageIds: [Float!]!): Boolean!
   editEvent(event: EventInput!): Event!
   editOrganization(organization: OrganizationInput!): Organization!
   getNewAccessToken(refreshToken: String!): LoginResponse!

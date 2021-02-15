@@ -3,7 +3,7 @@ import { User, UserInput } from "../../src/entities/user/user.entity";
 import { Role } from "../../src/entities/user/user-role.enum";
 
 import bcrypt from "bcrypt";
-import { UserService } from "../../src/services/user.service";
+import { UserService } from "../../src/services/user/user.service";
 import { Organization } from "../../src/entities/organization.entity";
 
 const loginMutation: string = `mutation login($password:String! , $username: String!){

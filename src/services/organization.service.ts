@@ -5,14 +5,21 @@ export class OrganizationService {
         organizationId: number
         ): Promise <Organization> {
 
-        try{
+        try {
             return await Organization.findOneOrFail({
                 where: { id: organizationId },
-                relations: ["address", "events"]  
-            })
-        } catch(err){
+                relations: ["address", "events"]
+            });
+        } catch(err) {
             throw new Error(`Could not find the Organization with id ${organizationId}`);
         }
+    }
+
+    public static async getOrganizations(
+        ): Promise<Organization[]> {
+            return await Organization.find({
+                relations: ["address", "events"]
+            });
     }
 
     public static async saveOrganization(

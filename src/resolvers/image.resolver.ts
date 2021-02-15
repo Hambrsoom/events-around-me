@@ -11,36 +11,39 @@ import { isImageOwner } from "../middlewares/isOwner";
 @Resolver()
 export class ImageResolver {
   @Mutation(() => Boolean)
- // @Authorized([Role.admin, Role.organizer])
-  async addImageToEvent(@Arg("pictures", () => [GraphQLUpload])
-  pictures: IUpload[], @Arg("eventId") eventId : number): Promise<boolean> {
+  @Authorized([Role.admin, Role.organizer])
+  async addImageToEvent(
+    @Arg("pictures", () => [GraphQLUpload])pictures: IUpload[],
+    @Arg("eventId") eventId : number
+    ): Promise<boolean> {
+      for (let picture of pictures) {
+        const uploadedPicture: IUpload = await picture;
 
-    for (let picture of pictures) {
-      const upload: IUpload = await picture;
+        if(!isImage(uploadedPicture.filename)) {
+          throw new Error("Only image files are allowed!");
+        } else {
+          const path: string = `${process.cwd()}\\images\\${uploadedPicture.filename}`;
 
-      if(!isImage(upload.filename)){
-        throw new Error("Only image files are allowed!");
-      } else {
-        const path: string = `${process.cwd()}\\images\\${upload.filename}`;
+          await ImageService.addSingleImageToEvent(uploadedPicture.filename, eventId);
 
-        await ImageService.addSingleImageToEvent(upload.filename, eventId)
-
-        new Promise(async (resolve, reject) =>
-        upload.createReadStream()
-          .pipe(createWriteStream(path))
-          .on("finish", () => resolve(true))
-          .on("error", () => reject(false))
-        );
+          new Promise(async (resolve, reject) =>
+          uploadedPicture.createReadStream()
+            .pipe(createWriteStream(path))
+            .on("finish", () => resolve(true))
+            .on("error", () => reject(false))
+          );
+        }
       }
-    }
-    return true;
+      return true;
   }
 
   @Mutation(() => Boolean)
   @Authorized([Role.admin, Role.organizer])
   @UseMiddleware(isImageOwner)
-  async deleteImage(@Arg("listOfImageIds", () => [Number]) listOfImageIds: number[]): Promise<boolean> {
-    await ImageService.deleteImages(listOfImageIds);
-    return true;
+  async deleteImages(
+    @Arg("imageIds", () => [Number]) imageIds: number[]
+    ): Promise<boolean> {
+      await ImageService.deleteImages(imageIds);
+      return true;
   }
 }
