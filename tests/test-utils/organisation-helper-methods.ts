@@ -18,6 +18,8 @@ export const insertOrganization = async() => {
         organization.url = "https://www.moissonmontreal.org/";
         organization.address = address;
 
-        await Organization.save(organization);
+        return await Organization.save(organization);
+    } else {
+        return existingOrganization;
     }
 };

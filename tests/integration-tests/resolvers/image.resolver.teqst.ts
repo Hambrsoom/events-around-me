@@ -1,10 +1,10 @@
 import { Connection } from "typeorm";
-import { testConn } from "../test-utils/testConn";
-import { gCall } from "../test-utils/gCall";
-import { getAccessToken, insertUser } from "../test-utils/user-helper-methods";
-import { Role } from "../../src/entities/user.entity";
-import { insertEvent } from "../test-utils/event-helper-methods";
-import { insertOrganization } from "../test-utils/organisation-helper-methods";
+import { testConn } from "../../test-utils/testConn";
+import { gCall } from "../../test-utils/gCall";
+import { getAccessToken, insertUser } from "../../test-utils/user-helper-methods";
+import { Role } from "../../../src/entities/user.entity";
+import { insertEvent } from "../../test-utils/event-helper-methods";
+import { insertOrganization } from "../../test-utils/organisation-helper-methods";
 import { GraphQLScalarType } from "graphql";
 const fs:any = require("fs");
 

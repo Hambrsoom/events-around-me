@@ -1,4 +1,3 @@
-"use strict";
 import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn } from "typeorm";
 import { Length } from "class-validator";
 import * as bcrypt from "bcryptjs";

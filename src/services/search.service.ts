@@ -6,6 +6,7 @@ export class SearchService {
         text: string
         ): Promise <Event[]> {
             const events: Event[] = await CashingService.getEventsByTitle(text);
+            console.log(events);
             if(events !== undefined && events.length > 0) {
                 return events;
             } else {

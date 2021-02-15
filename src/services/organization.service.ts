@@ -4,7 +4,7 @@ export class OrganizationService {
     public static async getOrganizationById(
         organizationId: number
         ): Promise <Organization> {
-      
+
         try{
             return await Organization.findOneOrFail({
                 where: { id: organizationId },
@@ -18,13 +18,13 @@ export class OrganizationService {
     public static async saveOrganization(
         organization: Organization
         ): Promise<Organization> {
-          
+
         try {
             // To update the organization and the address, it is important to pass the id of organization and the address related to this organization,
             // Otherwise, it will create a new row.
             return await Organization.save(organization);
         } catch(err) {
-            throw new Error("Failed in saving the organization");
+            throw new Error("Failed in storing the organization since it already exists in the database");
         }
     }
 }

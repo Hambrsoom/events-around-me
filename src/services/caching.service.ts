@@ -1,6 +1,6 @@
 import { promisify } from "util";
 import { Event } from "../entities/event.entity";
-import { redisClient } from "../server";
+import { redisClient } from "../redis-connection";
 
 export class CashingService { 
     public static async getEvents()

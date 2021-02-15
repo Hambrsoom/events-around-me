@@ -1,5 +1,5 @@
 import { promisify } from "util";
-import { redisClient } from "../server";
+import { redisClient } from "../redis-connection";
 
 interface IUserToken {
     userId: number;

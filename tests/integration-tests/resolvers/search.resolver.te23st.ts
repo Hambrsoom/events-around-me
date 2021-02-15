@@ -1,12 +1,12 @@
 import { Connection } from "typeorm";
-import { testConn } from "../test-utils/testConn";
-import { gCall } from "../test-utils/gCall";
-import { Organization, OrganizationInput } from "../../src/entities/organization.entity";
-import { Address, AddressInput } from "../../src/entities/address.entity";
-import { getAccessToken, insertUser, registerUser } from "../test-utils/user-helper-methods";
-import { Role } from "../../src/entities/user.entity";
-import { insertEvent } from "../test-utils/event-helper-methods";
-import { insertOrganization } from "../test-utils/organisation-helper-methods";
+import { testConn } from "../../test-utils/testConn";
+import { gCall } from "../../test-utils/gCall";
+import { Organization, OrganizationInput } from "../../../src/entities/organization.entity";
+import { Address, AddressInput } from "../../../src/entities/address.entity";
+import { getAccessToken, insertUser, registerUser } from "../../test-utils/user-helper-methods";
+import { Role } from "../../../src/entities/user.entity";
+import { insertEvent } from "../../test-utils/event-helper-methods";
+import { insertOrganization } from "../../test-utils/organisation-helper-methods";
 
 let connection: Connection;
 
@@ -20,7 +20,7 @@ afterAll(async() => {
     await connection.close();
 });
 
-beforeEach(async()=> { 
+beforeEach(async()=> {
     await registerUser("Hampic", "12345678");
 });
 

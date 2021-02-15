@@ -7,7 +7,7 @@
     "start": "nodemon src/server.ts",
     "db:setup": "ts-node ./tests/test-utils/setup.ts",
     "test": "npm run db:setup && jest",
-    "jest-test": "jest"
+    "unit-testing": "jest ./tests/unit-tests/*.test.ts"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Hambrsoom/events-around-me#readme",
   "dependencies": {
+    "@types/faker": "^5.1.6",
     "@types/redis": "^2.8.28",
     "apollo-server-express": "^2.19.2",
     "bcrypt": "^5.0.0",
@@ -28,6 +29,7 @@
     "class-validator": "^0.13.1",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
+    "faker": "^5.4.0",
     "graphql": "^15.5.0",
     "graphql-upload": "^11.0.0",
     "jwt-decode": "^3.1.2",

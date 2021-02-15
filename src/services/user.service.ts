@@ -28,30 +28,26 @@ export class UserService {
 
     public static async saveUser(
         user: User
-        ): Promise<void> {
+        ): Promise<User> {
 
         try {
-            await User.save(user);
+            return await User.save(user);
         } catch (err) {
-            throw new Error("Failed in storing the user");
+            throw new Error("Failed in storing the user since the user already exists in the database");
         }
     }
 
     public static async getUserByID(
-        userID: number
+        userId: number
         ): Promise<User> {
 
         try {
-            return await User.findOneOrFail(userID, {
+            return await User.findOneOrFail(userId, {
                 relations: ["organization"]
             });
         } catch(err) {
-            throw new Error(`Could not find a user with id ${userID}`);
+            throw new Error(`Could not find a user with id ${userId}`);
         }
     }
 
-    public static async logout(
-    ): Promise<void> {
-        
-    }
 }

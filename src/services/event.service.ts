@@ -14,7 +14,7 @@ export class EventService {
         return events;
     } else {
       events = await Event.find({
-        relations:["address", "images"]       
+        relations:["address", "images", "organizer"]
       });
 
       CashingService.setEvents(events);
@@ -25,38 +25,42 @@ export class EventService {
   public static async getEventById(
     eventId: number
     ): Promise <Event> {
-      
-    try{
-      let event = await CashingService.getEventById(eventId);
-      if(event != undefined) {
-        return event
-      } else {
-        event = await Event.findOneOrFail({
-          where: { id: eventId },
-          relations:["address", "images"]
-        });
 
-        // The cache is not up to date, thus we need to empty the cache. It will be populated again when the user request to get all the events.
-        CashingService.setNotValid();
-
+      let event: Event = await CashingService.getEventById(eventId);
+      if(event !== undefined) {
         return event;
+      } else {
+        try {
+          event = await Event.findOneOrFail({
+            where: { id: eventId },
+            relations:["address", "images"]
+          });
+
+          // the cache is not up to date, thus we need to empty the cache. 
+          // it will be populated again when the user request to get all the events.
+          CashingService.setNotValid();
+
+          return event;
+        } catch(err) {
+          throw new Error(`Could not find the event with id ${eventId}`);
+        }
       }
-    } catch(err){
-      throw new Error(`Could not find the event with id ${eventId}`);
-    }
+
   }
 
   public static async saveEvent(
     event: Event
     ): Promise<Event> {
-        
+
     try {
-      // To update the event and the address, it is important to pass the id of event and the address related to this event,
-      // Otherwise, it will create a new row.
+      // to update the event and the address,
+      // it is important to pass the id of event and the address related to this event,
+      // otherwise, it will create a new row.
       const newEvent: Event = await Event.save(event);
 
-      // The cache is not up to date anymore, thus we need to empty the cache. 
-      // It will be populated again when the user request to get all the events.
+      // the cache is not up to date anymore,
+      // thus we need to empty the cache.
+      // it will be populated again when the user request to get all the events.
       CashingService.setNotValid();
 
       return newEvent;

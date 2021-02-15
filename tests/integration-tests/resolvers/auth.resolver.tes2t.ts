@@ -1,9 +1,9 @@
 import { Connection } from "typeorm";
-import { testConn } from "../test-utils/testConn";
-import { gCall } from "../test-utils/gCall";
+import { testConn } from "../../test-utils/testConn";
+import { gCall } from "../../test-utils/gCall";
 import jwt_decode from "jwt-decode";
 import { GraphQLError } from "graphql";
-import { getAccessToken, registerUser } from "../test-utils/user-helper-methods";
+import { getAccessToken, registerUser } from "../../test-utils/user-helper-methods";
 
 let connection: Connection;
 

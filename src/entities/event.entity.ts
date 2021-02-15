@@ -1,4 +1,3 @@
-"use strict";
 import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { Length } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
@@ -22,7 +21,7 @@ export class Event extends BaseEntity {
     @Field()
     @Column()
     @Length(4, 100)
-    url: string
+    url: string;
 
     @Field(() =>  Address)
     @OneToOne(() => Address , { cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE"})
