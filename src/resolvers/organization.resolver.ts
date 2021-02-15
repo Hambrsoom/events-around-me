@@ -1,6 +1,6 @@
 import { Query, Resolver, Mutation, Arg, Authorized } from "type-graphql"
 import { Organization, OrganizationInput } from "../entities/organization.entity"
-import { Role } from "../entities/user.entity";
+import { Role } from "../entities/user/user-role.enum";
 import { OrganizationService } from "../services/organization.service";
 
 @Resolver(() => Organization)

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, OneToMany } from "typeorm";
-import { MaxLength } from "class-validator";
+import { IsUrl, MaxLength } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { Address, AddressInput } from "./address.entity";
 import { Event } from "./event.entity";
@@ -7,7 +7,6 @@ import { Event } from "./event.entity";
 @ObjectType()
 @Entity()
 export class Organization extends BaseEntity {
-
     @Field(() => ID)
     @PrimaryGeneratedColumn()
     id?: number;
@@ -17,7 +16,7 @@ export class Organization extends BaseEntity {
     name!: string;
 
     @Field()
-    @Column()
+    @Column({unique: true})
     url!: string;
 
     @Field(() => Address)
@@ -29,7 +28,6 @@ export class Organization extends BaseEntity {
 
     @Field(()=> [Event])
     @OneToMany(() => Event, event => event.organizer, { cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE"})
-    @JoinColumn()
     events?: Event[];
 }
 
@@ -44,6 +42,7 @@ export class OrganizationInput implements Partial<Organization> {
 
     @Field({nullable: true})
     @MaxLength(100)
+    @IsUrl()
     url: string;
 
     @Field(() => AddressInput, {nullable: true})

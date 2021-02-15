@@ -1,5 +1,6 @@
 import { gCall } from "./gCall";
-import { Role, User, UserInput } from "../../src/entities/user.entity";
+import { User, UserInput } from "../../src/entities/user/user.entity";
+import { Role } from "../../src/entities/user/user-role.enum";
 
 import bcrypt from "bcrypt";
 import { UserService } from "../../src/services/user.service";

@@ -4,7 +4,7 @@ import { gCall } from "../../test-utils/gCall";
 import { getAccessToken, insertUser, registerUser } from "../../test-utils/user-helper-methods";
 import { insertOrganization } from "../../test-utils/organisation-helper-methods";
 import { insertEvent } from "../../test-utils/event-helper-methods";
-import { Role } from "../../../src/entities/user.entity";
+import { Role } from "../../../src/entities/user/user-role.enum";
 import { AddressInput } from "../../../src/entities/address.entity";
 import { EventInput } from "../../../src/entities/event.entity";
 

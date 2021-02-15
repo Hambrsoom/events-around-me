@@ -1,28 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn } from "typeorm";
 import { Length } from "class-validator";
 import * as bcrypt from "bcryptjs";
 
 import { ObjectType, Field, ID, InputType, Authorized } from "type-graphql";
-import { IsUsernameAlreadyExist } from "../validators/isUsernameExist";
-import { Organization } from "./organization.entity";
+import { IsUsernameAlreadyExist } from "../../validators/isUsernameExist";
+import { Organization } from "../organization.entity";
+import { Role } from "./user-role.enum";
 
-export enum Role {
-  admin = "ADMIN",
-  organizer = "ORGANIZER",
-  regular = "REGULAR"
-}
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
-
     @Field(() => ID)
     @PrimaryGeneratedColumn()
     id: number;
 
     @Field()
     @Column({unique: true})
-    @Length(4, 20)
     username: string;
 
     @Column()
@@ -31,6 +25,7 @@ export class User extends BaseEntity {
     @Column({nullable: true})
     salt: string;
 
+    @Field()
     @Column({default: Role.regular})
     role: Role;
 
@@ -56,7 +51,8 @@ export class User extends BaseEntity {
 @InputType()
 export class UserInput implements Partial<User> {
     @Field()
-    @IsUsernameAlreadyExist({message: "username already exists!"})
+    // @IsUsernameAlreadyExist({message: "username already exists!"})
+    @Length(4, 20)
     username: string;
 
     @Field()

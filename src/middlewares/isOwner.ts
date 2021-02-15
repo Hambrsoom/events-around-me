@@ -3,23 +3,23 @@ import { ImageService } from "../services/image.service";
 import { MiddlewareFn } from "type-graphql";
 import { IContext } from "../types/context";
 
-import { UserService } from "../services/user.service";
+import { UserService } from "../services/user/user.service";
 import { Event } from "../entities/event.entity";
-import { Role } from "../entities/user.entity";
+import { Role } from "../entities/user/user-role.enum";
 import { EventService } from "../services/event.service";
 import { Organization } from "../entities/organization.entity";
 import { OrganizationService } from "../services/organization.service";
+import { User } from "../entities/user/user.entity";
 
 export const isImageOwner: MiddlewareFn<IContext> = async ({ context, args }, next) => {
-    const decoded = jwt_decode(context.req.headers["authorization"]);
-    const userId: number = Number(decoded["userId"]);
-    const user = await UserService.getUserByID(userId)
-    
+    const userId: number = Number(jwt_decode(context.req.headers["authorization"])["userId"]);
+    const user: User = await UserService.getUserByID(userId);
+
     if(user.role === Role.organizer) {
         const events: Event[] = await EventService.getAllEventsOfUser(userId);
         let listOfEventIds: number[] = [];
         events.forEach(event => listOfEventIds.push(event.id));
-    
+
         for(let imageID of args.listOfImageIds) {
             if(!ImageService.isOwnerOfImage(listOfEventIds, Number(imageID))) {
                 throw new Error(`User is not authorized to delete this picture ${imageID}`);
@@ -28,7 +28,7 @@ export const isImageOwner: MiddlewareFn<IContext> = async ({ context, args }, ne
     }
 
     return next();
-}
+};
 
 
 export const isEventOwner: MiddlewareFn<IContext> = async ({ context, args }, next) => {

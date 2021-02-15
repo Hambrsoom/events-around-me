@@ -1,8 +1,8 @@
 import { Event } from "../entities/event.entity";
 import { Organization } from "../entities/organization.entity";
-import { User } from "../entities/user.entity";
+import { User } from "../entities/user/user.entity";
 import { CashingService } from "./caching.service";
-import { UserService } from "./user.service";
+import { UserService } from "./user/user.service";
 
 export class EventService {
   public static async getAllEvents()

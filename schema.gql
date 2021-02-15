@@ -5,7 +5,10 @@
 
 type Address {
   appartmentNumber: Float!
+  city: String!
+  country: String!
   id: ID!
+  province: String!
   street: String!
   zipCode: String!
 }
@@ -60,8 +63,9 @@ type Mutation {
   editEvent(event: EventInput!): Event!
   editOrganization(organization: OrganizationInput!): Organization!
   getNewAccessToken(refreshToken: String!): LoginResponse!
-  login(password: String!, username: String!): LoginResponse!
-  register(user: UserInput!): Boolean!
+  login(user: UserInput!): LoginResponse!
+  logout(accessToken: String!): Boolean!
+  registerRegularUser(user: UserInput!): Boolean!
 }
 
 type Organization {

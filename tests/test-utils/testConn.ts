@@ -12,7 +12,10 @@ export const testConn = async(drop = false) => {
     database: "events-around-me-test",
     synchronize: drop,
     dropSchema: drop,
-    entities: ["./src/entities/*.*"],
+    entities: [
+    "./src/entities/*.entity.ts*",
+    "./src/entities/user/*.entity.ts"
+  ],
     namingStrategy:  new SnakeNamingStrategy()
   });
 };

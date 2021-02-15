@@ -5,7 +5,7 @@ import { createWriteStream } from "fs";
 import { IUpload } from "../types/upload";
 import { isImage } from "../utilities/isImage";
 import { ImageService } from "../services/image.service";
-import { Role } from "../entities/user.entity";
+import { Role } from "../entities/user/user-role.enum";
 import { isImageOwner } from "../middlewares/isOwner";
 
 @Resolver()

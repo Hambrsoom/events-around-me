@@ -1,6 +1,6 @@
 import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
   
-  import { User } from "../entities/user.entity";
+  import { User } from "../entities/user/user.entity";
   
   @ValidatorConstraint({ async: true })
   export class IsUsernameAlreadyExistConstraint implements ValidatorConstraintInterface {

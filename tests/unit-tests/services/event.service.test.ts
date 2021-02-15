@@ -9,7 +9,9 @@ import { EventService } from "../../../src/services/event.service";
 import { insertEvent } from "../../test-utils/event-helper-methods";
 import { getEvent1, getEvent2, getEvent3 } from "../../mock-data/events";
 import { insertUser } from "../../test-utils/user-helper-methods";
-import { Role, User } from "../../../src/entities/user.entity";
+import { User } from "../../../src/entities/user/user.entity";
+import { Role } from "../../../src/entities/user/user-role.enum";
+
 import { getOrganization1, getOrganization2 } from "../../mock-data/organizations";
 
 let connection: Connection;

@@ -1,6 +1,6 @@
 import { Query, Resolver, Mutation, Arg, UseMiddleware, Authorized } from "type-graphql"
 import { Event, EventInput } from "../entities/event.entity";
-import { Role } from "../entities/user.entity";
+import { Role } from "../entities/user/user-role.enum";
 import { isEventOwner } from "../middlewares/isOwner";
 
 import { EventService } from "../services/event.service";

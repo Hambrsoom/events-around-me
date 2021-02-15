@@ -2,7 +2,7 @@ import { AuthChecker } from "type-graphql";
 import { verify } from "jsonwebtoken";
 import config from "../../config/config";
 import { IContext } from "../types/context";
-import { User } from "../entities/user.entity";
+import { User } from "../entities/user/user.entity";
 
 
 export const customAuthChecker: AuthChecker<IContext> = async(

@@ -1,5 +1,4 @@
 import { ResolverData } from "type-graphql";
-import { Role } from "../../../../src/entities/user.entity";
 import { IContext } from "../../../../src/types/context";
 import { customAuthChecker } from "../../../../src/utilities/authChecker";
 import { isImage } from "../../../../src/utilities/isImage";

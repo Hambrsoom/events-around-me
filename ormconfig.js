@@ -10,7 +10,8 @@ module.exports = {
    "synchronize": true,
    "logging": false,
    "entities": [
-      "src/entities/*.ts"
+      "src/entities/*.entity.ts",
+      "src/entities/user/*.entity.ts"
    ],
    "namingStrategy": new typeormNamingStrategies.SnakeNamingStrategy(),
    "cli": {

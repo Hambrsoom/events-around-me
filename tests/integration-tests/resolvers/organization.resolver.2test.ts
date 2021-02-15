@@ -4,7 +4,7 @@ import { gCall } from "../../test-utils/gCall";
 import { Organization, OrganizationInput } from "../../../src/entities/organization.entity";
 import { Address, AddressInput } from "../../../src/entities/address.entity";
 import { getAccessToken, insertUser, registerUser } from "../../test-utils/user-helper-methods";
-import { Role } from "../../../src/entities/user.entity";
+import { Role } from "../../../src/entities/user/user-role.enum";
 import { insertOrganization } from "../../test-utils/organisation-helper-methods";
 let connection: Connection;
 
