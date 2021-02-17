@@ -24,7 +24,6 @@ const checkJwt: any =
 
 export const customAuthChecker: AuthChecker<Context> = async(
   { context }, roles) => {
-    console.log(context.jwt);
     context.payload = checkJwt(context.jwt);
     const user: User = await UserService.getUserByID(context.userId);
 

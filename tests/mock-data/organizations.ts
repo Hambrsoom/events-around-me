@@ -1,5 +1,5 @@
-import { Address } from "../../src/entities/address/address.entity";
-import { Organization } from "../../src/entities/organization.entity";
+import { Address, AddressInput } from "../../src/entities/address/address.entity";
+import { Organization, OrganizationInput } from "../../src/entities/organization.entity";
 
 export class OrganizationMockedData {
 
@@ -44,5 +44,20 @@ export class OrganizationMockedData {
             organization.address = address;
 
             return organization;
+    };
+
+    public static async getOrganizationInput1(
+        ): Promise<OrganizationInput> {
+            const address: AddressInput = new AddressInput();
+
+            address.street = "McGill CPE, 3491 Peel St.";
+            address.postalCode = "H3A 1W7";
+
+            const organizationInput: OrganizationInput = new OrganizationInput();
+            organizationInput.address = address;
+            organizationInput.name = "McGill Childcare Centre";
+            organizationInput.url = "https://www.mcgill.ca/daycare/";
+
+            return organizationInput;
     };
 }

@@ -17,7 +17,7 @@ export class OrganizationResolver {
   @Query(() => Organization)
   @Authorized()
   async getOrganizationById(
-    @Arg("id") id : string
+    @Arg("id", ()=> ID) id : string
     ): Promise<Organization> {
       return OrganizationService.getOrganizationById(id);
   }
@@ -38,7 +38,7 @@ export class OrganizationResolver {
   @Mutation(()=> Organization)
   @Authorized([Role.admin])
   async editOrganization(
-    @Arg("organizationId", ()=> [ID]) organizationId: string,
+    @Arg("organizationId", ()=> ID) organizationId: string,
     @Arg("organization") { name, url, address }: OrganizationInput
     ): Promise<Organization> {
       let organization: Organization = await OrganizationService.getOrganizationById(organizationId);

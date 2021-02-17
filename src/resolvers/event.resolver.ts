@@ -22,7 +22,7 @@ export class EventResolver {
   @Query(() => [Event])
   @Authorized()
   async getAllEventsForOrganization(
-    @Arg("organizationId") OrganizationId: string
+    @Arg("organizationId", () => ID) OrganizationId: string
     ): Promise<Event[]> {
       return EventService.getAllEventsForOrganization(OrganizationId);
   }
@@ -58,7 +58,7 @@ export class EventResolver {
   @Authorized([Role.organizer])
   @UseMiddleware(isEventOwner)
   async editEvent(
-    @Arg("eventId",() => [ID]) eventId: string,
+    @Arg("eventId",() => ID) eventId: string,
     @Arg("event") { title, url, date, address }: EventInput
     ): Promise<Event> {
       let event: Event = await EventService.getEventById(eventId);

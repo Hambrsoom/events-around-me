@@ -47,18 +47,18 @@ export class EventMockedData {
             event.organizer = await Organization.findOne({where: {id: 1}});
             return event;
     }
+
+    public static async getEventInput1(
+        ): Promise<EventInput> {
+            const address: AddressInput = new AddressInput();
+
+            address.street = "McGill CPE, 3491 Peel St.";
+            address.postalCode = "H3A 1W7";
+
+            const eventInput: EventInput = new EventInput();
+            eventInput.address = address;
+            eventInput.title = "Giving up Clothes";
+            eventInput.url = "https://www.mcgill.ca/daycare/";
+            return eventInput;
+    }
 }
-
-export const getEventInput1 = () => {
-    const address: AddressInput = new AddressInput();
-
-    address.street = "McGill CPE, 3491 Peel St.";
-    address.postalCode = "H3A 1W7";
-
-    const eventInput: EventInput = new EventInput();
-    eventInput.address = address;
-    eventInput.date = new Date("2022-01-16");
-    eventInput.title = "Giving up Clothes";
-    eventInput.url = "https://www.mcgill.ca/daycare/";
-    return eventInput;
-};

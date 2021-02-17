@@ -50,7 +50,6 @@ export const getAccessToken = async(
             }
         });
 
-        console.log(result);
         return result.data.login.accessToken;
 };
 
@@ -58,6 +57,8 @@ export const insertUser = async(username: string, password: string, role: Role, 
     const user: User = await User.findOne({ where: {
         username: username
     }});
+
+    console.log(user);
     if(user === undefined) {
         let user:User = new User();
         user.username = username;

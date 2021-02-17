@@ -26,7 +26,7 @@ export class Event extends BaseEntity {
     address: Address;
 
     @Field()
-    @Column({nullable: false})
+    @Column({nullable: true})
     date: Date;
 
     @Field(() => Organization)

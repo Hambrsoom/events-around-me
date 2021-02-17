@@ -70,8 +70,8 @@ type Mutation {
   addImageToEvent(eventId: String!, pictures: [Upload!]!): Boolean!
   addOrganization(organization: OrganizationInput!): Organization!
   deleteImages(imageIds: [String!]!): Boolean!
-  editEvent(event: EventInput!, eventId: [ID!]!): Event!
-  editOrganization(organization: OrganizationInput!, organizationId: [ID!]!): Organization!
+  editEvent(event: EventInput!, eventId: ID!): Event!
+  editOrganization(organization: OrganizationInput!, organizationId: ID!): Organization!
   getNewAccessToken(refreshToken: String!): LoginResponse!
   login(user: LoginUserInput!): LoginResponse!
   logout(accessToken: String!): Boolean!
@@ -98,9 +98,9 @@ enum Province {
 
 type Query {
   getAllEvents: [Event!]!
-  getAllEventsForOrganization(organizationId: String!): [Event!]!
+  getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
-  getOrganizationById(id: String!): Organization!
+  getOrganizationById(id: ID!): Organization!
   getOrganizations: [Organization!]!
   searchForEvents(text: String!): [Event!]!
 }

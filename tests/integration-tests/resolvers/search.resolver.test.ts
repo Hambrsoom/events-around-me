@@ -1,17 +1,19 @@
 import { Connection } from "typeorm";
 import { testConn } from "../../test-utils/testConn";
-import { gCall } from "../../test-utils/resolver-caller";
-import { Organization, OrganizationInput } from "../../../src/entities/organization.entity";
-import { Address, AddressInput } from "../../../src/entities/address/address.entity";
+import { callResolver } from "../../test-utils/resolver-caller";
 import { getAccessToken, insertUser, registerUser } from "../../test-utils/user-helper-methods";
-import { Role } from "../../../src/entities/user/user-role.enum";
 import { insertEvent } from "../../test-utils/event-helper-methods";
 import { insertOrganization } from "../../test-utils/organisation-helper-methods";
+import { ContextTest } from "../../test-utils/context";
 
 let connection: Connection;
 
+const username: string = "Hampic";
+const password: string = "12345678";
+
 beforeAll(async() => {
     connection = await testConn();
+    await registerUser(username, password);
     await insertOrganization();
     await insertEvent();
 });
@@ -21,7 +23,6 @@ afterAll(async() => {
 });
 
 beforeEach(async()=> {
-    await registerUser("Hampic", "12345678");
 });
 
 describe("Get Events by Search", () => {
@@ -32,18 +33,13 @@ describe("Get Events by Search", () => {
             }
         }`;
 
+
+
         const text: string = "Food";
 
-        const accessToken: string = await getAccessToken("Hampic", "12345678");
+        const context = await ContextTest.getContext(username, password);
 
-        const context = {
-            req: {
-                headers: {
-                    authorization: accessToken
-                }
-            }
-        };
-        const result: any = await gCall({
+        const result: any = await callResolver({
             source: searchForEventsQuery,
             contextValue: context,
             variableValues: {
