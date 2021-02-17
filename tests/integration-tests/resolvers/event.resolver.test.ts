@@ -130,36 +130,4 @@ describe("add & edit an event", () => {
             }
         });
     });
-
-    // it("edit an event successfully", async()=> {
-    //     const editEventMutation = `mutation editEvet($eventId: ID!, $event: EventInput!) {
-    //         editEvent(eventId: $eventId, event:$event){
-    //           title
-    //         }
-    //     }`;
-    //     await insertUser(username, password, Role.organizer, "1");
-    //     const context = await ContextTest.getContext(username, password);
-
-
-    //     const eventInput: EventInput = new EventInput();
-    //     eventInput.url = "https://www.mcgill.ca";
-    //     const eventId: string = "1";
-
-    //     const result: any = await callResolver({
-    //         source: editEventMutation,
-    //         variableValues: {
-    //             eventId: eventId,
-    //             event: eventInput
-    //         },
-    //         contextValue: context
-    //     });
-
-    //     expect(result).toMatchObject({
-    //         data: {
-    //             editEvent: {
-    //                     url: eventInput.url
-    //                 }
-    //         }
-    //     });
-    // });
 });

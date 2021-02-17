@@ -1,15 +1,16 @@
-import { createConnection } from "typeorm";
+import { createConnection, Db } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
+import config from "../../config/config";
 
 export const testConn = async(drop = false) => {
   return await createConnection({
     name: "default",
     type: "mysql",
     host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "password",
-    database: "events-around-me-test",
+    port: config.dbPort,
+    username: config.dbUsername,
+    password: config.dbPassword,
+    database: config.dbTestName,
     synchronize: drop,
     dropSchema: drop,
     entities: [
