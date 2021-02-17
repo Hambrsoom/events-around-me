@@ -2,24 +2,21 @@ import { Connection } from "typeorm";
 import { testConn } from "../../test-utils/testConn";
 import { insertOrganization } from "../../test-utils/organisation-helper-methods";
 import { Organization } from "../../../src/entities/organization.entity";
-import { OrganizationService } from "../../../src/services/organization.service";
-import { Address } from "../../../src/entities/address.entity";
 import { Event } from "../../../src/entities/event.entity";
-import { EventService } from "../../../src/services/event.service";
+import { EventService } from "../../../src/services/event/event.service";
 import { insertEvent } from "../../test-utils/event-helper-methods";
-import { getEvent1, getEvent2, getEvent3 } from "../../mock-data/events";
+import { EventMockedData } from "../../mock-data/events";
 import { insertUser } from "../../test-utils/user-helper-methods";
 import { User } from "../../../src/entities/user/user.entity";
 import { Role } from "../../../src/entities/user/user-role.enum";
 
-import { getOrganization1, getOrganization2 } from "../../mock-data/organizations";
+import { OrganizationMockedData } from "../../mock-data/organizations";
 
 let connection: Connection;
-let organizationByDefault: Organization;
 
 beforeAll(async() => {
     connection = await testConn();
-    organizationByDefault = await insertOrganization();
+    await insertOrganization();
     await insertEvent();
 });
 
@@ -30,8 +27,9 @@ afterAll(async() => {
 describe("Event service for getting events", () => {
 
     it("get event by id=1 successfully", async() => {
-        const eventId: number = 1;
-        const expectedEvent: Event = getEvent1();
+        const eventId: string = "1";
+        const expectedEvent: Event = await EventMockedData.getEvent1();
+
         const event: Event = await  EventService.getEventById(eventId);
 
         expect(event.title).toBe(expectedEvent.title);
@@ -39,7 +37,7 @@ describe("Event service for getting events", () => {
     });
 
     it("get event by id=1789 failure", async() => {
-        const eventId : number = 1789;
+        const eventId : string = "1789";
 
         try {
             await EventService.getEventById(eventId);
@@ -49,8 +47,8 @@ describe("Event service for getting events", () => {
     });
 
     it("get events successfully", async() => {
-        const expectListOfEvents: Event[] = [getEvent1()];
-        const listOfEvents: Event[] = await  EventService.getAllEvents();
+        const expectListOfEvents: Event[] = [await EventMockedData.getEvent1()];
+        const listOfEvents: Event[] = await EventService.getAllEvents();
 
         expect(listOfEvents[0].title).toBe(expectListOfEvents[0].title);
         expect(listOfEvents[0].organizer.name).toBe(expectListOfEvents[0].organizer.name);
@@ -58,13 +56,17 @@ describe("Event service for getting events", () => {
     });
 
     it("get events of an oragizer successfully", async()=> {
-        const organization: Organization = await Organization.save(getOrganization2());
-        insertUser("HampicoOrganizer", "123456789", Role.organizer, organization.id);
-        const event = getEvent2();
+        const newOrganization: Organization = await OrganizationMockedData.getOrganization2();
+        const organization: Organization = await Organization.save(newOrganization);
+        const organizerUsername: string = "HampicoOrganizer";
+        const password: string = "123456789";
+
+        await insertUser(organizerUsername, password, Role.organizer, organization.id);
+        const event: Event = await  EventMockedData.getEvent2();
         event.organizer = organization;
         await Event.save(event);
 
-        const user = await User.findOne({where: {username: "HampicoOrganizer"}});
+        const user: User = await User.findOne({where: {username: "HampicoOrganizer"}});
 
         const events: Event[] = await EventService.getAllEventsOfUser(user.id);
 
@@ -76,7 +78,7 @@ describe("Event service for getting events", () => {
 describe("Event service for saving events", () => {
 
     it("save an event successfully", async() => {
-        const newEvent: Event = getEvent3();
+        const newEvent: Event = await EventMockedData.getEvent3();
 
         const returnedEvemt: Event = await EventService.saveEvent(newEvent);
 

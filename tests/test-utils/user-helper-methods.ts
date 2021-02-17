@@ -1,4 +1,4 @@
-import { gCall } from "./gCall";
+import { callResolver } from "./resolver-caller";
 import { User, LoginUserInput, RegisterUserInput } from "../../src/entities/user/user.entity";
 import { Role } from "../../src/entities/user/user-role.enum";
 
@@ -28,7 +28,7 @@ export const registerUser = async(
             const userInput: RegisterUserInput = new RegisterUserInput();
             userInput.username= username;
             userInput.password= password;
-            await gCall({
+            await callResolver({
                 source: registerMutation,
                 variableValues: {
                     user: userInput
@@ -43,16 +43,18 @@ export const getAccessToken = async(
         const userInput: LoginUserInput = new LoginUserInput();
         userInput.username= username;
         userInput.password= password;
-        const result: any = await gCall({
+        const result: any = await callResolver({
             source: loginMutation,
             variableValues: {
                 user: userInput
             }
         });
+
+        console.log(result);
         return result.data.login.accessToken;
 };
 
-export const insertUser = async(username: string, password: string, role: Role, organizationId: number = undefined) => {
+export const insertUser = async(username: string, password: string, role: Role, organizationId: string = undefined) => {
     const user: User = await User.findOne({ where: {
         username: username
     }});

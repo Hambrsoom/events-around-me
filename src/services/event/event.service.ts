@@ -74,7 +74,7 @@ export class EventService {
     ): Promise<Event> {
       try {
         const newEvent: Event = await Event.save(event);
-
+        console.log(newEvent);
         EventCashingService.setNotUpToDate();
 
         return newEvent;

@@ -99,7 +99,7 @@ enum Province {
 type Query {
   getAllEvents: [Event!]!
   getAllEventsForOrganization(organizationId: String!): [Event!]!
-  getEventById(id: String!): Event!
+  getEventById(id: ID!): Event!
   getOrganizationById(id: String!): Organization!
   getOrganizations: [Organization!]!
   searchForEvents(text: String!): [Event!]!

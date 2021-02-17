@@ -1,5 +1,5 @@
 import { Organization } from "../../src/entities/organization.entity";
-import { getOrganization1 } from "../mock-data/organizations";
+import { OrganizationMockedData } from "../mock-data/organizations";
 
 export const insertOrganization = 
     async() => {
@@ -8,7 +8,7 @@ export const insertOrganization =
         }});
 
         if(existingOrganization === undefined) {
-            const organization: Organization = getOrganization1();
+            const organization: Organization = await OrganizationMockedData.getOrganization1();
             return await Organization.save(organization);
         } else {
             return existingOrganization;

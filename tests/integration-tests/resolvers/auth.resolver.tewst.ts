@@ -1,8 +1,7 @@
 import { Connection } from "typeorm";
 import { testConn } from "../../test-utils/testConn";
-import { gCall } from "../../test-utils/gCall";
+import { callResolver } from "../../test-utils/resolver-caller";
 import jwt_decode from "jwt-decode";
-import { GraphQLError } from "graphql";
 import { getAccessToken, registerUser } from "../../test-utils/user-helper-methods";
 import { getUsernameFromJwt } from "../../../src/utilities/decoding-jwt";
 import { LoginUserInput } from "../../../src/entities/user/user.entity";
@@ -22,14 +21,11 @@ describe("Register Resolver", () => {
         const username: string = "koko123";
         const password: string = "koko12345";
 
-
         await registerUser(username, password);
         const accessToken: string = await getAccessToken(username, password);
-        console.log(accessToken);
         const usernameFromAccessToken: string = jwt_decode(accessToken)["username"];
 
-
-        expect(usernameFromAccessToken).toBe("koko123");
+        expect(usernameFromAccessToken).toBe(username);
     });
 });
 
@@ -49,7 +45,7 @@ describe("Login Resolver", () => {
     it("login user successfully", async() => {
         await registerUser(user.username, user.password);
 
-        const result: any = await gCall({
+        const result: any = await callResolver({
             source: loginMutation,
             variableValues: {
                 user: user
@@ -66,31 +62,17 @@ describe("Login Resolver", () => {
     it("login user failure because the password is wrong", async() => {
         await registerUser(user.username, user.password);
         user.password = "123456783";
-        console.log(user);
-        const result: any = await gCall({
-            source: loginMutation,
-            variableValues: {
-                user: user
-            }
-        });
 
-        console.log(result);
-        // const error: GraphQLError = result.errors[0];
+        try {
+            await callResolver({
+                source: loginMutation,
+                variableValues: {
+                    user: user
+                }
+            });
 
-        // expect(error.message).toContain("Either your username or password is incorrect");
+        } catch(err) {
+            expect(err).toThrow("Either your username or password is incorrect");
+        }
     });
-
-    // it("login user failure because the user doesn't exist in the database", async() => {
-    //     user.username = "Hampico";
-    //     const result: any = await gCall({
-    //         source: loginMutation,
-    //         variableValues: {
-    //             user: user
-    //         }
-    //     });
-
-    //     const error: GraphQLError = result.errors[0];
-
-    //     expect(error.message).toContain("Either your username or password is incorrect");
-    // });
 });

@@ -1,17 +1,16 @@
 import { Connection } from "typeorm";
 import { testConn } from "../../test-utils/testConn";
 import jwt_decode from "jwt-decode";
-import { registerUser } from "../../test-utils/user-helper-methods";
 import { UserService } from "../../../src/services/user/user.service";
 import { User } from "../../../src/entities/user/user.entity";
 import { Role } from "../../../src/entities/user/user-role.enum";
 import bcrypt from "bcrypt";
+import { getUserIdFromJwt, getUsernameFromJwt } from "../../../src/utilities/decoding-jwt";
 
 let connection: Connection;
 
 beforeAll(async() => {
     connection = await testConn();
-    await registerUser("Hampic", "12345678");
 });
 
 afterAll(async() => {
@@ -19,14 +18,14 @@ afterAll(async() => {
 });
 
 describe("User Service for Tokens", () => {
-    const username: string = "koko123";
-    const userId: number = 1;
+    const username: string = "Hampic";
+    const userId: string = "1";
 
     it("get AccessToken", async() => {
         const accessToken: string = UserService.getAccessToken(username, userId);
 
-        const usernameFromAccessToken: string = jwt_decode(accessToken)["username"];
-        const userIdFromAccessToken: string = jwt_decode(accessToken)["userId"];
+        const usernameFromAccessToken: string = getUsernameFromJwt(accessToken);
+        const userIdFromAccessToken: string = getUserIdFromJwt(accessToken);
 
         expect(usernameFromAccessToken).toBe(username);
         expect(userIdFromAccessToken).toBe(userId);
@@ -35,8 +34,8 @@ describe("User Service for Tokens", () => {
     it("get RefreshToken", async() => {
         const refreshToken: string = UserService.getRefreshToken(username, userId);
 
-        const usernameFromAccessToken: string = jwt_decode(refreshToken)["username"];
-        const userIdFromAccessToken: string = jwt_decode(refreshToken)["userId"];
+        const usernameFromAccessToken: string = getUsernameFromJwt(refreshToken);
+        const userIdFromAccessToken: string = getUserIdFromJwt(refreshToken);
 
         expect(usernameFromAccessToken).toBe(username);
         expect(userIdFromAccessToken).toBe(userId);
@@ -44,35 +43,23 @@ describe("User Service for Tokens", () => {
 });
 
 describe("user service for saving users", () => {
-    const user: User = new User();
-
     it("save a user successfully", async() => {
-        user.username = "Ham123";
-        user.password = "Ham12345678";
-        user.role = Role.admin;
-        const salt:any = await bcrypt.genSalt();
-        user.salt = salt;
-    
-        user.hashPassword();
+        const username: string = "Ham123";
+        const password: string = "Ham12345678";
 
-        const returnedUser: User = await UserService.saveUser(user);
+        const returnedUser: User = await UserService.saveUser(username, password);
 
-
-        expect(returnedUser).toBe(user);
+        expect(returnedUser.username).toBe(username);
     });
 
     it("save a user failure for duplicated usernames", async() => {
-        user.username = "Hampic";
-        user.password = "12345678";
-        user.role = Role.regular;
-        const salt:any = await bcrypt.genSalt();
-        user.salt = salt;
-        user.hashPassword();
+        const username: string = "Hampic";
+        const password: string = "12345678";
 
         try {
-            await UserService.saveUser(user)
+            await UserService.saveUser(username, password);
         } catch(err) {
-            expect(err.message).toBe("Failed in storing the user since the user already exists in the database");
+            expect(err.message).toBe("Failed in storing the user in the database");
         }
     });
 });
@@ -80,20 +67,20 @@ describe("user service for saving users", () => {
 
 describe("user service for getting user by Id", () => {
     it("get a user with id=1 successfully", async() => {
-        const userId: number = 1;
+        const userId: string = "1";
 
         const user: User = await UserService.getUserByID(userId);
 
-        expect(user.username).toBe("Hampic");
+        expect(user.username).toBeDefined();
     });
 
     it("get a user with id=1789 Failure", async() => {
-        const userId: number = 1789;
+        const userId: string = "1789";
 
         try {
             await UserService.getUserByID(userId);
         } catch(err) {
-            expect(err.message).toBe(`Could not find a user with id ${userId}`);
+            expect(err.message).toBe(`Could not find the user with id ${userId}`);
         }
     });
 });

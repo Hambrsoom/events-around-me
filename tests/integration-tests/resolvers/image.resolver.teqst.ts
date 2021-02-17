@@ -1,6 +1,6 @@
 import { Connection } from "typeorm";
 import { testConn } from "../../test-utils/testConn";
-import { gCall } from "../../test-utils/gCall";
+import { gCall } from "../../test-utils/resolver-caller";
 import { getAccessToken, insertUser } from "../../test-utils/user-helper-methods";
 import { Role } from "../../../src/entities/user/user-role.enum";
 import { insertEvent } from "../../test-utils/event-helper-methods";
@@ -53,7 +53,6 @@ describe("Get Events by Search", () => {
         fs.readFile("../images/Game_of_Thrones_Season_1.jpg", async(err, data)=> {
             const images = [image];
             const uploads: GraphQLScalarType[] = images;
-            console.log(images);
             const result: any = await gCall({
                         source: addImageToEventQuery,
                         contextValue: context,
@@ -63,7 +62,6 @@ describe("Get Events by Search", () => {
                         }
                 });
 
-                    console.log(result);
         })
         
     });

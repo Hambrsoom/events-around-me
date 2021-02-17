@@ -1,6 +1,5 @@
 import { Query, Resolver, Mutation, Arg, UseMiddleware, ID, Authorized, Ctx } from "type-graphql";
 import { Context } from "vm";
-import { AddressInput } from "../entities/address/address.entity";
 import { Event, EventInput } from "../entities/event.entity";
 import { Role } from "../entities/user/user-role.enum";
 import { User } from "../entities/user/user.entity";
@@ -32,7 +31,7 @@ export class EventResolver {
   @Query(() => Event)
   @Authorized()
   async getEventById(
-    @Arg("id") id : string
+    @Arg("id", () => ID) id : string
     ): Promise<Event> {
       return await EventService.getEventById(id);
   }

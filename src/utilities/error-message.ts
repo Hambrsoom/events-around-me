@@ -28,7 +28,7 @@ export class ErrorMessage {
         id: string,
         type: string
     ): void {
-        throw new Error(`Could not find a ${type} with id ${id}`);
+        throw new Error(`Could not find the ${type} with id ${id}`);
     }
 
     public static failedToStoreErrorMessage(
