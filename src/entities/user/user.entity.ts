@@ -13,16 +13,16 @@ import { Role } from "./user-role.enum";
 export class User extends BaseEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
 
     @Field()
-    @Column({unique: true})
+    @Column({unique: true, nullable: false})
     username: string;
 
-    @Column()
+    @Column({nullable: false})
     password: string;
 
-    @Column({nullable: true})
+    @Column({nullable: false})
     salt: string;
 
     @Field()
@@ -49,9 +49,20 @@ export class User extends BaseEntity {
 }
 
 @InputType()
-export class UserInput implements Partial<User> {
+export class RegisterUserInput implements Partial<User> {
     @Field()
-    // @IsUsernameAlreadyExist({message: "username already exists!"})
+    @IsUsernameAlreadyExist({message: "username already exists!"})
+    @Length(4, 20)
+    username: string;
+
+    @Field()
+    @Length(8, 100)
+    password: string;
+}
+
+@InputType()
+export class LoginUserInput implements Partial<User> {
+    @Field()
     @Length(4, 20)
     username: string;
 

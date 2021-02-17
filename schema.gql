@@ -5,19 +5,26 @@
 
 type Address {
   appartmentNumber: Float!
-  city: String!
-  country: String!
+  city: City!
+  country: Country!
   id: ID!
-  province: String!
+  postalCode: String!
+  province: Province!
   street: String!
-  zipCode: String!
 }
 
 input AddressInput {
   appartmentNumber: Float
-  id: Float
+  postalCode: String
   street: String
-  zipCode: String
+}
+
+enum City {
+  Montreal
+}
+
+enum Country {
+  Canada
 }
 
 """
@@ -38,8 +45,6 @@ type Event {
 input EventInput {
   address: AddressInput
   date: DateTime
-  id: Float
-  organizerId: Float
   title: String
   url: String
 }
@@ -55,17 +60,22 @@ type LoginResponse {
   refreshToken: String!
 }
 
+input LoginUserInput {
+  password: String!
+  username: String!
+}
+
 type Mutation {
   addEvent(event: EventInput!): Event!
-  addImageToEvent(eventId: Float!, pictures: [Upload!]!): Boolean!
+  addImageToEvent(eventId: String!, pictures: [Upload!]!): Boolean!
   addOrganization(organization: OrganizationInput!): Organization!
-  deleteImages(imageIds: [Float!]!): Boolean!
-  editEvent(event: EventInput!): Event!
-  editOrganization(organization: OrganizationInput!): Organization!
+  deleteImages(imageIds: [String!]!): Boolean!
+  editEvent(event: EventInput!, eventId: [ID!]!): Event!
+  editOrganization(organization: OrganizationInput!, organizationId: [ID!]!): Organization!
   getNewAccessToken(refreshToken: String!): LoginResponse!
-  login(user: UserInput!): LoginResponse!
+  login(user: LoginUserInput!): LoginResponse!
   logout(accessToken: String!): Boolean!
-  registerRegularUser(user: UserInput!): Boolean!
+  registerRegularUser(user: RegisterUserInput!): Boolean!
 }
 
 type Organization {
@@ -77,25 +87,28 @@ type Organization {
 }
 
 input OrganizationInput {
-  addressInput: AddressInput
-  id: Float
+  address: AddressInput
   name: String
   url: String
 }
 
+enum Province {
+  Quebec
+}
+
 type Query {
   getAllEvents: [Event!]!
-  getAllEventsForOrganization(organizationId: Float!): [Event!]!
-  getEventById(id: Float!): Event!
-  getOrganizationById(id: Float!): Organization!
+  getAllEventsForOrganization(organizationId: String!): [Event!]!
+  getEventById(id: String!): Event!
+  getOrganizationById(id: String!): Organization!
   getOrganizations: [Organization!]!
   searchForEvents(text: String!): [Event!]!
 }
 
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
-input UserInput {
+input RegisterUserInput {
   password: String!
   username: String!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload

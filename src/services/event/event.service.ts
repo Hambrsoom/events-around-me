@@ -4,6 +4,9 @@ import { User } from "../../entities/user/user.entity";
 import { EventCashingService } from "./event-caching.service";
 import { UserService } from "../user/user.service";
 import { MoreThan } from "typeorm";
+import { Role } from "../../entities/user/user-role.enum";
+import { OrganizationService } from "../organization.service";
+import { ErrorMessage } from "../../utilities/error-message";
 
 export class EventService {
   public static async getAllEvents(
@@ -24,7 +27,7 @@ export class EventService {
   }
 
   public static async getAllEventsForOrganization(
-    OrganizationId: number
+    OrganizationId: string
     ): Promise <Event[]> {
       let events: Event[] = await EventCashingService.getAllEventsForOrganization(OrganizationId);
 
@@ -44,7 +47,7 @@ export class EventService {
   }
 
   public static async getEventById(
-    eventId: number
+    eventId: string
     ): Promise <Event> {
       let event: Event = await EventCashingService.getEventById(eventId);
 
@@ -57,13 +60,11 @@ export class EventService {
             relations:["address", "images", "organizer"]
           });
 
-          // the cache is not up to date, thus we need to empty the cache. 
-          // it will be populated again when the user request to get all the events.
           EventCashingService.setNotUpToDate();
 
           return event;
         } catch(err) {
-          throw new Error(`Could not find the event with id ${eventId}`);
+          ErrorMessage.notFoundErrorMessage(eventId, "event");
         }
       }
   }
@@ -72,25 +73,18 @@ export class EventService {
     event: Event
     ): Promise<Event> {
       try {
-        // to update the event and the address,
-        // it is important to pass the id of event and the address related to this event,
-        // otherwise, it will create a new row.
         const newEvent: Event = await Event.save(event);
 
-        // the cache is not up to date anymore,
-        // thus we need to empty the cache.
-        // it will be populated again when the user request to get all the events.
         EventCashingService.setNotUpToDate();
 
         return newEvent;
       } catch(err) {
-        console.log(err);
-        throw new Error("Failed in saving the event");
+        ErrorMessage.failedToStoreErrorMessage("event");
       }
   }
 
   public static async getAllEventsOfUser(
-    userId: number
+    userId: string
     ): Promise<Event[]> {
       const user: User = await UserService.getUserByID(userId);
       try {
@@ -99,7 +93,26 @@ export class EventService {
         });
         return organization.events;
       } catch(err) {
-        throw new Error(`Could not find an organization with id ${user.organization.id}`);
+        ErrorMessage.notFoundErrorMessage(user.organization.id, "organization");
+      }
+  }
+
+  public static async isEventOwner(
+    userId: string,
+    eventId: string
+    ): Promise<boolean> {
+      const user: User = await UserService.getUserByID(userId);
+
+      if(user.role === Role.organizer) {
+          const organization: Organization = await OrganizationService.getOrganizationById(user.organization.id);
+
+          const event: Event = organization.events.find(event => event.id === eventId);
+
+          if(event === undefined) {
+            ErrorMessage.forbiddenErrorForOwnership(eventId, "event");
+          }
+
+          return true;
       }
   }
 }

@@ -1,25 +1,17 @@
-import { Address } from "../../src/entities/address.entity";
+import { Address } from "../../src/entities/address/address.entity";
 import { Event } from "../../src/entities/event.entity";
-import { Organization } from "../../src/entities/organization.entity";
+import { getEvent1 } from "../mock-data/events";
 
-export const insertEvent = async() => {
-    const existingEvent: Event = await Event.findOne({ where: {
-        title: "Giving Free Food"
-    }});
-    if(existingEvent === undefined) {
-        const address: Address = new Address();
+export const insertEvent = 
+    async() => {
+        const existingEvent: Event = await Event.findOne({ where: {
+            title: "Giving Free Food"
+        }});
 
-        address.street = "6880 Chemin de la Côte-de-Liesse";
-        address.zipCode = "H4T 2A1";
-        address.appartmentNumber = 12;
-
-        const event: Event =  new Event();
-        event.title = "Giving Free Food";
-        event.url = "https://www.moissonmontreal.org/";
-        event.address = address;
-        event.organizer = await Organization.findOne({ where: { id:1 }});
-
-        await Event.save(event);
-    }
-
+        if(existingEvent === undefined) {
+            const event: Event = getEvent1();
+            return await Event.save(event);
+        } else {
+            return getEvent1();
+        }
 };

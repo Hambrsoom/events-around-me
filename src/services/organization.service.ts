@@ -1,8 +1,9 @@
 import { Organization } from "../entities/organization.entity";
+import { ErrorMessage } from "../utilities/error-message";
 
 export class OrganizationService {
     public static async getOrganizationById(
-        organizationId: number
+        organizationId: string
         ): Promise <Organization> {
 
         try {
@@ -11,7 +12,7 @@ export class OrganizationService {
                 relations: ["address", "events"]
             });
         } catch(err) {
-            throw new Error(`Could not find the Organization with id ${organizationId}`);
+            ErrorMessage.notFoundErrorMessage(organizationId, "organization");
         }
     }
 
@@ -27,11 +28,9 @@ export class OrganizationService {
         ): Promise<Organization> {
 
         try {
-            // To update the organization and the address, it is important to pass the id of organization and the address related to this organization,
-            // Otherwise, it will create a new row.
             return await Organization.save(organization);
         } catch(err) {
-            throw new Error("Failed in storing the organization since it already exists in the database");
+            ErrorMessage.failedToStoreErrorMessage("organization");
         }
     }
 }

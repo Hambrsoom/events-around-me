@@ -1,10 +1,10 @@
 import { Resolver, Mutation, Arg, ObjectType, Field } from "type-graphql";
-import { User, UserInput } from "../entities/user/user.entity";
-import { Role } from "../entities/user/user-role.enum";
-import bcrypt from "bcrypt";
+
+import { User, LoginUserInput, RegisterUserInput } from "../entities/user/user.entity";
 import { UserService } from "../services/user/user.service";
 import { UserCashingService } from "../services/user/user-cashing.service";
-import jwt_decode from "jwt-decode";
+import { getUserIdFromJwt, getUsernameFromJwt } from "../utilities/decoding-jwt";
+import { ErrorMessage } from "../utilities/error-message";
 
 @ObjectType()
 class LoginResponse {
@@ -20,26 +20,15 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   async registerRegularUser(
-    @Arg("user") {username, password}: UserInput
+    @Arg("user") {username, password}: RegisterUserInput
     ): Promise<boolean> {
-      let user:User = new User();
-      user.username = username;
-      user.password = password;
-      user.role = Role.regular;
-
-      const salt:any = await bcrypt.genSalt();
-      user.salt = salt;
-
-      user.hashPassword();
-
-      await UserService.saveUser(user);
-
+      await UserService.saveUser(username, password);
       return true;
   }
 
   @Mutation(() => LoginResponse)
   async login(
-    @Arg("user") {username, password}: UserInput
+    @Arg("user") {username, password}: LoginUserInput
     ): Promise<any> {
       const user: User = await UserService.getUserByUsernameAndPassword(username, password);
 
@@ -48,7 +37,7 @@ export class AuthResolver {
         refreshToken: UserService.getRefreshToken(user.username, user.id)
       };
 
-      await UserCashingService.addUser(loginResponse.refreshToken, user.id);
+      UserService.storeUserInfoInCache(loginResponse.refreshToken, user.id);
 
       return loginResponse;
   }
@@ -57,8 +46,9 @@ export class AuthResolver {
   async getNewAccessToken(
     @Arg("refreshToken") refreshToken: string
     ): Promise<LoginResponse> {
-      const userId: number = Number(jwt_decode(refreshToken)["userId"]);
-      const username: string = String(jwt_decode(refreshToken)["username"]);
+
+      const userId: string = getUserIdFromJwt(refreshToken);
+      const username: string = getUsernameFromJwt(refreshToken);
 
       if(await UserCashingService.isrefreshTokenValid(userId, refreshToken)) {
         let loginResponse: LoginResponse = {
@@ -66,7 +56,7 @@ export class AuthResolver {
         };
         return loginResponse;
       } else {
-        throw new Error("Invalid Token");
+        ErrorMessage.notAutherizedErrorMessage();
       }
   }
 
@@ -74,7 +64,7 @@ export class AuthResolver {
   async logout(
     @Arg("accessToken") accessToken: string
   ): Promise<boolean> {
-    const userId: number = Number(jwt_decode(accessToken)["userId"]);
+    const userId: string = getUserIdFromJwt(accessToken);;
     return await UserService.logout(userId);
   }
 }

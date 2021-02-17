@@ -15,5 +15,5 @@ export const createSchema = async() => await buildSchema({
             SearchResolver
         ],
         emitSchemaFile: true,
-        authChecker: customAuthChecker
-    })
+        authChecker: customAuthChecker,
+    });

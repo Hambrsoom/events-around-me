@@ -7,7 +7,7 @@ import { Field, ID, ObjectType } from "type-graphql";
 export class Image extends BaseEntity {
     @Field(()=> ID)
     @PrimaryGeneratedColumn()
-    id?: number;
+    id?: string;
 
     @Field()
     @Column({nullable: false})

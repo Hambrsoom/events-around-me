@@ -6,7 +6,7 @@ services:
     image: mysql:5.7
     build: ./db
     ports:
-      - 3306:3306
+      - 3307:3307
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -20,11 +20,5 @@ services:
     build: .
     depends_on:
       - db
-    environment:
-      DATABASE_HOST: db
-      MYSQL_PORT: 3306
-      MYSQL_DATABASE: events-around-me
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
     ports:
       - "4000:4000"

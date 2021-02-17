@@ -3,13 +3,13 @@ import { setAsync, existAsync, getAsync, delAsync } from "../../redis-connection
 export class UserCashingService {
 
     public static async isUserExist (
-        userId: number
+        userId: string
         ): Promise<number> {
             return await existAsync(userId);
     }
 
     public static async isrefreshTokenValid (
-        userId: number,
+        userId: string,
         refreshToken: string
         ): Promise<boolean> {
             return (await getAsync(userId)) === refreshToken;
@@ -17,13 +17,13 @@ export class UserCashingService {
 
     public static async addUser(
         refreshToken: string,
-        userId: number
+        userId: string
         ): Promise<void> {
             await setAsync(userId, refreshToken);
     }
 
     public static async removeUser(
-        userId: number
+        userId: string
         ): Promise<boolean> {
             await delAsync(userId);
             return true;

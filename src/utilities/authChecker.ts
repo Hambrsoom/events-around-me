@@ -1,35 +1,35 @@
 import { AuthChecker } from "type-graphql";
 import { verify } from "jsonwebtoken";
 import config from "../../config/config";
-import { IContext } from "../types/context";
 import { User } from "../entities/user/user.entity";
+import { ErrorMessage } from "./error-message";
+import { UserService } from "../services/user/user.service";
+import { Context } from "vm";
 
-
-export const customAuthChecker: AuthChecker<IContext> = async(
-  { context }, roles) => {
-    const autherization =  context.req.headers["authorization"];
-    context.payload = checkJwt(autherization);
-    const decodedUserID =  checkJwt(autherization)["userId"];
-    const user: User = await User.findOne({ where: {id: decodedUserID}});
-  
-    if(roles.length > 0 && !roles.includes(user.role)) {
-      throw new Error("Not Authorized");
-    }
-    return true;
-};
-
-
-const checkJwt: any = 
+const checkJwt: any =
   (authorization) => {
     if (!authorization) {
-      throw new Error("Not authenticated");
+      ErrorMessage.notAuthenticatedErrorMessage();
     }
 
     let payload: any;
     try {
       payload = verify(authorization, config.accessTokenSecretKey);
     } catch (err) {
-      throw new Error("Not authenticated");
+      ErrorMessage.notAuthenticatedErrorMessage();
     }
-      return payload as any;
+
+    return payload;
+};
+
+export const customAuthChecker: AuthChecker<Context> = async(
+  { context }, roles) => {
+    context.payload = checkJwt(context.jwt);
+    const user: User = await UserService.getUserByID(context.userId);
+
+    if(roles.length > 0 && !roles.includes(user.role)) {
+      ErrorMessage.notAutherizedErrorMessage();
+    }
+
+    return true;
 };

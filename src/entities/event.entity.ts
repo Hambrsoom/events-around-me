@@ -1,25 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, BaseEntity, OneToOne, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { IsUrl, Length, MaxLength } from "class-validator";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { IsUrl, MaxLength } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
-import { Address, AddressInput } from "./address.entity";
+import { Address, AddressInput } from "./address/address.entity";
 import { Organization } from "./organization.entity";
 import { Image } from "./image.entity";
-import { type } from "os";
-import { CustomDate } from "../types/date-scalar";
 
 @ObjectType()
 @Entity()
 export class Event extends BaseEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
 
     @Field()
-    @Column()
+    @Column({nullable: false})
     title: string;
 
     @Field()
-    @Column()
+    @Column({nullable: false})
     url: string;
 
     @Field(() =>  Address)
@@ -28,7 +26,7 @@ export class Event extends BaseEntity {
     address: Address;
 
     @Field()
-    @Column({default: null})
+    @Column({nullable: false})
     date: Date;
 
     @Field(() => Organization)
@@ -43,14 +41,11 @@ export class Event extends BaseEntity {
 @InputType()
 export class EventInput implements Partial<Event> {
     @Field({nullable: true})
-    id: number;
-
-    @Field({nullable: true})
-    @Length(4, 50)
+    @MaxLength(50)
     title: string;
 
     @Field({nullable: true})
-    @MaxLength(200)
+    @MaxLength(2048)
     @IsUrl()
     url: string;
 
@@ -59,7 +54,4 @@ export class EventInput implements Partial<Event> {
 
     @Field(() =>  AddressInput, {nullable: true})
     address: AddressInput;
-
-    @Field({nullable: true})
-    organizerId: number;
 }

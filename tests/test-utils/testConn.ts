@@ -14,7 +14,8 @@ export const testConn = async(drop = false) => {
     dropSchema: drop,
     entities: [
     "./src/entities/*.entity.ts*",
-    "./src/entities/user/*.entity.ts"
+    "./src/entities/user/*.entity.ts",
+    "src/entities/address/*.entity.ts"
   ],
     namingStrategy:  new SnakeNamingStrategy()
   });

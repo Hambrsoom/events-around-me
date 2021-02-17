@@ -6,7 +6,6 @@ export class SearchService {
         text: string
         ): Promise <Event[]> {
 
-            // check if the events already exist on Redis
             const events: Event[] = await EventCashingService.getEventsByTitle(text);
 
             if(events !== undefined && events.length > 0) {

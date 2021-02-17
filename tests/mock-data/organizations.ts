@@ -1,11 +1,11 @@
-import { Address } from "../../src/entities/address.entity";
+import { Address } from "../../src/entities/address/address.entity";
 import { Organization } from "../../src/entities/organization.entity";
 
 
 export const getOrganization1 = () => {
     const address: Address = new Address();
     address.street = "6880 Chemin de la Côte-de-Liesse";
-    address.zipCode = "H4T 2A1";
+    address.postalCode = "H4T 2A1";
     address.appartmentNumber = 12;
 
     const organization: Organization =  new Organization();
@@ -19,7 +19,7 @@ export const getOrganization1 = () => {
 export const getOrganization2 = () => {
     const address: Address = new Address();
     address.street = "6880 Chemin de la Côte-de-Liesse";
-    address.zipCode = "H4T 2A1";
+    address.postalCode = "H4T 2A1";
     address.appartmentNumber = 12;
 
     const organization: Organization =  new Organization();

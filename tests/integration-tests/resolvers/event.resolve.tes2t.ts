@@ -5,8 +5,11 @@ import { getAccessToken, insertUser, registerUser } from "../../test-utils/user-
 import { insertOrganization } from "../../test-utils/organisation-helper-methods";
 import { insertEvent } from "../../test-utils/event-helper-methods";
 import { Role } from "../../../src/entities/user/user-role.enum";
-import { AddressInput } from "../../../src/entities/address.entity";
+import { AddressInput } from "../../../src/entities/address/address.entity";
 import { EventInput } from "../../../src/entities/event.entity";
+import { getContext } from "../../test-utils/context";
+import { Context } from "vm";
+import { getEvent1, getEventInput1 } from "../../mock-data/events";
 
 
 let connection: Connection;
@@ -23,22 +26,17 @@ afterAll(async() => {
 });
 
 describe("Get Events", () => {
+    const username: string = "Hampic";
+    const password: string = "123123123";
+
     it("get All the events successfully", async() => {
         const getAllEventsQuery: string = `query getAllEvents {
             getAllEvents {
               title
             }
         }`;
+        const context: Context = getContext(username, password);
 
-        const accessToken: string = await getAccessToken("Hampic", "12345678");
-
-        const context = {
-            req: {
-                headers: {
-                    authorization: accessToken
-                }
-            }
-        };
         const result: any = await gCall({
             source: getAllEventsQuery,
             contextValue: context
@@ -52,7 +50,7 @@ describe("Get Events", () => {
                     }
                 ]
             }
-        })
+        });
     });
 
     it("get event by id successfully", async()=> {
@@ -61,16 +59,8 @@ describe("Get Events", () => {
               title
             }
         }`;
+        const context: Context = getContext(username, password);
 
-        const accessToken: string = await getAccessToken("Hampic", "12345678");
-
-        const context = {
-            req: {
-                headers: {
-                    authorization: accessToken
-                }
-            }
-        };
         const result: any = await gCall({
             source: getEventByIdQuery,
             variableValues: {
@@ -93,22 +83,15 @@ describe("Get Events", () => {
             getAllEventsForOrganization(organizationId: $organizationId) {
               title
             }
-          }`;
+        }`;
+        const organizationId: string = "1";
+        const context: Context = getContext(username, password);
 
-        const accessToken: string = await getAccessToken("Hampic", "12345678");
-
-        const context = {
-            req: {
-                headers: {
-                    authorization: accessToken
-                }
-            }
-        };
         const result: any = await gCall({
             source: getAllEventsForOrganizationQuery,
             contextValue: context,
             variableValues: {
-                organizationId: 1
+                organizationId: organizationId
             }
         });
 
@@ -120,17 +103,16 @@ describe("Get Events", () => {
                     }
                 ]
             }
-        })
+        });
     });
 });
 
 
 describe("add a new event", () => {
-    it("add a new organization successfully", async()=> {
+    it("add a new event successfully", async()=> {
         const username: string = "organizer1234";
         const password: string = "organizer1234";
         await insertUser(username, password, Role.organizer, 1);
-        const accessToken: string = await getAccessToken(username, password);
 
         const addEventMutation = `mutation addEvent($event: EventInput!){
             addEvent(event: $event){
@@ -138,23 +120,8 @@ describe("add a new event", () => {
             }
         }`;
 
-        const context = {
-            req: {
-                headers: {
-                    authorization: accessToken
-                }
-            }
-        };
-        const address: AddressInput = new AddressInput();
-
-        address.street = "McGill CPE, 3491 Peel St.";
-        address.zipCode = "H3A 1W7";
-
-        const eventInput: EventInput = new EventInput();
-        eventInput.address = address;
-        eventInput.title = "Giving up Clothes";
-        eventInput.url = "https://www.mcgill.ca/daycare/";
-        eventInput.organizerId = 1;
+        const context: Context = getContext(username, password);
+        const eventInput: EventInput = getEventInput1();
 
         const result: any = await gCall({
             source: addEventMutation,
@@ -173,34 +140,29 @@ describe("add a new event", () => {
         });
     });
 });
-describe("edit an event", () => {
-    it("add an event successfully", async()=> {
-        const username: string = "organizer1234";
-        const password: string = "organizer1234";
-        await insertUser(username, password, Role.organizer, 1);
-        const accessToken: string = await getAccessToken(username, password);
 
+describe("edit an event", () => {
+    it("edit an event successfully", async()=> {
         const editEventMutation = `mutation editEvent($event: EventInput!){
             editEvent(event: $event){
               url
             }
         }`;
 
-        const context = {
-            req: {
-                headers: {
-                    authorization: accessToken
-                }
-            }
-        };
+        const username: string = "Michael";
+        const password: string = "123123123";
+        await insertUser(username, password, Role.organizer, 1);
+        const context: Context = getContext(username, password);
+
 
         const eventInput: EventInput = new EventInput();
-        eventInput.id = 1;
         eventInput.url = "https://www.mcgill.ca";
+        const eventId: string = "1";
 
         const result: any = await gCall({
             source: editEventMutation,
             variableValues: {
+                eventId: eventId,
                 event: eventInput
             },
             contextValue: context

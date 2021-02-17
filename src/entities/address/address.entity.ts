@@ -1,46 +1,46 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { Length } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
+import { Country } from "./country.enum";
+import { Province } from "./province.enum";
+import { City } from "./city.enum";
 
 @ObjectType()
 @Entity()
 export class Address extends BaseEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn()
-    id?: number;
+    id?: string;
 
     @Field()
-    @Column()
+    @Column({nullable: false})
     street!: string;
 
     @Field()
-    @Column()
-    zipCode!: string;
+    @Column({nullable: false})
+    postalCode!: string;
 
     @Field()
     @Column({nullable: true})
     appartmentNumber?: number;
 
-    @Field()
-    @Column({default: "Montreal"})
-    city: string;
+    @Field(() => City)
+    @Column({default: City.Montreal})
+    city: City;
 
-    @Field()
-    @Column({default: "Quebec"})
-    province: string;
+    @Field(() => Province)
+    @Column({default: Province.Quebec})
+    province: Province;
 
-    @Field()
-    @Column({default: "Canada"})
-    country: string;
+    @Field(() => Country)
+    @Column({default: Country.Canada})
+    country: Country;
 
     equal(
         address: Address
         ): boolean {
-
             return (
-                this.street === address.street &&
-                this.zipCode === address.zipCode &&
-                this?.appartmentNumber === address?.appartmentNumber
+                JSON.stringify(this) === JSON.stringify(address)
             );
     }
 }
@@ -48,14 +48,11 @@ export class Address extends BaseEntity {
 @InputType()
 export class AddressInput extends Address {
     @Field({nullable: true})
-    id: number;
-
-    @Field({nullable: true})
     street: string;
 
     @Field({nullable: true})
     @Length(6, 7)
-    zipCode: string;
+    postalCode: string;
 
     @Field({nullable: true})
     appartmentNumber: number;

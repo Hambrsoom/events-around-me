@@ -30,7 +30,7 @@ export class EventCashingService {
     }
 
     public static async getEventById(
-        eventId: number
+        eventId: string
         ): Promise<Event> {
             const isValid: boolean = await EventCashingService.isValid();
             if(isValid) {
@@ -58,7 +58,7 @@ export class EventCashingService {
     }
 
     public static async getAllEventsForOrganization(
-        organizerId: number
+        organizerId: string
         ): Promise<Event[]> {
             const isValid: boolean = await EventCashingService.isValid();
 

@@ -1,12 +1,12 @@
-import { Address } from "../../src/entities/address.entity";
-import { Event } from "../../src/entities/event.entity";
+import { Address, AddressInput } from "../../src/entities/address/address.entity";
+import { Event, EventInput } from "../../src/entities/event.entity";
 import { getOrganization1 } from "./organizations";
 
 
 export const getEvent1 = () => {
     let address: Address = new Address();
     address.street = "6880 Chemin de la Côte-de-Liesse";
-    address.zipCode = "H4T 2A1";
+    address.postalCode = "H4T 2A1";
     address.appartmentNumber = 12;
 
     const event: Event =  new Event();
@@ -18,11 +18,10 @@ export const getEvent1 = () => {
     return event;
 };
 
-
 export const getEvent2 = () => {
     const address: Address = new Address();
     address.street = "McGill CPE, 3491 Peel St.";
-    address.zipCode = "H3A 1W7";
+    address.postalCode = "H3A 1W7";
 
     const event: Event = new Event();
     event.address = address;
@@ -35,7 +34,7 @@ export const getEvent2 = () => {
 export const getEvent3 = () => {
     const address: Address = new Address();
     address.street = "6700 Av du Parc";
-    address.zipCode = "H2V 4H9";
+    address.postalCode = "H2V 4H9";
 
     const event: Event = new Event();
     event.address = address;
@@ -45,3 +44,15 @@ export const getEvent3 = () => {
     return event;
 }
 
+export const getEventInput1 = () => {
+    const address: AddressInput = new AddressInput();
+
+    address.street = "McGill CPE, 3491 Peel St.";
+    address.postalCode = "H3A 1W7";
+
+    const eventInput: EventInput = new EventInput();
+    eventInput.address = address;
+    eventInput.title = "Giving up Clothes";
+    eventInput.url = "https://www.mcgill.ca/daycare/";
+    return eventInput;
+};

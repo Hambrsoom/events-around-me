@@ -4,6 +4,7 @@ import { SearchService } from "../services/search.service";
 
 @Resolver()
 export class SearchResolver {
+
   @Query(() => [Event])
   @Authorized()
   async searchForEvents(
