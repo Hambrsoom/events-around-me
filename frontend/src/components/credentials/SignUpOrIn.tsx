@@ -75,7 +75,7 @@ class SignUpOrIn extends Component<any, any> {
             </Button>
           </div>
         </div>
-        <ModalDialog open={this.state.openSignIn || this.state.openSignUp} handleClose={this.handleClose}  handleSubmit ={this.state.openSignIn ? this.handleSignInSubmit : this.handleSignUpSubmit}/>
+        <ModalDialog open={this.state.openSignIn || this.state.openSignUp} handleClose={this.handleClose}  handleSubmit ={this.state.openSignIn ? this.handleSignInSubmit : this.handleSignUpSubmit} isSignIn={this.state.OpenSignIn}/>
       </div>
     );
   }

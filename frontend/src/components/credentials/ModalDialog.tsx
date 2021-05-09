@@ -1,7 +1,6 @@
 
-import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import Form from './Form';
+import Form from './form/Form';
 
 export const ModalDialog = ({ open, handleClose, handleSubmit }: any) => {
   return (

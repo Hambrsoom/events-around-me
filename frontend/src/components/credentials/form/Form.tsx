@@ -5,52 +5,18 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import formStyling from './formStyle';
 
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      },
-      avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.primary.dark,
-      },
-      form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-      },
-      submit: {
-        margin: theme.spacing(3, 0, 2),
-      },
-
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: theme.spacing(2),
-  '& .MuiTextField-root': {
-        margin: theme.spacing(1),
-        width: '300px',
-      },
-  '& .MuiButtonBase-root': {
-        margin: theme.spacing(2),
-      },
-    },
-  }));
 
 export default function Form({ handleClose, handleSubmit }: any) {
-    const classes = useStyles();
+    const classes = formStyling();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit1 = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        console.log(username)
         handleSubmit(username, password);
         handleClose();
     };
