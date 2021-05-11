@@ -22,6 +22,8 @@ const Map: React.FC<IMap> = ({ mapType, mapTypeControl = false}) => {
     const [map, setMap] = useState<GoogleMap>();
     const [marker, setMarker] = useState<IMarker>();
 
+    const [selectedCenter, setSelectedCenter] = useState(null);
+
     const startMap = (): void => {
         if (!map) {
             defaultMapStart();
@@ -34,6 +36,15 @@ const Map: React.FC<IMap> = ({ mapType, mapTypeControl = false}) => {
         initMap(12, defaultAddress);
     };
 
+    const initEventListener = ():void => {
+        if (map) {
+            google.maps.event.addListener(map, 'click', function(e) {
+                coordinateToAddress(e.latLng);
+            })
+        }
+    };
+    useEffect(initEventListener, [map]);
+
     const coordinateToAddress = async (coordinate: GoogleLatLng) => {
         const geocoder = new google.maps.Geocoder();
         await geocoder.geocode({ location: coordinate}, function (results, status) {
@@ -45,6 +56,8 @@ const Map: React.FC<IMap> = ({ mapType, mapTypeControl = false}) => {
                 })
             }
         });
+
+        console.log([marker]);
     };
 
     const addSingleMarker = ():void => {
@@ -58,7 +71,8 @@ const Map: React.FC<IMap> = ({ mapType, mapTypeControl = false}) => {
         const marker:GoogleMarker = new google.maps.Marker({
             position: location,
             map: map,
-            icon: getIconAttributes('#000000')
+            icon: getIconAttributes('#000000'),
+            clickable: true
         });
     };
 

@@ -3,8 +3,6 @@ import { ModalDialog } from './ModalDialog';
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-
-
 const styles = (theme: { spacing: (arg0: number) => any; }) => ({
   margin: {
     margin: theme.spacing(1),
@@ -23,7 +21,7 @@ class SignUpOrIn extends Component<any, any> {
   }
 
 
-  handleClose = () => {
+  onClickCancelHandle = () => {
     this.setState({
       openSignIn: false,
       openSignUp: false
@@ -39,23 +37,6 @@ class SignUpOrIn extends Component<any, any> {
   handleOpenSignUp = () => {
     this.setState({
       openSignUp: true
-    });
-  }
-
-  handleSignInSubmit = (username: string, password: string) => {
-    console.log(username);
-
-    this.setState({
-      openSignIn: false
-    });
-  }
-
-  handleSignUpSubmit = (username: string, password: string) => {
-    console.log(password);
-
-
-    this.setState({
-      openSignUp: false
     });
   }
 
@@ -75,7 +56,7 @@ class SignUpOrIn extends Component<any, any> {
             </Button>
           </div>
         </div>
-        <ModalDialog open={this.state.openSignIn || this.state.openSignUp} handleClose={this.handleClose}  handleSubmit ={this.state.openSignIn ? this.handleSignInSubmit : this.handleSignUpSubmit} isSignIn={this.state.OpenSignIn}/>
+        <ModalDialog openSignIn={this.state.openSignIn} openSignUp = {this.state.openSignUp} onClickCancelHandle={this.onClickCancelHandle} isSignIn={this.state.OpenSignIn}/>
       </div>
     );
   }

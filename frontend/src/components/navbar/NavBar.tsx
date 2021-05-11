@@ -7,11 +7,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
-import navBarStyle from './NavBarStyling';
+import useStyles from './NavBarStyling';
+
+
 
 
 export default function ButtonAppBar() {
-  const classes = navBarStyle();
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>

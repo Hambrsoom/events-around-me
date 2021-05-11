@@ -3,6 +3,7 @@ import './App.css';
 import Map from './pages/map/Map';
 import {loadMapApi} from './utils/GoogleMapsUtil';
 import NavBar from './components/navbar/NavBar';
+import SignUpOrIn from './components/credentials/SignUpOrIn';
 function App() {
     const [scriptLoaded, setScriptLoaded] = useState(false);
 
@@ -17,12 +18,13 @@ function App() {
         <div>
         <NavBar/>
         <div className="App">
-            {scriptLoaded && (
+            {/* {scriptLoaded && (
                 <Map
                   mapType={google.maps.MapTypeId.ROADMAP}
                   mapTypeControl={true}
                 />
-            )}
+            )} */}
+            <SignUpOrIn/>
         </div>
         </div>
         
