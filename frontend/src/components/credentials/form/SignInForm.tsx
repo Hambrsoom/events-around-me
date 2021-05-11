@@ -33,8 +33,6 @@ export default function SignInForm({ onClickCancelHandle }: any) {
   const [login, {data}] = useMutation(SIGN_IN_MUTATION);
 
   const onClickSubmitHandle = async()=>{
-    console.log(values.username);
-
     const user: LoginUserInput = {
       password: values.password,
       username: values.username
@@ -45,8 +43,7 @@ export default function SignInForm({ onClickCancelHandle }: any) {
     }});
 
     localStorage.setItem('accessToken', response.data.login.accessToken);
-    localStorage.setItem('refreshToken', response.data.login.accessToken);
-
+    localStorage.setItem('refreshToken', response.data.login.refreshToken);
   }
 
   return(

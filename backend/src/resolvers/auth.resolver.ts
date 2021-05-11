@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Arg, ObjectType, Field } from "type-graphql";
+import { Resolver, Mutation, Arg, ObjectType, Field, Query } from "type-graphql";
 
 import { User, LoginUserInput, RegisterUserInput } from "../entities/user/user.entity";
 import { UserService } from "../services/user/user.service";
@@ -42,7 +42,7 @@ export class AuthResolver {
       return loginResponse;
   }
 
-  @Mutation(() => LoginResponse)
+  @Query(() => LoginResponse)
   async getNewAccessToken(
     @Arg("refreshToken") refreshToken: string
     ): Promise<LoginResponse> {

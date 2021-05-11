@@ -1,13 +1,17 @@
-import React, {useEffect, useState} from 'react';
 import './App.css';
-import Map from './pages/map/Map';
-import {loadMapApi} from './utils/GoogleMapsUtil';
+
 import NavBar from './components/navbar/NavBar';
 import SignUpOrIn from './components/credentials/SignUpOrIn';
 import { setContext } from "apollo-link-context";
-
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+} from "react-router-dom";
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client';
-
+import MapPage from './pages/map/MapPage';
+import IsAuthenticated from './components/authentication/IsAuthenticated';
+import DashboardPage from './pages/dashboard/DashboardPage';
 const httpLink = new HttpLink({
     uri: 'http://localhost:4000/graphql'
 })
@@ -24,7 +28,6 @@ const authLink = setContext(async(req, {headers})=>{
 })
 
 const link = authLink.concat(httpLink as any);
-console.log(link)
 const client = new ApolloClient({
   link: httpLink,
   cache: new InMemoryCache()
@@ -32,33 +35,24 @@ const client = new ApolloClient({
 
 
 function App() {
-    const [scriptLoaded, setScriptLoaded] = useState(false);
-
-    
-    useEffect(() => {
-        const googleMapScript = loadMapApi();
-        googleMapScript.addEventListener('load', function () {
-            setScriptLoaded(true);
-        });
-    }, []);
-
     return (
         <ApolloProvider client={client}>
-            <div>
-                <NavBar/>
+            <Router>
                 <div className="App">
-                    {scriptLoaded && (
-                        <Map
-                        mapType={google.maps.MapTypeId.ROADMAP}
-                        mapTypeControl={true}
-                        />
-                    )}
-                    {/* <SignUpOrIn/> */}
+                    <DashboardPage></DashboardPage>
+                    {/* <NavBar/>
+                    <Switch>
+                        <Route path="/authentication" exact component={SignUpOrIn} />
+                        <IsAuthenticated>
+                            <Route path="/map" exact component={MapPage} />
+                        </IsAuthenticated>
+                        <IsAuthenticated>
+                            <Route path="/dashboard" exact component={DashboardPage}/>
+                        </IsAuthenticated>
+                    </Switch> */}
                 </div>
-            </div>
+            </Router>     
         </ApolloProvider>
-        
-        
     );
 }
 

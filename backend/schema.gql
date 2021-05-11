@@ -72,7 +72,6 @@ type Mutation {
   deleteImages(imageIds: [String!]!): Boolean!
   editEvent(event: EventInput!, eventId: ID!): Event!
   editOrganization(organization: OrganizationInput!, organizationId: ID!): Organization!
-  getNewAccessToken(refreshToken: String!): LoginResponse!
   login(user: LoginUserInput!): LoginResponse!
   logout(accessToken: String!): Boolean!
   registerRegularUser(user: RegisterUserInput!): Boolean!
@@ -100,6 +99,7 @@ type Query {
   getAllEvents: [Event!]!
   getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
+  getNewAccessToken(refreshToken: String!): LoginResponse!
   getOrganizationById(id: ID!): Organization!
   getOrganizations: [Organization!]!
   searchForEvents(text: String!): [Event!]!
