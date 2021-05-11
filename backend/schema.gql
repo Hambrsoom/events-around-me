@@ -35,6 +35,7 @@ scalar DateTime
 type Event {
   address: Address!
   date: DateTime!
+  description: String!
   id: ID!
   images: [Image!]!
   organizer: Organization!
@@ -45,6 +46,7 @@ type Event {
 input EventInput {
   address: AddressInput
   date: DateTime
+  description: String!
   title: String
   url: String
 }

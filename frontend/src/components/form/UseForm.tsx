@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import useStyles from '../credentials/form/FormStyling';
+import useStyles from './FormStyling';
 
 
   

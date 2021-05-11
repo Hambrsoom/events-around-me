@@ -20,6 +20,10 @@ export class Event extends BaseEntity {
     @Column({nullable: false})
     url: string;
 
+    @Field()
+    @Column({nullable: true})
+    description: string;
+
     @Field(() =>  Address)
     @OneToOne(() => Address , { cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE"})
     @JoinColumn()
@@ -54,4 +58,7 @@ export class EventInput implements Partial<Event> {
 
     @Field(() =>  AddressInput, {nullable: true})
     address: AddressInput;
+
+    @Field()
+    description: string;
 }

@@ -8,12 +8,35 @@ import MenuIcon from '@material-ui/icons/Menu';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './NavBarStyling';
-
-
-
+import { gql, useMutation } from '@apollo/client';
+import AlertNotifcation from '../alert/Alert';
+import { Severity } from '../../models/ErrorNotification';
+import Controls from '../controls/Controls';
+const LOGOUT = gql`mutation logout($accessToken: String!){
+  logout(
+  	accessToken: $accessToken
+  )
+}`
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+
+  const [logout] = useMutation(LOGOUT);
+
+  const onClickLogoutHandle = async()=>{
+    const response = await logout({ variables: {
+        accessToken: localStorage.getItem('accessToken')
+    }});
+
+    if(response.errors){
+        <AlertNotifcation
+        message={response.errors[0].message}
+        severity={Severity.Error}/>
+    } else {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -38,7 +61,10 @@ export default function ButtonAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-          <Button color="inherit">Logout</Button>
+          <Controls.Button
+          color="primary"
+          onClick={onClickLogoutHandle}
+          text="Logout"/>
         </Toolbar>
       </AppBar>
     </div>

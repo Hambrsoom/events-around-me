@@ -1,7 +1,6 @@
 import './App.css';
 
 import NavBar from './components/navbar/NavBar';
-import SignUpOrIn from './components/credentials/SignUpOrIn';
 import { setContext } from "apollo-link-context";
 import {
     BrowserRouter as Router,
@@ -12,9 +11,13 @@ import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/c
 import MapPage from './pages/map/MapPage';
 import IsAuthenticated from './components/authentication/IsAuthenticated';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import SignIn from './pages/authentication/signin/Signin';
+import SignUp from './pages/authentication/signup/Signup';
+
 const httpLink = new HttpLink({
     uri: 'http://localhost:4000/graphql'
 })
+
 
 const authLink = setContext(async(req, {headers})=>{
     const token = localStorage.getItem('token');
@@ -27,7 +30,7 @@ const authLink = setContext(async(req, {headers})=>{
     }
 })
 
-const link = authLink.concat(httpLink as any);
+// const link = authLink.concat(httpLink as any);
 const client = new ApolloClient({
   link: httpLink,
   cache: new InMemoryCache()
@@ -39,17 +42,25 @@ function App() {
         <ApolloProvider client={client}>
             <Router>
                 <div className="App">
-                    <DashboardPage></DashboardPage>
-                    {/* <NavBar/>
+                    <NavBar/>
                     <Switch>
-                        <Route path="/authentication" exact component={SignUpOrIn} />
+                        <Route path="/signin">
+                            <SignIn/>    
+                        </Route>
+                        <Route path="/signup">
+                            <SignUp/>
+                        </Route>
                         <IsAuthenticated>
-                            <Route path="/map" exact component={MapPage} />
+                            <Route path="/map">
+                                <MapPage/>    
+                            </Route>
                         </IsAuthenticated>
                         <IsAuthenticated>
-                            <Route path="/dashboard" exact component={DashboardPage}/>
+                            <Route path="/dashboard">
+                                <DashboardPage></DashboardPage>
+                            </Route>
                         </IsAuthenticated>
-                    </Switch> */}
+                    </Switch>
                 </div>
             </Router>     
         </ApolloProvider>

@@ -16,7 +16,7 @@ interface Props {
 export default function IsAuthenticated({children}: Props) {
     const {loading, error, data} = useQuery(GET_NEW_ACCESS_TOKEN);
     if(error) {
-        return <Redirect to={{pathname: '/authentication'}}/>
+        return <Redirect to={{pathname: '/signin'}}/>
     }
     if(data){
         localStorage.setItem('accessToken', data.getNewAccessToken.accessToken);
