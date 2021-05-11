@@ -6,6 +6,8 @@ import Link from '@material-ui/core/Link';
 import useStyle from './FormStyling';
 import { useForm, Form } from '../../form/UseForm';
 import Controls from '../../controls/Controls';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { LoginUserInput } from "../../../models/User";
 
 const initialFormValues = {
   username: '',
@@ -13,18 +15,44 @@ const initialFormValues = {
   password: ''
 }
 
+
+
+
+const SIGN_IN_MUTATION = gql`
+mutation login($user: LoginUserInput!) {
+  login(user: $user){
+    accessToken
+    refreshToken
+  }
+}`
+
 export default function SignInForm({ onClickCancelHandle }: any) {
   const classes = useStyle();
-  const {values, setValues, handleInputChange} = useForm(initialFormValues)
 
-  const onClickSubmitHandle = ()=>{
+  const {values, setValues, handleInputChange} = useForm(initialFormValues)
+  const [login, {data}] = useMutation(SIGN_IN_MUTATION);
+
+  const onClickSubmitHandle = async()=>{
     console.log(values.username);
+
+    const user: LoginUserInput = {
+      password: values.password,
+      username: values.username
+    }
+    
+    const response = await login({ variables: {
+      user: user
+    }});
+
+    localStorage.setItem('accessToken', response.data.login.accessToken);
+    localStorage.setItem('refreshToken', response.data.login.accessToken);
 
   }
 
   return(
     <div className={classes.paper}>
       <Paper>
+
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -56,7 +84,7 @@ export default function SignInForm({ onClickCancelHandle }: any) {
                   type="submit"
                   color="primary"
                   onClick={onClickSubmitHandle}
-                  text="Sign Up"
+                  text="Submit"
               />
               <Typography > Need an account?
                   <Link href="#">

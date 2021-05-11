@@ -6,6 +6,9 @@ import Link from '@material-ui/core/Link';
 import useStyle from './FormStyling';
 import { useForm, Form } from '../../form/UseForm';
 import Controls from '../../controls/Controls';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { useHistory } from "react-router";
+import { RegisterUserInput } from '../../../models/User';
 
 const initialFormValues = {
   username: '',
@@ -13,13 +16,30 @@ const initialFormValues = {
   password: ''
 }
 
+const SIGNUP_MUTATION = gql`
+mutation registerRegularUser($user: RegisterUserInput!) {
+  registerRegularUser(user: $user)
+}`
+
 export default function SignUpForm({ onClickCancelHandle }: any) {
+  const history = useHistory();
   const classes = useStyle();
   const {values, setValues, handleInputChange} = useForm(initialFormValues)
 
-  const onClickSubmitHandle = ()=>{
-    console.log(values.username);
+  const [signup] = useMutation(SIGNUP_MUTATION);
 
+
+  const onClickSubmitHandle = async() =>{
+    console.log(values.username);
+    const user: RegisterUserInput = {
+      username: values.username,
+      password: values.password
+    }
+    const response = await signup({
+      variables: {
+        user: user
+      }
+    })
   }
 
   return(

@@ -36,7 +36,7 @@
     "jwt-decode": "^3.1.2",
     "mysql": "^2.18.1",
     "prettier": "^2.2.1",
-    "redis": "^3.0.2",
+    "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
     "typeorm": "^0.2.30",

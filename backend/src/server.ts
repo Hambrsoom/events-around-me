@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import Express from "express";
 import { createConnection } from "typeorm";
-
+import cors from 'cors';
 import { createSchema } from "./utilities/createSechema";
 import  config  from "../config/config";
 import { runRedis } from "./redis-connection";
@@ -15,6 +15,7 @@ async function main() {
   const app = Express()
 
   app.use("/images", Express.static("images"));
+  app.use("*",cors());
 
   const server = new ApolloServer({
     schema,
@@ -27,7 +28,7 @@ async function main() {
     debug: false
    });
 
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, path:"/graphql" });
 
   createConnection().then(async connection => {
     app.listen(port, () =>

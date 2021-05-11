@@ -13,7 +13,7 @@ import { UserService } from "../services/user/user.service";
 export class EventResolver {
 
   @Query(() => [Event])
-  @Authorized()
+  // @Authorized()
   async getAllEvents(
   ): Promise<Event[]> {
     return await EventService.getAllEvents();

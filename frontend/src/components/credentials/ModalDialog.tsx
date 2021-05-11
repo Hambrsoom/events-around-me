@@ -5,7 +5,6 @@ import SignUpForm from './form/SignUpForm';
 
 export const ModalDialog = ({ openSignIn, openSignUp, onClickCancelHandle }: any) => {
   const ref = useRef<HTMLDivElement>(null);
-  console.log(openSignIn)
   return (
     <div ref={ref}>
       <Dialog open={openSignIn}>

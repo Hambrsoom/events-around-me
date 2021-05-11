@@ -66,15 +66,13 @@ export class UserService {
         username: string,
         password: string
         ): Promise<User> {
-            const user: User = await User.findOne({ where: { username } });
-
-            if (!user) {
+            try {
+                const user: User = await User.findOneOrFail({ where: { username } });
+                UserService.isPasswordValid(user, password);
+                return user;
+            } catch(error) {
                 UserService.loginErrorMessage();
             }
-
-            UserService.isPasswordValid(user, password);
-
-            return user;
     }
 
     public static async storeUserInfoInCache(
@@ -89,6 +87,7 @@ export class UserService {
         password: string
         ): Promise<boolean> {
             const isPasswordValid: boolean = await user.validatePassword(password);
+            console.log(isPasswordValid);
             if (!isPasswordValid) {
                 UserService.loginErrorMessage();
             } else {
