@@ -7,7 +7,7 @@ export default function AlertNotifcation(props: ErrorNotification) {
     const classes = useStyles();
     return (
       <div className={classes.root}>
-        <Alert severity={props.severity}>{props.message}</Alert>
+        <Alert  variant="filled" severity={props.severity}>{props.message}</Alert>
       </div>
     );
   }

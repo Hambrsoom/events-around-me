@@ -12,6 +12,7 @@ import { gql, useMutation } from '@apollo/client';
 import AlertNotifcation from '../alert/Alert';
 import { Severity } from '../../models/ErrorNotification';
 import Controls from '../controls/Controls';
+import MenuNavBar from './menu/Menu';
 const LOGOUT = gql`mutation logout($accessToken: String!){
   logout(
   	accessToken: $accessToken
@@ -42,9 +43,7 @@ export default function ButtonAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
+          <MenuNavBar></MenuNavBar>
           <Typography variant="h6" className={classes.title}>
             Events Around Me
           </Typography>

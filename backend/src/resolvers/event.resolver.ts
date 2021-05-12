@@ -13,7 +13,7 @@ import { UserService } from "../services/user/user.service";
 export class EventResolver {
 
   @Query(() => [Event])
-  // @Authorized()
+  @Authorized()
   async getAllEvents(
   ): Promise<Event[]> {
     return await EventService.getAllEvents();
@@ -40,16 +40,18 @@ export class EventResolver {
   @Mutation(() => Event)
   @Authorized([Role.organizer])
   async addEvent(
-    @Arg("event") { title, url, date, address }: EventInput,
+    @Arg("event") { title, url, date, address, description }: EventInput,
     @Ctx() ctx: Context
     ): Promise<Event> {
-      const user: User = await UserService.getUserByID(ctx.userId);
 
+      console.log("BTEEEEEEEEEEEEEEEEEEEEEEEEE");
+      const user: User = await UserService.getUserByID(ctx.userId);
       let event: Event = new Event();
       event.title = title;
       event.url = url;
       event.address = address;
       event.date = date;
+      event.description = description;
       event.organizer = await OrganizationService.getOrganizationById(user.organization.id);
       return await EventService.saveEvent(event);
   }

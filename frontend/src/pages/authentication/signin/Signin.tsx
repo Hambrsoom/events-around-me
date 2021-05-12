@@ -19,12 +19,13 @@ import { gql, useMutation } from '@apollo/client';
 import AlertNotifcation from '../../../components/alert/Alert';
 import { Severity } from '../../../models/ErrorNotification';
 import useStyles from '../AuthenticationStyling';
+import { ContactSupportOutlined } from '@material-ui/icons';
 
 const initialFormValues = {
     username: '',
     email: '',
     password: ''
-  }
+}
   
   const SIGN_IN_MUTATION = gql`
   mutation login($user: LoginUserInput!) {
@@ -39,7 +40,8 @@ export default function SignIn() {
   const {values, setValues, handleInputChange} = useForm(initialFormValues)
   const [login, {data}] = useMutation(SIGN_IN_MUTATION);
 
-  const onClickSubmitHandle = async()=>{
+  const onClickSubmitHandle = async(e:any)=>{
+      e.preventDefault();
         const user: LoginUserInput = {
           password: values.password,
           username: values.username
@@ -50,11 +52,14 @@ export default function SignIn() {
                 user: user
             }});
 
-            if(response.errors){
+            console.log(response);
+
+            if(response.errors !== undefined){
                 <AlertNotifcation
                 message={response.errors[0].message}
                 severity={Severity.Error}/>
             } else {
+                console.log("Hello world");
                 localStorage.setItem('accessToken', response.data.login.accessToken);
                 localStorage.setItem('refreshToken', response.data.login.refreshToken);
             }

@@ -7,10 +7,10 @@ const useStyles = makeStyles((theme:Theme) =>
         },
         heroContent: {
         backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(8, 0, 6),
+        padding: theme.spacing(12, 0, 6),
         },
         heroButtons: {
-        marginTop: theme.spacing(4),
+        marginTop: theme.spacing(6),
         },
         cardGrid: {
         paddingTop: theme.spacing(8),

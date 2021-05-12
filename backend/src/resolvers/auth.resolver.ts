@@ -37,6 +37,8 @@ export class AuthResolver {
         refreshToken: UserService.getRefreshToken(user.username, user.id)
       };
 
+      console.log("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+
       UserService.storeUserInfoInCache(loginResponse.refreshToken, user.id);
 
       return loginResponse;

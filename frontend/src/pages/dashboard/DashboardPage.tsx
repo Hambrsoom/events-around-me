@@ -46,6 +46,8 @@ export default function DashboardPage() {
         severity={Severity.Error}/>
     }
 
+    console.log(data);
+
     return (    
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
