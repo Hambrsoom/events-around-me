@@ -1,25 +1,19 @@
-import React from 'react';
+import { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Controls from '../../../components/controls/Controls';
 import { useForm, Form } from '../../../components/form/UseForm';
 import { LoginUserInput } from '../../../models/User.Model';
 import { gql, useMutation } from '@apollo/client';
-import AlertNotifcation from '../../../components/alert/Alert';
 import { Severity } from '../../../models/ErrorNotification';
 import useStyles from '../AuthenticationStyling';
-import { ContactSupportOutlined } from '@material-ui/icons';
+import SnackBar from '../../../components/snackbar/SnackBar';
+import { signinMutation } from '../../../graphql/Authentication.graphql';
+import { useHistory } from 'react-router';
 
 const initialFormValues = {
     username: '',
@@ -27,42 +21,35 @@ const initialFormValues = {
     password: ''
 }
   
-  const SIGN_IN_MUTATION = gql`
-  mutation login($user: LoginUserInput!) {
-    login(user: $user){
-      accessToken
-      refreshToken
-    }
-  }`
+const SIGN_IN_MUTATION = signinMutation();
 
 export default function SignIn() {
   const classes = useStyles();
   const {values, setValues, handleInputChange} = useForm(initialFormValues)
   const [login, {data}] = useMutation(SIGN_IN_MUTATION);
+  const [errorMessage, setErrorMessage] = useState('');
+  const history = useHistory();
 
-  const onClickSubmitHandle = async(e:any)=>{
-      e.preventDefault();
-        const user: LoginUserInput = {
-          password: values.password,
-          username: values.username
-        }
-    
-        if(user.username !== '' && user.password !== ''){
-            const response = await login({ variables: {
-                user: user
-            }});
+  const onClickSubmitHandle = async(e:any)=> {
+    e.preventDefault();
+    const user: LoginUserInput = {
+      password: values.password,
+      username: values.username
+    }
+  
+    if(user.username !== '' && user.password !== ''){
+      try{
+        const response = await login({ variables: {
+          user: user
+        }});
 
-            console.log(response);
-
-            if(response.errors !== undefined){
-                <AlertNotifcation
-                message={response.errors[0].message}
-                severity={Severity.Error}/>
-            } else {
-                localStorage.setItem('accessToken', response.data.login.accessToken);
-                localStorage.setItem('refreshToken', response.data.login.refreshToken);
-            }
-        }
+        localStorage.setItem('accessToken', response.data.login.accessToken);
+        localStorage.setItem('refreshToken', response.data.login.refreshToken);
+        history.replace('dashboard');
+      } catch(err) {
+          setErrorMessage(err.message);
+      }
+    }
     }
 
   return (
@@ -85,6 +72,7 @@ export default function SignIn() {
           <Controls.Input
             name="password"
             label="Password"
+            type="password"
             value={values.password}
             onChange={handleInputChange}
             required
@@ -102,6 +90,12 @@ export default function SignIn() {
             </Grid>
         </Form>
       </div>
+      { errorMessage !== ''  && (
+        <SnackBar
+          severity={Severity.Error}
+          message={errorMessage}
+        />
+      )}
     </Container>
   );
   }

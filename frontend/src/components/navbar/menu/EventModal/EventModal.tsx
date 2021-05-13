@@ -1,13 +1,11 @@
-import { Grid, Modal } from '@material-ui/core';
-import React from 'react'
+import { Grid } from '@material-ui/core';
 import Controls from '../../../controls/Controls';
 import { Form, useForm } from '../../../form/UseForm';
-import useStyles from './EventModalStyling';
-import { Address } from '../../../../models/Address.Model';
-import { gql, useMutation } from '@apollo/client';
-import AlertNotifcation from '../../../alert/Alert';
+import { useMutation } from '@apollo/client';
+import SnackBar from '../../../snackbar/SnackBar';
 import { Severity } from '../../../../models/ErrorNotification';
-import jwt_decode from "jwt-decode";
+import MyModal from '../../../modal/MyModal';
+import { addEventMutation } from '../../../../graphql/Event.graphql';
 
 const initialFormValues = {
     title: '',
@@ -18,140 +16,102 @@ const initialFormValues = {
     description: '',
 }
 
-
-const ADD_EVENT = gql`mutation addEvent($event: EventInput!){
-    addEvent(event: $event){
-      title
-    }
-}`
+const ADD_EVENT = addEventMutation();
   
-
-function rand() {
-    return Math.round(Math.random() * 20) - 10;
-}
-  
-function getModalStyle() {
-    const top = 50 + rand();
-    const left = 50 + rand();
-
-    return {
-        top: `${top}%`,
-        left: `${left}%`,
-        transform: `translate(-${top}%, -${left}%)`,
-    };
-}
-
-
-
 export default function EventModal({open, handleClose}:any) {
-    const classes = useStyles();
-    const [modalStyle] = React.useState(getModalStyle);
     const {values, setValues, handleInputChange} = useForm(initialFormValues)
     const [addEvent] = useMutation(ADD_EVENT);
 
-
     const onClickSubmitHandle = async() => {
-        const token: string = localStorage.getItem('accessToken') || '';
-        const decodedToken = (jwt_decode<any>(token))['userId'];
-        console.log(values.description); 
-        const response = await addEvent({ variables: {
-            event: {
-                title: values.title,
-                url: values.url,
-                description: values.description,
-                date: values.date,
-                address: {
-                    street: values.street,
-                    postalCode: values.postalCode
+        try{
+            await addEvent({ variables: {
+                event: {
+                    title: values.title,
+                    url: values.url,
+                    description: values.description,
+                    date: values.date,
+                    address: {
+                        street: values.street,
+                        postalCode: values.postalCode
+                    }
                 }
-            }
-            },
-            context: {
-                userId: decodedToken
-            }
-    });
-    //jwt_decode(localStorage.getItem('accessToken'))['userId']
-        if(response.errors){
-            <AlertNotifcation
-            message={response.errors[0].message}
-            severity={Severity.Error}/>
-        } else {
-            
+                }
+            });
+        } catch(err) {
+            <SnackBar
+                message={err.message}
+                severity={Severity.Error}/>
         }
     }
 
     const body = (
-            <div style={modalStyle} className={classes.paper}>
-                <Form>
-                    <Grid container>
-                        <Grid item xs={6}>
-                            <Controls.Input
-                                name="title"
-                                label="Title"
-                                value={values.title}
-                                onChange={handleInputChange}
-                                autoFocus
-                                required/>
-                            <Controls.Input
-                                name="url"
-                                label="Url"
-                                value={values.url}
-                                onChange={handleInputChange}
-                                required/>
-                            <Controls.Input
-                                name="description"
-                                label="Description"
-                                value={values.description}
-                                onChange={handleInputChange}
-                                multiline
-                                rows={4}
-                                required/>
-                            
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Controls.Input
-                                name="date"
-                                label="Date"
-                                value={values.date}
-                                onChange={handleInputChange}
-                                type="datetime-local"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                required/>
-                            <Controls.Input
-                                name="street"
-                                label="Street"
-                                value={values.street}
-                                onChange={handleInputChange}
-                                required/>
-                            <Controls.Input
-                                name="postalCode"
-                                label="Postal Code"
-                                value={values.postalCode}
-                                onChange={handleInputChange}
-                                required/>
-                        </Grid>
+        <Form>
+            <Grid container>
+                <Grid item xs={6}>
+                    <Controls.Input
+                        name="title"
+                        label="Title"
+                        value={values.title}
+                        onChange={handleInputChange}
+                        autoFocus
+                        required/>
+                    <Controls.Input
+                        name="url"
+                        label="Url"
+                        value={values.url}
+                        onChange={handleInputChange}
+                        required/>
+                    <Controls.Input
+                        name="description"
+                        label="Description"
+                        value={values.description}
+                        onChange={handleInputChange}
+                        multiline
+                        rows={4}
+                        required/>
                     
-                    </Grid>
-                    <Controls.Button  
-                            type="submit"
-                            color="primary"
-                            onClick={onClickSubmitHandle}
-                            text="Submit"
-                    />
-                </Form>
-            </div>
+                </Grid>
+                <Grid item xs={6}>
+                    <Controls.Input
+                        name="date"
+                        label="Date"
+                        value={values.date}
+                        onChange={handleInputChange}
+                        type="datetime-local"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        required/>
+                    <Controls.Input
+                        name="street"
+                        label="Street"
+                        value={values.street}
+                        onChange={handleInputChange}
+                        required/>
+                    <Controls.Input
+                        name="postalCode"
+                        label="Postal Code"
+                        value={values.postalCode}
+                        onChange={handleInputChange}
+                        required/>
+                </Grid>
+            
+            </Grid>
+            <Controls.Button  
+                    type="submit"
+                    color="primary"
+                    onClick={onClickSubmitHandle}
+                    text="Submit"
+            />
+        </Form>
     );
 
     return (
-        <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        <MyModal
+            open={open}
+            handleClose={handleClose}
         >
             {body}
-        </Modal>
+        </MyModal>
     )
 }

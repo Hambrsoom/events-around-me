@@ -13,7 +13,7 @@ const useStyle = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.primary.dark,
     },
     form: {
-      width: '100%', // Fix IE 11 issue.
+      width: '100%',
       marginTop: theme.spacing(1),
     },
     submit: {

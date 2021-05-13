@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import { useState } from 'react';
 import useStyles from './FormStyling';
 
-
-  
 export function useForm(initialFormValues: any) {
     const [values, setValues] = useState(initialFormValues);
 
@@ -23,7 +21,7 @@ export function useForm(initialFormValues: any) {
     }
 }
 
-export  function Form(props: any) {
+export function Form(props: any) {
     const classes = useStyles();
     return (
         <form className ={classes.root}>

@@ -2,25 +2,18 @@ import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './NavBarStyling';
 import { gql, useMutation } from '@apollo/client';
-import AlertNotifcation from '../alert/Alert';
+import SnackBar from '../../components/snackbar/SnackBar';
 import { Severity } from '../../models/ErrorNotification';
 import Controls from '../controls/Controls';
 import MenuNavBar from './menu/Menu';
 import Search from '../../pages/searchPage/Search';
-import { useHistory } from 'react-router';
+import { logoutMutation } from '../../graphql/Authentication.graphql';
 
-const LOGOUT = gql`mutation logout($accessToken: String!){
-  logout(
-  	accessToken: $accessToken
-  )
-}`
+const LOGOUT = logoutMutation();
 
 export default function NavBar() {
   const classes = useStyles();
@@ -29,17 +22,17 @@ export default function NavBar() {
   const [logout] = useMutation(LOGOUT);
 
   const onClickLogoutHandle = async()=>{
-    const response = await logout({ variables: {
+    try{
+      await logout({ variables: {
         accessToken: localStorage.getItem('accessToken')
-    }});
+      }});
 
-    if(response.errors){
-        <AlertNotifcation
-        message={response.errors[0].message}
-        severity={Severity.Error}/>
-    } else {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    } catch(err) {
+        <SnackBar
+          message={err.message}
+          severity={Severity.Error}/>
     }
   }
 
@@ -84,6 +77,5 @@ export default function NavBar() {
         <Search text={searchValue}/>
       )}
     </div>
-
   );
 }

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom';
 import ImageGallery from '../../components/imageGallery/ImageGallery'
 import { gql, useQuery } from '@apollo/client';
-import AlertNotifcation from '../../components/alert/Alert';
 import { Severity } from '../../models/ErrorNotification';
 import Box from '@material-ui/core/Box';
 import { Grid, Typography } from '@material-ui/core';
@@ -10,6 +9,9 @@ import useStyles from './eventStyling';
 import { Event as EventModel } from '../../models/Event.Model';
 import Button from '../../components/controls/Button';
 import UploadImage from '../../components/uploadImage/UploadImage';
+import SnackBar from '../../components/snackbar/SnackBar';
+import { getEventById } from '../../graphql/Event.graphql';
+import Loading from '../../components/loading/Loading';
 
 type Props = RouteComponentProps & {
     match: {
@@ -25,40 +27,18 @@ type Props = RouteComponentProps & {
 export default function Event(props: Props) {
     const eventId = props.match.params.id; 
     const classes = useStyles();
-    const GET_EVENT_BY_ID = gql`
-    query {
-        getEventById(id:"${eventId}"){
-          id
-          title
-              url
-          description
-          address {
-            street
-            postalCode
-            city
-            province
-            country
-          }
-          date
-          images {
-            path
-          }
-        }
-    }`
-
-    
-
+    const GET_EVENT_BY_ID = getEventById(eventId);
 
     const {loading, error, data} = useQuery(GET_EVENT_BY_ID);
     const [openUploadImageModal, setOpenUploadImageModal] = useState(false);
-    if (loading) return <p>Loading...</p>
+
+    if(loading) return <Loading/>
 
     if(error) {
-      return <AlertNotifcation
+      return <SnackBar
         message={error.message}
         severity={Severity.Error}/>
     }
-
 
     const event: EventModel = data.getEventById;
 

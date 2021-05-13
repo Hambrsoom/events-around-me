@@ -1,13 +1,7 @@
-import React from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 import useStyles from './ImageGalleryStyling';
 import { Image } from '../../models/Image.Model';
-import Box from '@material-ui/core/Box';
 
 interface Props {
     images: Image[]
@@ -15,7 +9,6 @@ interface Props {
 
 export default function ImageGallery(props: Props) {
   const classes = useStyles();
-
 
   return (
     <div>
@@ -30,7 +23,7 @@ export default function ImageGallery(props: Props) {
                 </GridList>
             </div>
         :
-            <div>There are not any images</div>
+            <h1>There are not any images</h1>
         }
     </div>
   );
