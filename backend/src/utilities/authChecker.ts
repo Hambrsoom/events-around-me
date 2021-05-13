@@ -8,8 +8,6 @@ import { Context } from "vm";
 
 const checkJwt: any =
   (authorization) => {
-    console.log("authorization");
-    console.log(authorization);
     if (!authorization) {
       ErrorMessage.notAuthenticatedErrorMessage();
     }
@@ -27,8 +25,6 @@ const checkJwt: any =
 export const customAuthChecker: AuthChecker<Context> = async(
   { context }, roles) => {
     context.payload = checkJwt(context.jwt);
-    console.log("Auth Checker");
-    console.log(context.jwt);
     const user: User = await UserService.getUserByID(context.userId);
 
     if(roles.length > 0 && !roles.includes(user.role)) {

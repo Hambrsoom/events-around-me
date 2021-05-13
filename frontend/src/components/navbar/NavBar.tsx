@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -13,14 +13,18 @@ import AlertNotifcation from '../alert/Alert';
 import { Severity } from '../../models/ErrorNotification';
 import Controls from '../controls/Controls';
 import MenuNavBar from './menu/Menu';
+import Search from '../../pages/searchPage/Search';
+import { useHistory } from 'react-router';
+
 const LOGOUT = gql`mutation logout($accessToken: String!){
   logout(
   	accessToken: $accessToken
   )
 }`
 
-export default function ButtonAppBar() {
+export default function NavBar() {
   const classes = useStyles();
+  const [searchValue, setSearchValue] = useState('');
 
   const [logout] = useMutation(LOGOUT);
 
@@ -36,6 +40,14 @@ export default function ButtonAppBar() {
     } else {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+    }
+  }
+
+  const onSearchChange = (e: any) => {
+    if(e.target.value !== '') {
+      setSearchValue(e.target.value);
+    } else {
+      window.location.reload(false);
     }
   }
 
@@ -58,6 +70,8 @@ export default function ButtonAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              name="Search"
+              onChange = {(e)=>onSearchChange(e)}
             />
           </div>
           <Controls.Button
@@ -66,6 +80,10 @@ export default function ButtonAppBar() {
           text="Logout"/>
         </Toolbar>
       </AppBar>
+      {searchValue && (
+        <Search text={searchValue}/>
+      )}
     </div>
+
   );
 }

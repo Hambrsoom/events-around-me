@@ -1,4 +1,4 @@
-import { Query, Resolver, Arg, Authorized } from "type-graphql";
+import { Query, Resolver, Arg, Authorized, Mutation } from "type-graphql";
 import { Event } from "../entities/event.entity";
 import { SearchService } from "../services/search.service";
 

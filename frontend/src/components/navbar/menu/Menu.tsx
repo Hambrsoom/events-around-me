@@ -6,9 +6,11 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Modal from '@material-ui/core/Modal';
 import EventModal from './EventModal/EventModal';
+import { useHistory } from 'react-router-dom';
 
 export default function MenuNavBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  let history = useHistory();
 
   const [open, setOpen] = React.useState(false);
 
@@ -27,7 +29,13 @@ export default function MenuNavBar() {
 
   const handleCloseCreateEventModal = () => {
     setOpen(false);
+    setAnchorEl(null);
   };
+
+  const handleOpenRedirect = (path: string) => {
+    history.replace(`${path}`);
+    setAnchorEl(null);
+  }
 
 
   
@@ -45,6 +53,8 @@ export default function MenuNavBar() {
             onClose={handleClose}
         >
             <MenuItem onClick={handleOpenCreateEventModal}>Create Event</MenuItem>
+            <MenuItem onClick={() => handleOpenRedirect("/dashboard")}>Dashboard</MenuItem>
+            <MenuItem onClick={() => handleOpenRedirect("/map")}>Map</MenuItem>
         </Menu>
 
         <EventModal open={open} handleClose={handleCloseCreateEventModal}></EventModal>

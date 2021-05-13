@@ -59,7 +59,6 @@ export default function SignIn() {
                 message={response.errors[0].message}
                 severity={Severity.Error}/>
             } else {
-                console.log("Hello world");
                 localStorage.setItem('accessToken', response.data.login.accessToken);
                 localStorage.setItem('refreshToken', response.data.login.refreshToken);
             }

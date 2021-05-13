@@ -11,8 +11,10 @@ export class SearchService {
             if(events !== undefined && events.length > 0) {
                 return events;
             } else {
-                return await Event.createQueryBuilder()
+                return await Event.createQueryBuilder("event")
                 .select()
+                .leftJoinAndSelect("event.address","address")
+                .leftJoinAndSelect("event.images","images")
                 .where("(title LIKE :title AND date > :date)",
                 {title: `%${text}%`, date: new Date()})
                 .getMany();

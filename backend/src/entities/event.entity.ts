@@ -21,7 +21,7 @@ export class Event extends BaseEntity {
     url: string;
 
     @Field()
-    @Column({nullable: true})
+    @Column({nullable: true, type: "mediumtext"})
     description: string;
 
     @Field(() =>  Address)

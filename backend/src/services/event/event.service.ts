@@ -59,7 +59,6 @@ export class EventService {
             where: { id: eventId },
             relations:["address", "images", "organizer"]
           });
-          console.log(event);
           EventCashingService.setNotUpToDate();
 
           return event;

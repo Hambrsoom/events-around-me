@@ -44,7 +44,6 @@ export class EventResolver {
     @Ctx() ctx: Context
     ): Promise<Event> {
 
-      console.log("BTEEEEEEEEEEEEEEEEEEEEEEEEE");
       const user: User = await UserService.getUserByID(ctx.userId);
       let event: Event = new Event();
       event.title = title;

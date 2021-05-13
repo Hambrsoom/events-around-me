@@ -17,7 +17,7 @@ export class ImageResolver {
     ): Promise<boolean> {
       for (let picture of pictures) {
         const uploadedPicture: IUpload = await picture;
-          ImageService.uploadImage(uploadedPicture, eventId);
+        await ImageService.uploadImage(uploadedPicture, eventId);
       }
       return true;
   }
