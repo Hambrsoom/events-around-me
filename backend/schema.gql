@@ -46,7 +46,7 @@ type Event {
 input EventInput {
   address: AddressInput
   date: DateTime
-  description: String!
+  description: String
   title: String
   url: String
 }

@@ -1,4 +1,4 @@
-import { Organization } from "../entities/organization.entity";
+import { Organization, OrganizationInput } from "../entities/organization.entity";
 import { ErrorMessage } from "../utilities/error-message";
 
 export class OrganizationService {
@@ -24,10 +24,34 @@ export class OrganizationService {
     }
 
     public static async saveOrganization(
-        organization: Organization
+        { name, url, address }: OrganizationInput,
         ): Promise<Organization> {
+            try {
+                const organization: Organization = await Organization.create({
+                    name,
+                    url,
+                    address
+                }).save();
+                return organization;
+            } catch(err) {
+                ErrorMessage.failedToStoreErrorMessage("organization");
+            }
+    }
 
-        try {
+    public static async editOrganizationById(
+        { name, url, address }: OrganizationInput,
+        organizationId: string
+    ): Promise<Organization> {
+        try{
+            let organization: Organization = await OrganizationService.getOrganizationById(organizationId);
+
+            organization.name = name || organization.name;
+            organization.url = url || organization.url;
+
+            if (address && !organization.address.equal(address)) {
+                organization.address = address;
+                organization.address.id = organization.address.id;
+            }
             return await Organization.save(organization);
         } catch(err) {
             ErrorMessage.failedToStoreErrorMessage("organization");

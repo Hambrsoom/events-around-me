@@ -69,9 +69,21 @@ export class EventService {
   }
 
   public static async saveEvent(
-    event: Event
+    {title, url, date, address, description}: any,
+    organizerId: string
     ): Promise<Event> {
+      const organizer: Organization = await OrganizationService.getOrganizationById(organizerId);
+      
       try {
+        const event:Event = await Event.create({
+          title,
+          url,
+          address,
+          date,
+          description,
+          organizer
+        });
+
         const newEvent: Event = await Event.save(event);
         EventCashingService.setNotUpToDate();
 
@@ -79,6 +91,31 @@ export class EventService {
       } catch(err) {
         ErrorMessage.failedToStoreErrorMessage("event");
       }
+  }
+
+  public static async editEventById(
+    {title, url, date, address, description}: any,
+    eventId: string
+    ) {
+      try {
+        let event: Event = await EventService.getEventById(eventId);
+        event.title = title || event.title;
+        event.url = url || event.url;
+        event.date = date || event.date;
+        event.description = description || event.description;
+
+        if (address && !event.address.equal(address)) {
+            event.address = address;
+            event.address.id = event.address.id;
+        }
+
+        const newEvent: Event = await Event.save(event);
+        EventCashingService.setNotUpToDate();
+
+        return newEvent;
+    } catch(err) {
+      ErrorMessage.failedToStoreErrorMessage("event");
+    }
   }
 
   public static async getAllEventsOfUser(
@@ -104,8 +141,8 @@ export class EventService {
       if(user.role === Role.organizer) {
           const organization: Organization = await OrganizationService.getOrganizationById(user.organization.id);
 
-          const event: Event = organization.events.find(event => event.id === eventId);
-
+          const event: Event = organization.events.find(event => event.id == eventId);
+          console.log(event);
           if(event === undefined) {
             ErrorMessage.forbiddenErrorForOwnership(eventId, "event");
           }

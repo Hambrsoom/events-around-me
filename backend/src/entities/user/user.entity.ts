@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, BeforeInsert } from "typeorm";
 import { Length } from "class-validator";
 import * as bcrypt from "bcryptjs";
 
@@ -19,11 +19,11 @@ export class User extends BaseEntity {
     @Column({unique: true, nullable: false})
     username: string;
 
-    @Column({nullable: false})
+    @Column("text", {nullable: false})
     password: string;
 
     @Column({nullable: false})
-    salt: string;
+    salt?: string;
 
     @Field()
     @Column({default: Role.regular})
@@ -38,7 +38,9 @@ export class User extends BaseEntity {
     organization?: Organization;
 
 
-    hashPassword(): void {
+    @BeforeInsert()
+    async hashPassword(): Promise<void> {
+        this.salt = await bcrypt.genSalt();
         this.password = bcrypt.hashSync(this.password, this.salt);
     }
 

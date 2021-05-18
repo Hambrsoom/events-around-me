@@ -1,6 +1,5 @@
 import { Resolver, Mutation, Arg, Authorized, UseMiddleware } from "type-graphql";
 import { GraphQLUpload } from "apollo-server-express";
-
 import { IUpload } from "../types/upload";
 import { ImageService } from "../services/image.service";
 import { Role } from "../entities/user/user-role.enum";

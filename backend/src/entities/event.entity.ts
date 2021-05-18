@@ -59,6 +59,6 @@ export class EventInput implements Partial<Event> {
     @Field(() =>  AddressInput, {nullable: true})
     address: AddressInput;
 
-    @Field()
+    @Field({nullable: true})
     description: string;
 }

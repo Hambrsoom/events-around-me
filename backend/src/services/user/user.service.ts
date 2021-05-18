@@ -1,20 +1,35 @@
 import { sign } from "jsonwebtoken";
-import { User } from "../../entities/user/user.entity";
-import config from "../../../config/config";
+import { LoginUserInput, User } from "../../entities/user/user.entity";
 import { UserCashingService } from "./user-cashing.service";
-import { Role } from "../../entities/user/user-role.enum";
-import bcrypt from "bcrypt";
 import { ErrorMessage } from "../../utilities/error-message";
 import { UserInputError } from "apollo-server-express";
+import { LoginResponse } from "../../resolvers/auth.resolver";
+import { getUserIdFromJwt, getUsernameFromJwt } from "../../utilities/decoding-jwt";
+import { Role } from "../../entities/user/user-role.enum";
 
 export class UserService {
+    public static async login(
+        loginUserInput: LoginUserInput
+        ): Promise<LoginResponse> {
+            const user: User = await UserService.getUserByUsernameAndPassword(loginUserInput.username, loginUserInput.password);
+
+            let loginResponse: LoginResponse = {
+                accessToken: UserService.getAccessToken(user.username, user.id),
+                refreshToken: UserService.getRefreshToken(user.username, user.id)
+            };
+
+            UserService.storeUserInfoInCache(loginResponse.refreshToken, user.id);
+
+            return loginResponse;
+    }
+
     public static getAccessToken(
         username: string,
         userId: string
         ): string {
             return sign(
                   { userId: userId, username: username },
-                  config.accessTokenSecretKey,
+                  process.env.ACCESS_TOKEN_SECRET,
                   { expiresIn: "1h"}
             );
     }
@@ -25,26 +40,40 @@ export class UserService {
         ): string {
             return sign(
                   { userId: userId, username: username },
-                  config.refreshTokenSecretKey
+                  process.env.REFRESH_TOKEN_SECRET
             );
+    }
+
+
+    public static async getNewAccessToken(
+        refreshToken: string
+        ): Promise<LoginResponse> {
+            const userId: string = getUserIdFromJwt(refreshToken);
+            const username: string = getUsernameFromJwt(refreshToken);
+
+            if(await UserCashingService.isrefreshTokenValid(userId, refreshToken)) {
+                let loginResponse: LoginResponse = {
+                    accessToken: UserService.getAccessToken(username, userId)
+                };
+                return loginResponse;
+            } else {
+                ErrorMessage.notAutherizedErrorMessage();
+            }
     }
 
     public static async saveUser(
         username: string,
-        password: string
+        password: string,
+        role: Role = Role.regular
         ): Promise<User> {
-            let user:User = new User();
-            user.username = username;
-            user.password = password;
-            user.role = Role.regular;
-
-            const salt:any = await bcrypt.genSalt();
-            user.salt = salt;
-
-            user.hashPassword();
-
             try {
-                return await User.save(user);
+                const user: User = await User.create({
+                    username,
+                    password,
+                    role
+                }).save();
+
+                return user;
             } catch (err) {
                 ErrorMessage.failedToStoreErrorMessage("user");
             }
@@ -67,7 +96,9 @@ export class UserService {
         password: string
         ): Promise<User> {
             try {
-                const user: User = await User.findOneOrFail({ where: { username } });
+                const user: User = await User.findOneOrFail({
+                     where: { username }
+                });
                 UserService.isPasswordValid(user, password);
                 return user;
             } catch(error) {
