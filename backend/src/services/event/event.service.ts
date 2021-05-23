@@ -11,9 +11,8 @@ import { ICoordinates } from "../../types/coordinates";
 import { NotFoundError } from "../../error-handlers/not-found.error-handler";
 import { StoringError } from "../../error-handlers/storing.error-handler";
 import { ForbiddenForOwnershipError } from "../../error-handlers/ownership.error-handler";
-import { Edge, EventsCursorResult } from "../../types/pagination";
-import { UserInputError } from "../../error-handlers/input.error-handler";
-import { PageInfo } from "../../types/pagination";
+import { PaginatedEventResponse } from "../../resolvers/event.resolver";
+import { PaginationService } from "../pagination.service";
 
 export class EventService {
   public static async getAllEvents(
@@ -33,52 +32,11 @@ export class EventService {
       }
   }
 
-  public static async getAllEventsCursor (after: string, first: number): Promise<EventsCursorResult> {
-    if (first < 0) {
-      throw new UserInputError("First must be positive");
-    }
+  public static async getAllEventsCursor (after: string, first: number): Promise<PaginatedEventResponse> {
 
     const eventsFromDatabase: Event[] = await EventService.getAllEvents();
 
-    const totalCount: number = eventsFromDatabase.length;
-    let events: Event[] = [];
-    let start: number = 0;
-
-    if (after !== undefined) {
-      const index: number = eventsFromDatabase.findIndex((event) => event.id == after);
-      if (index === -1) {
-        throw new UserInputError("After does not exist");
-      }
-      start = index + 1;
-    }
-    events = first === undefined ?
-      eventsFromDatabase :
-      eventsFromDatabase.slice(start, start + first);
-    let endCursor: string;
-
-    const edges: Edge[] = events.map((event) => {
-      endCursor = event.id;
-      return ({
-        cursor: endCursor,
-        node: event
-      });
-    });
-    const hasNextPage: boolean = start + first < totalCount;
-    const pageInfo: PageInfo = endCursor !== undefined ?
-      {
-        endCursor,
-        hasNextPage,
-      } :
-      {
-        hasNextPage,
-      };
-
-    const result: EventsCursorResult = {
-      edges,
-      pageInfo,
-      totalCount,
-    };
-    return result;
+    return PaginationService.getElements(after, first, eventsFromDatabase);
   };
 
 
@@ -141,7 +99,7 @@ export class EventService {
     organizerId: string
     ): Promise<Event> {
       const organizer: Organization = await OrganizationService.getOrganizationById(organizerId);
-      
+
       try {
         const event:Event = await Event.create({
           title,

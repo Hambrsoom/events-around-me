@@ -1,4 +1,4 @@
-import { Query, Resolver, Mutation, Arg, UseMiddleware, ID, Authorized, Ctx } from "type-graphql";
+import { Query, Resolver, Mutation, Arg, UseMiddleware, ID, Authorized, Ctx, ObjectType, Field } from "type-graphql";
 import { Context } from "vm";
 import { Event, EventInput } from "../entities/event.entity";
 import { Role } from "../entities/user/user-role.enum";
@@ -7,7 +7,13 @@ import { isEventOwner } from "../middlewares/isOwner";
 import { EventService } from "../services/event/event.service";
 import { UserService } from "../services/user/user.service";
 import { ICoordinates } from "../types/coordinates";
-import { CursorInput, EventsCursorResult } from "../types/pagination";
+import { CursorInput } from "../types/pagination/cursor-input.type";
+import { PaginatedResponse } from "../types/pagination/pagination-response.type";
+
+
+@ObjectType()
+export class PaginatedEventResponse extends PaginatedResponse(Event) {
+}
 
 @Resolver(() => Event)
 export class EventResolver {
@@ -19,13 +25,12 @@ export class EventResolver {
     return await EventService.getAllEvents();
   }
 
-  @Query(() => EventsCursorResult)
+  @Query(() => PaginatedEventResponse)
   // @Authorized()
   async getAllEventsCursor(
     @Arg("cursor") {after, first }: CursorInput
-  ): Promise<EventsCursorResult> {
+  ): Promise<PaginatedEventResponse> {
     return await EventService.getAllEventsCursor(after, first);
-    // return await EventService.getAllEvents();
   }
 
 

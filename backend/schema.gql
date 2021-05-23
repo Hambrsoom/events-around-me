@@ -38,7 +38,7 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
-type Edge {
+type EdgeClass {
   cursor: String!
   node: Event!
 }
@@ -60,12 +60,6 @@ input EventInput {
   description: String
   title: String
   url: String
-}
-
-type EventsCursorResult {
-  edges: [Edge!]!
-  pageInfo: PageInfo!
-  totalCount: Float!
 }
 
 input ICoordinates {
@@ -120,13 +114,19 @@ type PageInfo {
   hasNextPage: Boolean!
 }
 
+type PaginatedEventResponse {
+  edges: [EdgeClass!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
 enum Province {
   Quebec
 }
 
 type Query {
   getAllEvents: [Event!]!
-  getAllEventsCursor(cursor: CursorInput!): EventsCursorResult!
+  getAllEventsCursor(cursor: CursorInput!): PaginatedEventResponse!
   getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
   getEventsAtDistance(distance: Float!): [Event!]!
