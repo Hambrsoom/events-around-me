@@ -6,9 +6,14 @@ import { UserService } from "../user/user.service";
 import { MoreThan } from "typeorm";
 import { Role } from "../../entities/user/user-role.enum";
 import { OrganizationService } from "../organization.service";
-import { ErrorMessage } from "../../utilities/error-message";
 import { MapService } from "../map/map.service";
 import { ICoordinates } from "../../types/coordinates";
+import { NotFoundError } from "../../error-handlers/not-found.error-handler";
+import { StoringError } from "../../error-handlers/storing.error-handler";
+import { ForbiddenForOwnershipError } from "../../error-handlers/ownership.error-handler";
+import { Edge, EventsCursorResult } from "../../types/pagination";
+import { UserInputError } from "../../error-handlers/input.error-handler";
+import { PageInfo } from "../../types/pagination";
 
 export class EventService {
   public static async getAllEvents(
@@ -27,6 +32,55 @@ export class EventService {
         return events;
       }
   }
+
+  public static async getAllEventsCursor (after: string, first: number): Promise<EventsCursorResult> {
+    if (first < 0) {
+      throw new UserInputError("First must be positive");
+    }
+
+    const eventsFromDatabase: Event[] = await EventService.getAllEvents();
+
+    const totalCount: number = eventsFromDatabase.length;
+    let events: Event[] = [];
+    let start: number = 0;
+
+    if (after !== undefined) {
+      const index: number = eventsFromDatabase.findIndex((event) => event.id == after);
+      if (index === -1) {
+        throw new UserInputError("After does not exist");
+      }
+      start = index + 1;
+    }
+    events = first === undefined ?
+      eventsFromDatabase :
+      eventsFromDatabase.slice(start, start + first);
+    let endCursor: string;
+
+    const edges: Edge[] = events.map((event) => {
+      endCursor = event.id;
+      return ({
+        cursor: endCursor,
+        node: event
+      });
+    });
+    const hasNextPage: boolean = start + first < totalCount;
+    const pageInfo: PageInfo = endCursor !== undefined ?
+      {
+        endCursor,
+        hasNextPage,
+      } :
+      {
+        hasNextPage,
+      };
+
+    const result: EventsCursorResult = {
+      edges,
+      pageInfo,
+      totalCount,
+    };
+    return result;
+  };
+
 
   public static async getEventsAtDistnace(
     userCoordinates: ICoordinates,
@@ -77,7 +131,7 @@ export class EventService {
 
           return event;
         } catch(err) {
-          ErrorMessage.notFoundErrorMessage(eventId, "event");
+          throw new NotFoundError(eventId, "event");
         }
       }
   }
@@ -103,7 +157,7 @@ export class EventService {
 
         return newEvent;
       } catch(err) {
-        ErrorMessage.failedToStoreErrorMessage("event");
+        throw new StoringError("event");
       }
   }
 
@@ -128,7 +182,7 @@ export class EventService {
 
         return newEvent;
     } catch(err) {
-      ErrorMessage.failedToStoreErrorMessage("event");
+      throw new StoringError("event");
     }
   }
 
@@ -142,7 +196,7 @@ export class EventService {
         });
         return organization.events;
       } catch(err) {
-        ErrorMessage.notFoundErrorMessage(user.organization.id, "organization");
+        throw new NotFoundError(user.organization.id, "organization");
       }
   }
 
@@ -156,9 +210,9 @@ export class EventService {
           const organization: Organization = await OrganizationService.getOrganizationById(user.organization.id);
 
           const event: Event = organization.events.find(event => event.id == eventId);
-          console.log(event);
+
           if(event === undefined) {
-            ErrorMessage.forbiddenErrorForOwnership(eventId, "event");
+            throw new ForbiddenForOwnershipError(eventId, "event");
           }
 
           return true;

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { IsDate, IsUrl, Length, MaxLength } from "class-validator";
+import { IsDate, IsUrl, Length, ValidateNested } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { Address, AddressInput } from "./address/address.entity";
 import { Organization } from "./organization.entity";
@@ -57,6 +57,7 @@ export class EventInput implements Partial<Event> {
     date: Date;
 
     @Field(() =>  AddressInput, {nullable: true})
+    @ValidateNested()
     address: AddressInput;
 
     @Field({nullable: true})

@@ -1,11 +1,14 @@
+import { ForbiddenError, UserInputError } from "apollo-server-errors";
 import { createWriteStream } from "fs";
 import config  from "../../config/config";
 import { Event } from "../entities/event.entity";
 import { Image } from "../entities/image.entity";
 import { Role } from "../entities/user/user-role.enum";
 import { User } from "../entities/user/user.entity";
+import { NotFoundError } from "../error-handlers/not-found.error-handler";
+import { ForbiddenForOwnershipError } from "../error-handlers/ownership.error-handler";
+import { StoringError } from "../error-handlers/storing.error-handler";
 import { IUpload } from "../types/upload";
-import { ErrorMessage } from "../utilities/error-message";
 import { isImage } from "../utilities/isImage";
 import { EventService } from "./event/event.service";
 import { UserService } from "./user/user.service";
@@ -19,7 +22,7 @@ export class ImageService {
             try {
                 return await Image.findByIds(imageIds);
             } catch(err) {
-                ErrorMessage.notFoundErrorMessage(JSON.stringify(imageIds), "images");
+                throw new NotFoundError(JSON.stringify(imageIds), "images");
             }
     }
 
@@ -28,7 +31,7 @@ export class ImageService {
         eventId:string
         ): Promise<void> {
             if(!isImage(uploadedPicture.filename)) {
-                ErrorMessage.userInputErrorMessage("Only image files are allowed!");
+                throw new UserInputError("Only image files are allowed!");
             } else {
                 const path: string = `${process.cwd()}\\images\\${uploadedPicture.filename}`;
                 await ImageService.addSingleImageToEvent(uploadedPicture.filename, eventId);
@@ -53,7 +56,7 @@ export class ImageService {
                 image.event = event;
                 return Image.save(image);
             } catch (err) {
-                ErrorMessage.failedToStoreErrorMessage("image");
+                throw new StoringError("image");
             }
     }
 
@@ -101,7 +104,7 @@ export class ImageService {
                 for(let imageID of imageIds) {
                     const isImageOwner: boolean = await ImageService.isImageBelongToOneOfEvents(eventIds, imageID);
                     if(!isImageOwner) {
-                        ErrorMessage.forbiddenErrorForOwnership(imageID, "image");
+                        throw new ForbiddenForOwnershipError(imageID, "image");
                     }
                 }
             }

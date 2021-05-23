@@ -1,5 +1,6 @@
 import { Organization, OrganizationInput } from "../entities/organization.entity";
-import { ErrorMessage } from "../utilities/error-message";
+import { NotFoundError } from "../error-handlers/not-found.error-handler";
+import { StoringError } from "../error-handlers/storing.error-handler";
 
 export class OrganizationService {
     public static async getOrganizationById(
@@ -12,7 +13,7 @@ export class OrganizationService {
                 relations: ["address", "events"]
             });
         } catch(err) {
-            ErrorMessage.notFoundErrorMessage(organizationId, "organization");
+            throw new NotFoundError(organizationId, "organization");
         }
     }
 
@@ -34,7 +35,7 @@ export class OrganizationService {
                 }).save();
                 return organization;
             } catch(err) {
-                ErrorMessage.failedToStoreErrorMessage("organization");
+                throw new StoringError("organization");
             }
     }
 
@@ -54,7 +55,7 @@ export class OrganizationService {
             }
             return await Organization.save(organization);
         } catch(err) {
-            ErrorMessage.failedToStoreErrorMessage("organization");
+            throw new StoringError("organization");
         }
     }
 }

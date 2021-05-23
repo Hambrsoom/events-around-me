@@ -1,12 +1,14 @@
 import { sign } from "jsonwebtoken";
 import { LoginUserInput, User } from "../../entities/user/user.entity";
 import { UserCashingService } from "./user-cashing.service";
-import { ErrorMessage } from "../../utilities/error-message";
-import { UserInputError } from "apollo-server-express";
+import { UserInputError } from "../../error-handlers/input.error-handler";
 import { LoginResponse } from "../../resolvers/auth.resolver";
 import { getUserIdFromJwt, getUsernameFromJwt } from "../../utilities/decoding-jwt";
 import { Role } from "../../entities/user/user-role.enum";
 import { verify } from "jsonwebtoken";
+import { NotAuthenticatedError, NotAuthorizedError } from "../../error-handlers/authentication.error-handler";
+import { StoringError } from "../../error-handlers/storing.error-handler";
+import { NotFoundError } from "../../error-handlers/not-found.error-handler";
 
 export class UserService {
     public static async login(
@@ -66,7 +68,7 @@ export class UserService {
                 };
                 return loginResponse;
             } else {
-                ErrorMessage.notAutherizedErrorMessage();
+                throw new NotAuthorizedError();
             }
     }
 
@@ -84,7 +86,7 @@ export class UserService {
 
                 return user;
             } catch (err) {
-                ErrorMessage.failedToStoreErrorMessage("user");
+                throw new StoringError("user");
             }
     }
 
@@ -96,7 +98,7 @@ export class UserService {
                     relations: ["organization"]
                 });
             } catch(err) {
-                ErrorMessage.notFoundErrorMessage(userId, "user");
+                throw new NotFoundError(userId, "user");
             }
     }
 
@@ -141,7 +143,7 @@ export class UserService {
             if(await UserCashingService.isUserExist(userId) !== 0) {
                 return await UserCashingService.removeUser(userId);
             } else {
-                ErrorMessage.notAuthenticatedErrorMessage();
+                throw new NotAuthenticatedError();
             }
     }
 

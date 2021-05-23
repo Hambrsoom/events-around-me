@@ -28,10 +28,20 @@ enum Country {
   Canada
 }
 
+input CursorInput {
+  after: ID
+  first: Float
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+type Edge {
+  cursor: String!
+  node: Event!
+}
 
 type Event {
   address: Address!
@@ -50,6 +60,12 @@ input EventInput {
   description: String
   title: String
   url: String
+}
+
+type EventsCursorResult {
+  edges: [Edge!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
 }
 
 input ICoordinates {
@@ -99,12 +115,18 @@ input OrganizationInput {
   url: String
 }
 
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+}
+
 enum Province {
   Quebec
 }
 
 type Query {
   getAllEvents: [Event!]!
+  getAllEventsCursor(cursor: CursorInput!): EventsCursorResult!
   getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
   getEventsAtDistance(distance: Float!): [Event!]!

@@ -3,11 +3,11 @@ import { ApolloServer } from "apollo-server-express";
 import Express from "express";
 import { createConnection } from "typeorm";
 import cors from "cors";
-import { createSchema } from "./utilities/createSechema";
+import { createSchema } from "./utilities/server/createSechema";
 import  config  from "../config/config";
 import { runRedis } from "./redis-connection";
 import { getUserIdFromJwt } from "./utilities/decoding-jwt";
-import { validationRules } from "./utilities/queryComplexity";
+import { validationRules } from "./utilities/server/queryComplexity";
 
 const port: number = config.appPort || 5000;
 

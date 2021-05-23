@@ -7,19 +7,30 @@ import { isEventOwner } from "../middlewares/isOwner";
 import { EventService } from "../services/event/event.service";
 import { UserService } from "../services/user/user.service";
 import { ICoordinates } from "../types/coordinates";
+import { CursorInput, EventsCursorResult } from "../types/pagination";
 
 @Resolver(() => Event)
 export class EventResolver {
 
   @Query(() => [Event])
-  // @Authorized()
+  @Authorized()
   async getAllEvents(
   ): Promise<Event[]> {
     return await EventService.getAllEvents();
   }
 
-  @Query(() => [Event])
+  @Query(() => EventsCursorResult)
   // @Authorized()
+  async getAllEventsCursor(
+    @Arg("cursor") {after, first }: CursorInput
+  ): Promise<EventsCursorResult> {
+    return await EventService.getAllEventsCursor(after, first);
+    // return await EventService.getAllEvents();
+  }
+
+
+  @Query(() => [Event])
+  @Authorized()
   async getEventsAtDistnace(
     @Arg("desiredDistanceInKm") desiredDistanceInKm: number,
     @Arg("userCoordinates") userCoordinates: ICoordinates
