@@ -125,10 +125,9 @@ enum Province {
 }
 
 type Query {
-  getAllEvents: [Event!]!
-  getAllEventsCursor(cursor: CursorInput!): PaginatedEventResponse!
   getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
+  getEvents(cursor: CursorInput!): PaginatedEventResponse!
   getEventsAtDistance(distance: Float!): [Event!]!
   getEventsAtDistnace(desiredDistanceInKm: Float!, userCoordinates: ICoordinates!): [Event!]!
   getNewAccessToken(refreshToken: String!): LoginResponse!

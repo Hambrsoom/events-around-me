@@ -6,7 +6,7 @@ import { User } from "../entities/user/user.entity";
 import { isEventOwner } from "../middlewares/isOwner";
 import { EventService } from "../services/event/event.service";
 import { UserService } from "../services/user/user.service";
-import { ICoordinates } from "../types/coordinates";
+import { ICoordinates } from "../types/coordinates.types";
 import { CursorInput } from "../types/pagination/cursor-input.type";
 import { PaginatedResponse } from "../types/pagination/pagination-response.type";
 
@@ -18,16 +18,9 @@ export class PaginatedEventResponse extends PaginatedResponse(Event) {
 @Resolver(() => Event)
 export class EventResolver {
 
-  @Query(() => [Event])
-  @Authorized()
-  async getAllEvents(
-  ): Promise<Event[]> {
-    return await EventService.getAllEvents();
-  }
-
   @Query(() => PaginatedEventResponse)
   // @Authorized()
-  async getAllEventsCursor(
+  async getEvents(
     @Arg("cursor") {after, first }: CursorInput
   ): Promise<PaginatedEventResponse> {
     return await EventService.getAllEventsCursor(after, first);

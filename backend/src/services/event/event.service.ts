@@ -7,7 +7,7 @@ import { MoreThan } from "typeorm";
 import { Role } from "../../entities/user/user-role.enum";
 import { OrganizationService } from "../organization.service";
 import { MapService } from "../map/map.service";
-import { ICoordinates } from "../../types/coordinates";
+import { ICoordinates } from "../../types/coordinates.types";
 import { NotFoundError } from "../../error-handlers/not-found.error-handler";
 import { StoringError } from "../../error-handlers/storing.error-handler";
 import { ForbiddenForOwnershipError } from "../../error-handlers/ownership.error-handler";

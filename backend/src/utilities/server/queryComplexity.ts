@@ -5,7 +5,7 @@ import queryComplexity, {
 
 export const validationRules: any =  [
     queryComplexity({
-      maximumComplexity: 150,
+      maximumComplexity: 20,
       variables: {},
       onComplete: (complexity: number) => {
         console.log("Query Complexity:", complexity);

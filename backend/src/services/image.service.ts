@@ -8,7 +8,7 @@ import { User } from "../entities/user/user.entity";
 import { NotFoundError } from "../error-handlers/not-found.error-handler";
 import { ForbiddenForOwnershipError } from "../error-handlers/ownership.error-handler";
 import { StoringError } from "../error-handlers/storing.error-handler";
-import { IUpload } from "../types/upload";
+import { IUpload } from "../types/upload.type";
 import { isImage } from "../utilities/isImage";
 import { EventService } from "./event/event.service";
 import { UserService } from "./user/user.service";

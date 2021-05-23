@@ -1,6 +1,6 @@
 import distance from "google-distance-matrix";
 import { Event } from "../../entities/event.entity";
-import IResult from "../../types/google_maps_matrix_results";
+import IResult from "../../types/google_maps_matrix_results.type";
 
 export class MapService {
     public static async getDistnacesFromSourceToDistnaces(
