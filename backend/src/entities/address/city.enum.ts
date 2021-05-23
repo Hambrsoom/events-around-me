@@ -1,7 +1,8 @@
 import { registerEnumType } from "type-graphql";
 
 export enum City {
-    Montreal = "Montreal"
+    Montreal = "montreal",
+    Kirkland = "kirkland"
 }
 
 

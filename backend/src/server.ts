@@ -7,6 +7,7 @@ import { createSchema } from "./utilities/createSechema";
 import  config  from "../config/config";
 import { runRedis } from "./redis-connection";
 import { getUserIdFromJwt } from "./utilities/decoding-jwt";
+import { validationRules } from "./utilities/queryComplexity";
 
 const port: number = config.appPort || 5000;
 
@@ -25,7 +26,8 @@ async function main() {
       jwt: req.headers["authorization"],
       userId: req.headers["authorization"]? getUserIdFromJwt(req.headers["authorization"]): null
     }),
-    debug: false
+    debug: false,
+    validationRules: validationRules
    });
 
    apolloServer.applyMiddleware({ app, path:"/graphql" });

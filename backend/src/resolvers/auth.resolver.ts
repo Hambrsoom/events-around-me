@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Arg, ObjectType, Field, Query } from "type-graphql";
+import { Resolver, Mutation, Arg, ObjectType, Field, Query, Ctx } from "type-graphql";
 
 import { LoginUserInput, RegisterUserInput } from "../entities/user/user.entity";
 import { UserService } from "../services/user/user.service";
@@ -36,6 +36,13 @@ export class AuthResolver {
     @Arg("refreshToken") refreshToken: string
     ): Promise<LoginResponse> {
       return UserService.getNewAccessToken(refreshToken);
+  }
+
+  @Query(() => Boolean)
+  async isAccessTokenValid(
+    @Arg("accessToken") accessToken: string
+  ) {
+    return UserService.isAccessTokenValid(accessToken);
   }
 
   @Mutation(()=> Boolean)

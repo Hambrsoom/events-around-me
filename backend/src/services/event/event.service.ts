@@ -7,6 +7,8 @@ import { MoreThan } from "typeorm";
 import { Role } from "../../entities/user/user-role.enum";
 import { OrganizationService } from "../organization.service";
 import { ErrorMessage } from "../../utilities/error-message";
+import { MapService } from "../map/map.service";
+import { ICoordinates } from "../../types/coordinates";
 
 export class EventService {
   public static async getAllEvents(
@@ -24,6 +26,18 @@ export class EventService {
         EventCashingService.setEvents(events);
         return events;
       }
+  }
+
+  public static async getEventsAtDistnace(
+    userCoordinates: ICoordinates,
+    desiredDistanceInKm: number
+  ): Promise<Event[]> {
+    const events: Event[] = await EventService.getAllEvents();
+    return await MapService.getTheClosestEventsToTheUser(
+      userCoordinates.convertCoordintatesToString(),
+      events,
+      desiredDistanceInKm
+    );
   }
 
   public static async getAllEventsForOrganization(

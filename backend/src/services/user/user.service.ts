@@ -6,6 +6,7 @@ import { UserInputError } from "apollo-server-express";
 import { LoginResponse } from "../../resolvers/auth.resolver";
 import { getUserIdFromJwt, getUsernameFromJwt } from "../../utilities/decoding-jwt";
 import { Role } from "../../entities/user/user-role.enum";
+import { verify } from "jsonwebtoken";
 
 export class UserService {
     public static async login(
@@ -42,6 +43,14 @@ export class UserService {
                   { userId: userId, username: username },
                   process.env.REFRESH_TOKEN_SECRET
             );
+    }
+
+    public static isAccessTokenValid(token: string): boolean {
+        verify(
+            token,
+            process.env.ACCESS_TOKEN_SECRET
+        );
+        return true;
     }
 
 

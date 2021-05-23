@@ -6,15 +6,25 @@ import { User } from "../entities/user/user.entity";
 import { isEventOwner } from "../middlewares/isOwner";
 import { EventService } from "../services/event/event.service";
 import { UserService } from "../services/user/user.service";
+import { ICoordinates } from "../types/coordinates";
 
 @Resolver(() => Event)
 export class EventResolver {
 
   @Query(() => [Event])
-  @Authorized()
+  // @Authorized()
   async getAllEvents(
   ): Promise<Event[]> {
     return await EventService.getAllEvents();
+  }
+
+  @Query(() => [Event])
+  // @Authorized()
+  async getEventsAtDistnace(
+    @Arg("desiredDistanceInKm") desiredDistanceInKm: number,
+    @Arg("userCoordinates") userCoordinates: ICoordinates
+  ): Promise<Event[]> {
+    return await EventService.getEventsAtDistnace(userCoordinates, desiredDistanceInKm);
   }
 
   @Query(() => [Event])
@@ -23,6 +33,14 @@ export class EventResolver {
     @Arg("organizationId", () => ID) OrganizationId: string
     ): Promise<Event[]> {
       return EventService.getAllEventsForOrganization(OrganizationId);
+  }
+
+  @Query(() => [Event])
+  @Authorized()
+  async getEventsAtDistance(
+    @Arg("distance") distance: number
+  ): Promise<Event[]> {
+    return null;
   }
 
   @Query(() => Event)

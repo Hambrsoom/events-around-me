@@ -3,7 +3,7 @@ import { Length } from "class-validator";
 import * as bcrypt from "bcryptjs";
 
 import { ObjectType, Field, ID, InputType, Authorized } from "type-graphql";
-import { IsUsernameAlreadyExist } from "../../validators/isUsernameExist";
+import { IsUsernameAlreadyExist } from "../../validators/isUsernameAlreadyExist";
 import { Organization } from "../organization.entity";
 import { Role } from "./user-role.enum";
 
@@ -52,23 +52,23 @@ export class User extends BaseEntity {
 
 @InputType()
 export class RegisterUserInput implements Partial<User> {
-    @Field()
+    @Field({ complexity: 1 })
     @IsUsernameAlreadyExist({message: "username already exists!"})
     @Length(4, 20)
     username: string;
 
-    @Field()
+    @Field({ complexity: 1 })
     @Length(8, 100)
     password: string;
 }
 
 @InputType()
 export class LoginUserInput implements Partial<User> {
-    @Field()
+    @Field({ complexity: 1 })
     @Length(4, 20)
     username: string;
 
-    @Field()
+    @Field({ complexity: 1 })
     @Length(8, 100)
     password: string;
 }

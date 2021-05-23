@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { IsUrl, MaxLength } from "class-validator";
+import { IsDate, IsUrl, Length, MaxLength } from "class-validator";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 import { Address, AddressInput } from "./address/address.entity";
 import { Organization } from "./organization.entity";
@@ -45,15 +45,15 @@ export class Event extends BaseEntity {
 @InputType()
 export class EventInput implements Partial<Event> {
     @Field({nullable: true})
-    @MaxLength(50)
+    @Length(1, 50)
     title: string;
 
     @Field({nullable: true})
-    @MaxLength(2048)
     @IsUrl()
     url: string;
 
     @Field({nullable: true})
+    @IsDate()
     date: Date;
 
     @Field(() =>  AddressInput, {nullable: true})

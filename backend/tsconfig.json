@@ -6,6 +6,7 @@
      ],
      "typeRoots" : ["./node_modules/@types", "./typings"],
       "module": "commonjs",
+      "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
       "target": "es6",
       "moduleResolution": "node",

@@ -1,7 +1,7 @@
 import { registerEnumType } from "type-graphql";
 
 export enum Province {
-    Quebec = "Quebec"
+    Quebec = "qc"
 }
 
 

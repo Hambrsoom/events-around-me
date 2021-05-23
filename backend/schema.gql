@@ -20,6 +20,7 @@ input AddressInput {
 }
 
 enum City {
+  Kirkland
   Montreal
 }
 
@@ -49,6 +50,11 @@ input EventInput {
   description: String
   title: String
   url: String
+}
+
+input ICoordinates {
+  latitude: Float!
+  longitude: Float!
 }
 
 type Image {
@@ -101,9 +107,12 @@ type Query {
   getAllEvents: [Event!]!
   getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
+  getEventsAtDistance(distance: Float!): [Event!]!
+  getEventsAtDistnace(desiredDistanceInKm: Float!, userCoordinates: ICoordinates!): [Event!]!
   getNewAccessToken(refreshToken: String!): LoginResponse!
   getOrganizationById(id: ID!): Organization!
   getOrganizations: [Organization!]!
+  isAccessTokenValid(accessToken: String!): Boolean!
   searchForEvents(text: String!): [Event!]!
 }
 
