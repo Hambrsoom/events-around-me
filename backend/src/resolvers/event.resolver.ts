@@ -9,16 +9,20 @@ import { UserService } from "../services/user/user.service";
 import  CoordinatesInput  from "../types/coordinates-input.type";
 import { EventInput } from "../types/event-input.type";
 import { CursorInput } from "../types/pagination/cursor-input.type";
-import { PaginatedResponse } from "../types/pagination/pagination-response.type";
+import PaginatedResponseClass from "../types/pagination/pagination-response.type";
+
+// @ObjectType()
+// export class PaginatedEventResponse extends PaginatedResponse(Event) {
+// }
 
 @Resolver(() => Event)
 export class EventResolver {
 
-  @Query(() => PaginatedEventResponse)
+  @Query(() => PaginatedResponseClass)
   @Authorized()
   public async getEvents(
     @Arg("cursor") {after, first }: CursorInput,
-  ): Promise<PaginatedEventResponse> {
+  ): Promise<PaginatedResponseClass> {
     return await EventService.getAllEventsCursor(after, first);
   }
 
@@ -80,6 +84,3 @@ export class EventResolver {
   }
 }
 
-@ObjectType()
-export class PaginatedEventResponse extends PaginatedResponse(Event) {
-}

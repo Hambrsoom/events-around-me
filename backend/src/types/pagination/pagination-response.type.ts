@@ -1,35 +1,15 @@
-import { ClassType, Field, ObjectType } from "type-graphql";
-
-export function PaginatedResponse<TItem>(TItemClass: ClassType<TItem>) {
-
-    @ObjectType({isAbstract: true})
-    abstract class EdgeClass {
-        @Field()
-        cursor: string;
-
-        @Field(() => TItemClass)
-        node: TItem;
-    }
-
-    @ObjectType({isAbstract: true})
-    abstract class PaginatedResponseClass {
-        @Field(() => [EdgeClass])
-        edges: EdgeClass[];
-
-        @Field(() => PageInfo)
-        pageInfo: PageInfo;
-
-        @Field()
-        totalCount: number;
-    }
-    return PaginatedResponseClass;
-}
+import { Field, ObjectType } from "type-graphql";
+import Edge from "./edge.type";
+import PageInfo from "./page-info.type";
 
 @ObjectType()
-export class PageInfo {
-    @Field({nullable: true})
-    endCursor?: string;
+export default class PaginatedResponseClass {
+  @Field(() => [Edge])
+  public edges: Edge[];
 
-    @Field()
-    hasNextPage: boolean;
+  @Field(() => PageInfo)
+  public pageInfo: PageInfo;
+
+  @Field()
+  public totalCount: number;
 }

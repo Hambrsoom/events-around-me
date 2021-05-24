@@ -3,10 +3,10 @@ import { Field, ID, InputType } from "type-graphql";
 
 @InputType()
 export class CursorInput {
-    @Field(() => ID, {nullable: true})
-    after?: string;
+  @Field(() => ID, {nullable: true})
+  public after?: string;
 
-    @Field({nullable: true})
-    @IsPositive()
-    first: number;
+  @Field({nullable: true})
+  @IsPositive()
+  public first: number;
 }

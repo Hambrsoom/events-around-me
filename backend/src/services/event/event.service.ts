@@ -6,8 +6,8 @@ import { User } from "../../entities/user/user.entity";
 import NotFoundError from "../../error-handlers/not-found.error-handler";
 import OwnershipError from "../../error-handlers/ownership.error-handler";
 import PersistenceError  from "../../error-handlers/persistence-error.error-handler";
-import { PaginatedEventResponse } from "../../resolvers/event.resolver";
 import CoordinatesInput  from "../../types/coordinates-input.type";
+import PaginatedResponseClass from "../../types/pagination/pagination-response.type";
 import getDistanceFromCoordinatesInKm from "../../utilities/distance-calculator";
 import { OrganizationService } from "../organization.service";
 import { PaginationService } from "../pagination.service";
@@ -32,7 +32,7 @@ export class EventService {
       }
   }
 
-  public static async getAllEventsCursor (after: string, first: number): Promise<PaginatedEventResponse> {
+  public static async getAllEventsCursor (after: string, first: number): Promise<PaginatedResponseClass> {
     const eventsFromDatabase: Event[] = await EventService.getAllEvents();
 
     return PaginationService.getElements(after, first, eventsFromDatabase);

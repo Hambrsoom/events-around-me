@@ -48,12 +48,12 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
-type EdgeClass {
+type Edge {
   cursor: String!
-  node: Event!
+  node: INode!
 }
 
-type Event {
+type Event implements INode {
   address: Address!
   date: DateTime!
   description: String!
@@ -70,6 +70,10 @@ input EventInput {
   description: String
   title: String
   url: String
+}
+
+interface INode {
+  id: ID!
 }
 
 type Image {
@@ -120,8 +124,8 @@ type PageInfo {
   hasNextPage: Boolean!
 }
 
-type PaginatedEventResponse {
-  edges: [EdgeClass!]!
+type PaginatedResponseClass {
+  edges: [Edge!]!
   pageInfo: PageInfo!
   totalCount: Float!
 }
@@ -133,7 +137,7 @@ enum Province {
 type Query {
   getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
-  getEvents(cursor: CursorInput!): PaginatedEventResponse!
+  getEvents(cursor: CursorInput!): PaginatedResponseClass!
   getEventsAtDistance(distance: Float!): [Event!]!
   getEventsAtDistnace(desiredDistanceInKm: Float!, userCoordinates: CoordinatesInput!): [Event!]!
   getNewAccessToken(refreshToken: String!): LoginResponse!

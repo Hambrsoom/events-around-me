@@ -1,5 +1,5 @@
 import UserInputError from "../error-handlers/user-input.error-handler";
-import { PageInfo } from "../types/pagination/pagination-response.type";
+import PageInfo from "../types/pagination/page-info.type";
 
 export class PaginationService {
     public static getElements(

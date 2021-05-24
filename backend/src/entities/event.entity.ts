@@ -1,13 +1,13 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import INode from "../types/node.type";
 import { Address } from "./address/address.entity";
 import { Image } from "./image.entity";
 import { Organization } from "./organization.entity";
 
-@ObjectType()
+@ObjectType({implements: [INode]})
 @Entity()
-export class Event {
-  @Field(() => ID)
+export class Event extends INode {
   @PrimaryGeneratedColumn()
   public id?: string;
 
