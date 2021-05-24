@@ -13,7 +13,6 @@ export default class BaseError extends ApolloError {
 
       if (loggingMessage) {
         logger.error({
-            level : loggingLevels.error,
             message: loggingMessage,
         });
       }

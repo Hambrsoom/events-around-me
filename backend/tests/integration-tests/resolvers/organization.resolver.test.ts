@@ -94,8 +94,6 @@ describe("add & edit an organization", () => {
             contextValue: context
         });
 
-        console.log(result);
-
         expect(result).toMatchObject({
             data: {
                 addOrganization: {

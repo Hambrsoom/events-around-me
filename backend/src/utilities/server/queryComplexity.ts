@@ -2,20 +2,23 @@ import queryComplexity, {
     fieldExtensionsEstimator,
   simpleEstimator,
 } from "graphql-query-complexity";
+import logger from "../logger/logger";
 
 export const validationRules: any =  [
     queryComplexity({
-      maximumComplexity: 20,
-      variables: {},
-      onComplete: (complexity: number) => {
-        console.log("Query Complexity:", complexity);
-      },
       estimators: [
         fieldExtensionsEstimator(),
         simpleEstimator({
           defaultComplexity: 1,
         }),
       ],
+      maximumComplexity: 20,
+      onComplete: (complexity: number) => {
+        logger.info({
+          message: `Query Complexity: ${complexity}`,
+        });
+      },
+      variables: {},
     }) as any,
 ];
 

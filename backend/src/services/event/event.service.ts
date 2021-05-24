@@ -8,7 +8,7 @@ import OwnershipError from "../../error-handlers/ownership.error-handler";
 import PersistenceError  from "../../error-handlers/persistence-error.error-handler";
 import { PaginatedEventResponse } from "../../resolvers/event.resolver";
 import CoordinatesInput  from "../../types/coordinates-input.type";
-import { MapService } from "../map/map.service";
+import getDistanceFromCoordinatesInKm from "../../utilities/distance-calculator";
 import { OrganizationService } from "../organization.service";
 import { PaginationService } from "../pagination.service";
 import { UserService } from "../user/user.service";
@@ -45,11 +45,13 @@ export class EventService {
   ): Promise<Event[]> {
     const events: Event[] = await EventService.getAllEvents();
 
-    return await MapService.getTheClosestEventsToTheUser(
-      "userCoordinates.convertCoordintatesToString()",
-      events,
-      desiredDistanceInKm,
-    );
+    const filteredEvents: Event[] = events.filter((event: Event) => getDistanceFromCoordinatesInKm(
+      userCoordinates,
+      {
+        latitude: event.address.latitude,
+        longitude: event.address.longitude,
+      }) <=  desiredDistanceInKm);
+    return filteredEvents;
   }
 
   public static async getAllEventsForOrganization(
@@ -115,8 +117,7 @@ export class EventService {
 
         return newEvent;
       } catch (err) {
-        console.log(err);
-        throw new PersistenceError("event");
+        throw new PersistenceError("event", err.message);
       }
   }
 

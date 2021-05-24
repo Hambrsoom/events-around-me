@@ -6,6 +6,7 @@ import { createConnection } from "typeorm";
 import  config  from "../config/config";
 import { runRedis } from "./redis-connection";
 import { getUserIdFromJwt } from "./utilities/decoding-jwt";
+import logger from "./utilities/logger/logger";
 import { createSchema } from "./utilities/server/createSechema";
 import { validationRules } from "./utilities/server/queryComplexity";
 
@@ -34,7 +35,9 @@ async function main() {
 
   createConnection().then(async (connection) => {
     app.listen(port, () =>
-      console.log(`Server is running on http://localhost:${port}/graphql`),
+      logger.info({
+        message: `Server is running on http://localhost:${port}/graphql`,
+      }),
     );
   });
 }

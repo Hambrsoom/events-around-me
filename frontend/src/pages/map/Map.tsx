@@ -56,8 +56,6 @@ const Map: React.FC<IMap> = ({ mapType, mapTypeControl = false}) => {
                 })
             }
         });
-
-        console.log([marker]);
     };
 
     const addSingleMarker = ():void => {

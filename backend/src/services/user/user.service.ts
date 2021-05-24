@@ -131,7 +131,6 @@ export class UserService {
         password: string,
         ): Promise<boolean> {
             const isPasswordValid: boolean = await user.validatePassword(password);
-            console.log(isPasswordValid);
             if (!isPasswordValid) {
                 UserService.loginErrorMessage();
             } else {

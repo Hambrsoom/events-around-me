@@ -1,5 +1,5 @@
 import { callResolver } from "./resolver-caller";
-import { User, LoginUserInput, RegisterUserInput } from "../../src/entities/user/user.entity";
+import { User } from "../../src/entities/user/user.entity";
 import { Role } from "../../src/entities/user/user-role.enum";
 
 import bcrypt from "bcrypt";
@@ -58,7 +58,6 @@ export const insertUser = async(username: string, password: string, role: Role, 
         username: username
     }});
 
-    console.log(user);
     if(user === undefined) {
         let user:User = new User();
         user.username = username;
@@ -67,9 +66,6 @@ export const insertUser = async(username: string, password: string, role: Role, 
         if(organizationId !== undefined) {
             user.organization = await Organization.findOne({ where: { id: organizationId }});
         }
-        const salt:any = await bcrypt.genSalt();
-        user.salt = salt;
-        user.hashPassword();
         await User.save(user);
     }
 }
