@@ -1,13 +1,12 @@
-import { ApolloError } from "apollo-server-express";
+import BaseError from "./base-error.error.handler";
 
-export class NotFoundError extends ApolloError {
-    constructor(
-        id: string,
-        type: string,
-        message: string = `Could not find the ${type} with id ${id}`
-        ) {
-            super(message, "NOT_FOUND" );
-
-            Object.defineProperty(this, "name", { value: "NotFoundError" });
-    }
+export default class NotFoundError extends BaseError {
+  constructor(
+    id: string,
+    type: string,
+    loggingMessage: string = undefined,
+    message: string = `Could not find the ${type} with id ${id}`,
+    ) {
+      super(message, "NOT_FOUND", "NotFoundError", loggingMessage);
+  }
 }

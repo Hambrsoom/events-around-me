@@ -1,6 +1,6 @@
 import redis from "redis";
-import  config  from "../config/config";
 import { promisify } from "util";
+import  config  from "../config/config";
 
 export const redisClient = redis.createClient(config.redisPort, "127.0.0.1");
 

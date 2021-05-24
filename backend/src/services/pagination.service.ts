@@ -1,11 +1,11 @@
-import { UserInputError } from "../error-handlers/input.error-handler";
+import UserInputError from "../error-handlers/user-input.error-handler";
 import { PageInfo } from "../types/pagination/pagination-response.type";
 
 export class PaginationService {
     public static getElements(
-        after: string, 
-        first: number, 
-        elementsFromDatabase: any[]
+        after: string,
+        first: number,
+        elementsFromDatabase: any[],
         ): any {
             const totalCount: number = elementsFromDatabase.length;
             let start: number = PaginationService.getStartingPoint(after, elementsFromDatabase);
@@ -16,13 +16,13 @@ export class PaginationService {
             return {
                 edges,
                 pageInfo,
-                totalCount
+                totalCount,
             };
     }
 
     public static getStartingPoint(
         after: string,
-        elementsFromDatabase: any[]
+        elementsFromDatabase: any[],
         ): number {
             if (after !== undefined) {
                 const index: number = elementsFromDatabase.findIndex((element) => element.id == after);
@@ -37,7 +37,7 @@ export class PaginationService {
     public static SliceListOfElements(
         start: number,
         first: number,
-        elements: any[]
+        elements: any[],
         ) {
             return first === undefined ?
                 elements :
@@ -48,7 +48,7 @@ export class PaginationService {
         start: number,
         first: number,
         totalCount: number,
-        endCursor: string
+        endCursor: string,
         ): PageInfo {
             const hasNextPage: boolean = start + first < totalCount;
             const pageInfo: PageInfo = endCursor !== undefined ?
@@ -63,14 +63,14 @@ export class PaginationService {
     }
 
     public static defineEdges(
-        elements: any[]
-        ): { edges: any[], endCursor:string} {
+        elements: any[],
+        ): { edges: any[], endCursor: string} {
             let endCursor: string;
             const edges: any[] = elements.map((event) => {
                 endCursor = event.id;
                 return ({
                 cursor: endCursor,
-                node: event
+                node: event,
                 });
             });
             return { edges, endCursor };

@@ -1,5 +1,5 @@
 export function isImage(
-  filename: string
+  filename: string,
   ): boolean {
     const extension: string = getExtension(filename);
     switch (extension.toLowerCase()) {
@@ -13,7 +13,7 @@ export function isImage(
 };
 
 function getExtension(
-  filename: string
+  filename: string,
   ): string {
     const parts: string[] = filename.split(".");
     return parts[parts.length - 1];

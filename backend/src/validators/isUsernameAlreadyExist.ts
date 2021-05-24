@@ -5,9 +5,9 @@ import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorCon
   @ValidatorConstraint({ async: true })
   export class IsUsernameAlreadyExistConstraint implements ValidatorConstraintInterface {
     validate(
-      username: string
+      username: string,
       ) {
-        return User.findOne({ where: { username } }).then(user => {
+        return User.findOne({ where: { username } }).then((user) => {
           if (user) {
             return false;
           }
@@ -17,15 +17,15 @@ import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorCon
   }
 
   export function IsUsernameAlreadyExist(
-    validationOptions?: ValidationOptions
+    validationOptions?: ValidationOptions,
     ) {
       return function(object: Object, propertyName: string) {
         registerDecorator({
           target: object.constructor,
-          propertyName: propertyName,
+          propertyName,
           options: validationOptions,
           constraints: [],
-          validator: IsUsernameAlreadyExistConstraint
+          validator: IsUsernameAlreadyExistConstraint,
         });
       };
   }

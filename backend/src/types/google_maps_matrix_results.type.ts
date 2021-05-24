@@ -1,6 +1,6 @@
 export default interface IResult {
     destination_addresses: string[];
-    results:IMeasurement[];
+    results: IMeasurement[];
 }
 
 interface IMeasurement {

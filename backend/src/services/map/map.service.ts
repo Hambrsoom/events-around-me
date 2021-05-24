@@ -5,13 +5,13 @@ import IResult from "../../types/google_maps_matrix_results.type";
 export class MapService {
     public static async getDistnacesFromSourceToDistnaces(
         origins: string[],
-        destinations: string[]
+        destinations: string[],
         ): Promise<IResult> {
             return new Promise((resolve) => {
                 distance.key(process.env.GOOGLE_MAPS_API_KEY);
                 const result: IResult = MapService.callMatrixDistance(origins, destinations);
 
-                setTimeout(()=> {
+                setTimeout(() => {
                     resolve(result);
                 }, 1000);
             }).then((result: IResult) => {
@@ -21,11 +21,11 @@ export class MapService {
 
     public static callMatrixDistance(
         origins: string[],
-        destinations: string[]
+        destinations: string[],
         ): IResult {
             let result: IResult = {
                 destination_addresses: [],
-                results:[]
+                results: [],
             };
 
             distance.matrix(origins, destinations, async (err, distances)  => {
@@ -43,17 +43,17 @@ export class MapService {
     public static async getTheClosestEventsToTheUser(
         origin: string,
         events: Event[],
-        desiredDistanceInKm: number
+        desiredDistanceInKm: number,
         ): Promise<Event[]> {
             let dictionaryOfEvents: {[id: string] : Event[]} = MapService.createADictionaryOfEvents(events);
             const result: IResult = await MapService.getDistnacesFromSourceToDistnaces(
                 [origin],
-                Object.keys(dictionaryOfEvents)
+                Object.keys(dictionaryOfEvents),
             );
             dictionaryOfEvents = MapService.filterEventsAccordingToDistance(
                 dictionaryOfEvents,
                 result,
-                desiredDistanceInKm
+                desiredDistanceInKm,
             );
             return MapService.returnListOfEvents(dictionaryOfEvents);
     }
@@ -61,10 +61,10 @@ export class MapService {
     public static filterEventsAccordingToDistance(
         dictionaryOfEvents: {[id: string] : Event[]},
         result: IResult,
-        desiredDistanceInKm: number
+        desiredDistanceInKm: number,
         ):  {[id: string] : Event[]} {
             result.destination_addresses.forEach((element, index) => {
-                if(result.results[index].distance.value/1000 > desiredDistanceInKm) {
+                if (result.results[index].distance.value / 1000 > desiredDistanceInKm) {
                     delete dictionaryOfEvents[element.toLowerCase()];
                 }
             });
@@ -74,7 +74,7 @@ export class MapService {
 
     public static returnListOfEvents(dictionaryOfEvents: {[id: string] : Event[]}): Event[] {
         let events: Event[] = [];
-        Object.values(dictionaryOfEvents).forEach(listOfEvents =>{
+        Object.values(dictionaryOfEvents).forEach((listOfEvents) => {
             events = events.concat(listOfEvents);
         });
 
@@ -82,11 +82,11 @@ export class MapService {
     }
 
     public static createADictionaryOfEvents(
-        events: Event[]
+        events: Event[],
         ):  {[id: string] : Event[]} {
             let dictionaryOfEvents: { [name: string]: Event[] } = {};
-            events.forEach(event => {
-                if(dictionaryOfEvents[event.address.convertAddressToString()]) {
+            events.forEach((event) => {
+                if (dictionaryOfEvents[event.address.convertAddressToString()]) {
                     dictionaryOfEvents[event.address.convertAddressToString()].push(event);
                 } else {
                     dictionaryOfEvents[event.address.convertAddressToString()] = [event];

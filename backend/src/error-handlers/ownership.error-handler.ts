@@ -1,14 +1,13 @@
-import { ApolloError } from "apollo-server-errors";
+import BaseError from "./base-error.error.handler";
 
-export class ForbiddenForOwnershipError extends ApolloError {
-    constructor(
-        id: string,
-        type: string,
-        message: string = `User is not the owner of the ${type} with ${id}`
-        ) {
-            super(message, "FORBIDDEN");
-
-            Object.defineProperty(this, "name", { value: "ForbiddenError" });
-    }
+export default class OwnershipError extends BaseError {
+  constructor(
+    id: string,
+    type: string,
+    loggingMessage: string = undefined,
+    message: string = `User is not the owner of the ${type} with ${id}`,
+    ) {
+      super(message, "FORBIDDEN", "ForbiddenError", loggingMessage);
+  }
 }
 

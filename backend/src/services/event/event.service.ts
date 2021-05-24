@@ -1,30 +1,30 @@
+import { getRepository, MoreThan } from "typeorm";
 import { Event } from "../../entities/event.entity";
 import { Organization } from "../../entities/organization.entity";
-import { User } from "../../entities/user/user.entity";
-import { EventCashingService } from "./event-caching.service";
-import { UserService } from "../user/user.service";
-import { MoreThan } from "typeorm";
 import { Role } from "../../entities/user/user-role.enum";
-import { OrganizationService } from "../organization.service";
-import { MapService } from "../map/map.service";
-import { ICoordinates } from "../../types/coordinates.types";
-import { NotFoundError } from "../../error-handlers/not-found.error-handler";
-import { StoringError } from "../../error-handlers/storing.error-handler";
-import { ForbiddenForOwnershipError } from "../../error-handlers/ownership.error-handler";
+import { User } from "../../entities/user/user.entity";
+import NotFoundError from "../../error-handlers/not-found.error-handler";
+import OwnershipError from "../../error-handlers/ownership.error-handler";
+import PersistenceError  from "../../error-handlers/persistence-error.error-handler";
 import { PaginatedEventResponse } from "../../resolvers/event.resolver";
+import CoordinatesInput  from "../../types/coordinates-input.type";
+import { MapService } from "../map/map.service";
+import { OrganizationService } from "../organization.service";
 import { PaginationService } from "../pagination.service";
+import { UserService } from "../user/user.service";
+import { EventCashingService } from "./event-caching.service";
 
 export class EventService {
   public static async getAllEvents(
     ): Promise<Event[]> {
       let events: Event[] = await EventCashingService.getEvents();
 
-      if(events !== undefined && events.length > 0) {
+      if (events && events.length) {
           return events;
       } else {
-        events = await Event.find({
+        events = await getRepository(Event).find({
+          relations: ["address", "images", "organizer"],
           where: {date: MoreThan(new Date())},
-          relations:["address", "images", "organizer"]
         });
 
         EventCashingService.setEvents(events);
@@ -33,7 +33,6 @@ export class EventService {
   }
 
   public static async getAllEventsCursor (after: string, first: number): Promise<PaginatedEventResponse> {
-
     const eventsFromDatabase: Event[] = await EventService.getAllEvents();
 
     return PaginationService.getElements(after, first, eventsFromDatabase);
@@ -41,31 +40,32 @@ export class EventService {
 
 
   public static async getEventsAtDistnace(
-    userCoordinates: ICoordinates,
-    desiredDistanceInKm: number
+    userCoordinates: CoordinatesInput,
+    desiredDistanceInKm: number,
   ): Promise<Event[]> {
     const events: Event[] = await EventService.getAllEvents();
+
     return await MapService.getTheClosestEventsToTheUser(
-      userCoordinates.convertCoordintatesToString(),
+      "userCoordinates.convertCoordintatesToString()",
       events,
-      desiredDistanceInKm
+      desiredDistanceInKm,
     );
   }
 
   public static async getAllEventsForOrganization(
-    OrganizationId: string
+    OrganizationId: string,
     ): Promise <Event[]> {
       let events: Event[] = await EventCashingService.getAllEventsForOrganization(OrganizationId);
 
-      if(events !== undefined && events.length > 0) {
+      if (events !== undefined && events.length > 0) {
           return events;
       } else {
-        events = await Event.find({
+        events = await getRepository(Event).find({
           where: {
             organizer: OrganizationId,
-            date: MoreThan(new Date())
+            date: MoreThan(new Date()),
           },
-          relations: ["address", "images", "organizer"]
+          relations: ["address", "images", "organizer"],
         });
 
         return events;
@@ -73,22 +73,22 @@ export class EventService {
   }
 
   public static async getEventById(
-    eventId: string
+    eventId: string,
     ): Promise <Event> {
       let event: Event = await EventCashingService.getEventById(eventId);
 
-      if(event !== undefined) {
+      if (event) {
         return event;
       } else {
         try {
-          event = await Event.findOneOrFail({
+          event = await getRepository(Event).findOneOrFail({
             where: { id: eventId },
-            relations:["address", "images", "organizer"]
+            relations: ["address", "images", "organizer"],
           });
           EventCashingService.setNotUpToDate();
 
           return event;
-        } catch(err) {
+        } catch (err) {
           throw new NotFoundError(eventId, "event");
         }
       }
@@ -96,32 +96,33 @@ export class EventService {
 
   public static async saveEvent(
     {title, url, date, address, description}: any,
-    organizerId: string
+    organizerId: string,
     ): Promise<Event> {
       const organizer: Organization = await OrganizationService.getOrganizationById(organizerId);
 
       try {
-        const event:Event = await Event.create({
+        const event: Event = await getRepository(Event).create({
           title,
           url,
           address,
           date,
           description,
-          organizer
+          organizer,
         });
 
-        const newEvent: Event = await Event.save(event);
+        const newEvent: Event = await getRepository(Event).save(event);
         EventCashingService.setNotUpToDate();
 
         return newEvent;
-      } catch(err) {
-        throw new StoringError("event");
+      } catch (err) {
+        console.log(err);
+        throw new PersistenceError("event");
       }
   }
 
   public static async editEventById(
     {title, url, date, address, description}: any,
-    eventId: string
+    eventId: string,
     ) {
       try {
         let event: Event = await EventService.getEventById(eventId);
@@ -135,45 +136,43 @@ export class EventService {
             event.address.id = event.address.id;
         }
 
-        const newEvent: Event = await Event.save(event);
+        const newEvent: any = await getRepository(Event).save(event);
         EventCashingService.setNotUpToDate();
 
         return newEvent;
-    } catch(err) {
-      throw new StoringError("event");
+    } catch (err) {
+      throw new PersistenceError("event");
     }
   }
 
   public static async getAllEventsOfUser(
-    userId: string
+    userId: string,
     ): Promise<Event[]> {
       const user: User = await UserService.getUserByID(userId);
       try {
         const organization: Organization = await Organization.findOne(user.organization.id, {
-              relations: ["events"]
+              relations: ["events"],
         });
         return organization.events;
-      } catch(err) {
+      } catch (err) {
         throw new NotFoundError(user.organization.id, "organization");
       }
   }
 
   public static async isEventOwner(
     userId: string,
-    eventId: string
+    eventId: string,
     ): Promise<boolean> {
-      const user: User = await UserService.getUserByID(userId);
+      const event = await getRepository(Event).createQueryBuilder("event")
+        .leftJoinAndSelect("event.organizer", "organization")
+        .leftJoinAndSelect("organization.user", "user")
+        .where("event.id=:eventId", {eventId})
+        .andWhere("user.id=:userId", {userId})
+        .getOne();
 
-      if(user.role === Role.organizer) {
-          const organization: Organization = await OrganizationService.getOrganizationById(user.organization.id);
-
-          const event: Event = organization.events.find(event => event.id == eventId);
-
-          if(event === undefined) {
-            throw new ForbiddenForOwnershipError(eventId, "event");
-          }
-
-          return true;
+      if (event === undefined) {
+        throw new OwnershipError(eventId, "event");
       }
+      return true;
   }
 }

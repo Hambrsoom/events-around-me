@@ -1,18 +1,18 @@
-import { Resolver, Mutation, Arg, Authorized, UseMiddleware } from "type-graphql";
 import { GraphQLUpload } from "apollo-server-express";
-import { IUpload } from "../types/upload.type";
-import { ImageService } from "../services/image.service";
+import { Arg, Authorized, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import { Role } from "../entities/user/user-role.enum";
-import { isImagesOwner } from "../middlewares/isOwner";
+import { isImagesOwner } from "../middlewares/is-owner";
+import { ImageService } from "../services/image.service";
+import { IUpload } from "../types/upload.type";
 
 @Resolver()
 export class ImageResolver {
 
   @Mutation(() => Boolean)
   @Authorized([Role.admin, Role.organizer])
-  async addImageToEvent(
+  public async addImageToEvent(
     @Arg("pictures", () => [GraphQLUpload])pictures: IUpload[],
-    @Arg("eventId") eventId : string
+    @Arg("eventId") eventId : string,
     ): Promise<boolean> {
       for (let picture of pictures) {
         const uploadedPicture: IUpload = await picture;
@@ -24,8 +24,8 @@ export class ImageResolver {
   @Mutation(() => Boolean)
   @Authorized([Role.admin, Role.organizer])
   @UseMiddleware(isImagesOwner)
-  async deleteImages(
-    @Arg("imageIds", () => [String]) imageIds: string[]
+  public async deleteImages(
+    @Arg("imageIds", () => [String]) imageIds: string[],
     ): Promise<boolean> {
       await ImageService.deleteImages(imageIds);
       return true;

@@ -8,6 +8,8 @@ type Address {
   city: City!
   country: Country!
   id: ID!
+  latitude: Float!
+  longitude: Float!
   postalCode: String!
   province: Province!
   street: String!
@@ -15,13 +17,21 @@ type Address {
 
 input AddressInput {
   appartmentNumber: Float
+  city: City
+  country: Country
   postalCode: String
+  province: Province
   street: String
 }
 
 enum City {
   Kirkland
   Montreal
+}
+
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
 }
 
 enum Country {
@@ -62,11 +72,6 @@ input EventInput {
   url: String
 }
 
-input ICoordinates {
-  latitude: Float!
-  longitude: Float!
-}
-
 type Image {
   event: Event!
   id: ID!
@@ -101,6 +106,7 @@ type Organization {
   id: ID!
   name: String!
   url: String!
+  user: User!
 }
 
 input OrganizationInput {
@@ -129,7 +135,7 @@ type Query {
   getEventById(id: ID!): Event!
   getEvents(cursor: CursorInput!): PaginatedEventResponse!
   getEventsAtDistance(distance: Float!): [Event!]!
-  getEventsAtDistnace(desiredDistanceInKm: Float!, userCoordinates: ICoordinates!): [Event!]!
+  getEventsAtDistnace(desiredDistanceInKm: Float!, userCoordinates: CoordinatesInput!): [Event!]!
   getNewAccessToken(refreshToken: String!): LoginResponse!
   getOrganizationById(id: ID!): Organization!
   getOrganizations: [Organization!]!
@@ -144,3 +150,10 @@ input RegisterUserInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+type User {
+  id: ID!
+  organization: Organization!
+  role: String!
+  username: String!
+}

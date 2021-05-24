@@ -1,18 +1,19 @@
-import { Organization, OrganizationInput } from "../entities/organization.entity";
-import { NotFoundError } from "../error-handlers/not-found.error-handler";
-import { StoringError } from "../error-handlers/storing.error-handler";
+import { Organization } from "../entities/organization.entity";
+import NotFoundError from "../error-handlers/not-found.error-handler";
+import PersistenceError from "../error-handlers/persistence-error.error-handler";
+import { OrganizationInput } from "../types/organization-input.type";
 
 export class OrganizationService {
     public static async getOrganizationById(
-        organizationId: string
+        organizationId: string,
         ): Promise <Organization> {
 
         try {
             return await Organization.findOneOrFail({
                 where: { id: organizationId },
-                relations: ["address", "events"]
+                relations: ["address", "events"],
             });
-        } catch(err) {
+        } catch (err) {
             throw new NotFoundError(organizationId, "organization");
         }
     }
@@ -20,7 +21,7 @@ export class OrganizationService {
     public static async getOrganizations(
         ): Promise<Organization[]> {
             return await Organization.find({
-                relations: ["address", "events"]
+                relations: ["address", "events"],
             });
     }
 
@@ -31,17 +32,17 @@ export class OrganizationService {
                 const organization: Organization = await Organization.create({
                     name,
                     url,
-                    address
+                    address,
                 }).save();
                 return organization;
-            } catch(err) {
-                throw new StoringError("organization");
+            } catch (err) {
+                throw new PersistenceError("organization");
             }
     }
 
     public static async editOrganizationById(
         { name, url, address }: OrganizationInput,
-        organizationId: string
+        organizationId: string,
     ): Promise<Organization> {
         try{
             let organization: Organization = await OrganizationService.getOrganizationById(organizationId);
@@ -54,8 +55,8 @@ export class OrganizationService {
                 organization.address.id = organization.address.id;
             }
             return await Organization.save(organization);
-        } catch(err) {
-            throw new StoringError("organization");
+        } catch (err) {
+            throw new PersistenceError("organization");
         }
     }
 }

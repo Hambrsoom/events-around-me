@@ -1,10 +1,9 @@
 import { registerEnumType } from "type-graphql";
 
 export enum Country {
-    Canada = "canada"
+  Canada = "Canada",
 }
 
-
 registerEnumType(Country, {
-    name: "Country"
+  name: "Country",
 });

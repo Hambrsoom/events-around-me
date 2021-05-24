@@ -1,18 +1,18 @@
 import { Event } from "../../entities/event.entity";
-import { getAsync, setAsync, delAsync } from "../../redis-connection";
+import { delAsync, getAsync, setAsync } from "../../redis-connection";
 
 export class EventCashingService {
     public static async getEvents(
         ): Promise<Event[]> {
             const isValid: boolean = await EventCashingService.isValid();
-            if(isValid) {
-                let events:any = await getAsync("events");
-                return events? JSON.parse(events): null;
+            if (isValid) {
+                let events: any = await getAsync("events");
+                return events ? JSON.parse(events) : null;
             }
     }
 
     public static async setEvents(
-        events: Event[]
+        events: Event[],
         ): Promise<void> {
             await setAsync("events", JSON.stringify(events));
             await setAsync("valid", true);
@@ -30,27 +30,27 @@ export class EventCashingService {
     }
 
     public static async getEventById(
-        eventId: string
+        eventId: string,
         ): Promise<Event> {
             const isValid: boolean = await EventCashingService.isValid();
-            if(isValid) {
+            if (isValid) {
                 let events: Event[] = JSON.parse(await getAsync("events"));
-                if(events !== undefined) {
-                    return events.find(event => event.id === eventId);
+                if (events !== undefined) {
+                    return events.find((event) => event.id === eventId);
                 }
             }
     }
 
     public static async getEventsByTitle(
-        text: string
+        text: string,
         ): Promise<Event[]> {
             const isValid: boolean = await EventCashingService.isValid();
 
-            if(isValid) {
+            if (isValid) {
                 let events: Event[] = JSON.parse(await getAsync("events"));
-                if(events !== undefined && events.length > 0) {
+                if (events !== undefined && events.length > 0) {
                     const eventsByTitle: Event[] = events.filter(
-                            event => (event.title.toLowerCase()).includes(text.toLowerCase())
+                            (event) => (event.title.toLowerCase()).includes(text.toLowerCase()),
                         );
                     return eventsByTitle;
                 }
@@ -58,15 +58,15 @@ export class EventCashingService {
     }
 
     public static async getAllEventsForOrganization(
-        organizerId: string
+        organizerId: string,
         ): Promise<Event[]> {
             const isValid: boolean = await EventCashingService.isValid();
 
-            if(isValid) {
+            if (isValid) {
                 let events: Event[] = JSON.parse(await getAsync("events"));
-                if(events !== undefined && events.length > 0) {
+                if (events !== undefined && events.length > 0) {
                     const eventsByTitle: Event[] = events.filter(
-                            event => (event.organizer.id === organizerId)
+                            (event) => (event.organizer.id === organizerId),
                         );
                     return eventsByTitle;
                 }

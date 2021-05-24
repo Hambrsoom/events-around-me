@@ -1,73 +1,74 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, BeforeInsert } from "typeorm";
-import { Length } from "class-validator";
-import { ObjectType, Field, ID, InputType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
+import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import findCoordinates from "../../services/geocoding.service";
+import CoordinatesInput from "../../types/coordinates-input.type";
+import { City } from "./city.enum";
 import { Country } from "./country.enum";
 import { Province } from "./province.enum";
-import { City } from "./city.enum";
-import { IsPostalCodeValid } from  "../../validators/isPostalCode";
+
 @ObjectType()
 @Entity()
 export class Address extends BaseEntity {
-    @Field(() => ID)
-    @PrimaryGeneratedColumn()
-    id?: string;
+  @Field(() => ID)
+  @PrimaryGeneratedColumn()
+  public id?: string;
 
-    @Field()
-    @Column({nullable: false})
-    street!: string;
+  @Field()
+  @Column({nullable: false})
+  public street!: string;
 
-    @Field()
-    @Column({nullable: false})
-    postalCode!: string;
+  @Field()
+  @Column({nullable: false})
+  public postalCode!: string;
 
-    @Field()
-    @Column({nullable: true})
-    appartmentNumber?: number;
+  @Field()
+  @Column({nullable: true})
+  public appartmentNumber?: number;
 
-    @Field(() => City)
-    @Column({default: City.Montreal})
-    city: City;
+  @Field(() => City)
+  @Column({default: City.Montreal})
+  public city: City;
 
-    @Field(() => Province)
-    @Column({default: Province.Quebec})
-    province: Province;
+  @Field(() => Province)
+  @Column({default: Province.Quebec})
+  public province: Province;
 
-    @Field(() => Country)
-    @Column({default: Country.Canada})
-    country: Country;
+  @Field(() => Country)
+  @Column({default: Country.Canada})
+  public country: Country;
 
-    @BeforeInsert()
-    async hashPassword(): Promise<void> {
-        this.street = this.street.toLowerCase();
-        this.postalCode = this.postalCode.toLowerCase();
-    }
+  @Field()
+  @Column("decimal", { precision: 11, scale: 8 })
+  public latitude: number;
 
-    equal(
-        address: Address
-        ): boolean {
-            return (
-                JSON.stringify(this) === JSON.stringify(address)
-            );
-    }
+  @Field()
+  @Column("decimal", { precision: 11, scale: 8 })
+  public longitude: number;
 
-    convertAddressToString(): string {
-        const appartment: string = this.appartmentNumber ? this.appartmentNumber + "-" : "";
-        return appartment + this.street + ", " + this.city + ", " +
-                this.province + " " + this.postalCode + ", " + this.country;
-    }
+  @BeforeInsert()
+  public async generateLongitudeAndLatitude(
+  ): Promise<void> {
+    const coordinates: CoordinatesInput = await findCoordinates(this.convertAddressToString());
+    this.latitude = coordinates.latitude;
+    this.longitude =  coordinates.longitude;
+  }
 
-}
+  public equal(
+    address: Address,
+    ): boolean {
+        return (
+            JSON.stringify(this) === JSON.stringify(address)
+        );
+  }
 
-@InputType()
-export class AddressInput extends Address {
-    @Field({nullable: true})
-    street: string;
+  public convertAddressToString(
+  ): string {
+    const appartment: string = this.appartmentNumber ? this.appartmentNumber + "-" : "";
+    const city = this.city ? this.city : "Montreal";
+    const province = this.country ? this.province : "Quebec";
+    const country = this.country ? this.country : "Canada";
 
-    @Field({nullable: true})
-    // @Length(6, 7)
-    @IsPostalCodeValid({message: "Not a valid postal code"})
-    postalCode: string;
-
-    @Field({nullable: true})
-    appartmentNumber: number;
+    return appartment + this.street + ", " + city + ", " +
+            province + ", " + country;
+  }
 }

@@ -1,9 +1,10 @@
-import { AuthChecker } from "type-graphql";
 import { verify } from "jsonwebtoken";
-import { User } from "../../entities/user/user.entity";
-import { UserService } from "../../services/user/user.service";
+import { AuthChecker } from "type-graphql";
 import { Context } from "vm";
-import { NotAuthenticatedError, NotAuthorizedError } from "../../error-handlers/authentication.error-handler";
+import { User } from "../../entities/user/user.entity";
+import  NotAuthenticatedError  from "../../error-handlers/not-authenticated.error-handler";
+import  NotAuthorizedError  from "../../error-handlers/not-authorized.error-handler";
+import { UserService } from "../../services/user/user.service";
 
 const checkJwt: any =
   (authorization) => {
@@ -15,7 +16,7 @@ const checkJwt: any =
     try {
       payload = verify(authorization, process.env.ACCESS_TOKEN_SECRET);
     } catch (err) {
-      throw new NotAuthenticatedError();
+      throw new NotAuthenticatedError(err.message);
     }
 
     return payload;
@@ -25,7 +26,7 @@ export const customAuthChecker: AuthChecker<Context> = async(
   { context }, roles) => {
     context.payload = checkJwt(context.jwt);
     const user: User = await UserService.getUserByID(context.userId);
-    if(roles.length > 0 && !roles.includes(user.role)) {
+    if (roles.length > 0 && !roles.includes(user.role)) {
       throw new NotAuthorizedError();
     }
 

@@ -1,4 +1,4 @@
-import { Field, ObjectType, ClassType } from "type-graphql";
+import { ClassType, Field, ObjectType } from "type-graphql";
 
 export function PaginatedResponse<TItem>(TItemClass: ClassType<TItem>) {
 
@@ -16,7 +16,7 @@ export function PaginatedResponse<TItem>(TItemClass: ClassType<TItem>) {
         @Field(() => [EdgeClass])
         edges: EdgeClass[];
 
-        @Field(()=> PageInfo)
+        @Field(() => PageInfo)
         pageInfo: PageInfo;
 
         @Field()

@@ -1,4 +1,4 @@
-import { Query, Resolver, Arg, Authorized, Mutation } from "type-graphql";
+import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
 import { Event } from "../entities/event.entity";
 import { SearchService } from "../services/search.service";
 
@@ -7,8 +7,8 @@ export class SearchResolver {
 
   @Query(() => [Event])
   @Authorized()
-  async searchForEvents(
-    @Arg("text") text : string
+  public async searchForEvents(
+    @Arg("text") text: string,
     ): Promise<Event[]> {
       return SearchService.getEventsByTitle(text);
   }

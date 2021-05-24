@@ -1,11 +1,10 @@
 import { registerEnumType } from "type-graphql";
 
 export enum City {
-    Montreal = "montreal",
-    Kirkland = "kirkland"
+  Montreal = "Montreal",
+  Kirkland = "Kirkland",
 }
 
-
 registerEnumType(City, {
-    name: "City"
+  name: "City",
 });

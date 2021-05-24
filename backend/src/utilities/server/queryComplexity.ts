@@ -1,6 +1,6 @@
 import queryComplexity, {
     fieldExtensionsEstimator,
-  simpleEstimator
+  simpleEstimator,
 } from "graphql-query-complexity";
 
 export const validationRules: any =  [
@@ -13,9 +13,9 @@ export const validationRules: any =  [
       estimators: [
         fieldExtensionsEstimator(),
         simpleEstimator({
-          defaultComplexity: 1
-        })
-      ]
-    }) as any
+          defaultComplexity: 1,
+        }),
+      ],
+    }) as any,
 ];
 

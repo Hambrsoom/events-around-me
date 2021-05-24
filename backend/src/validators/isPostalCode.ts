@@ -3,13 +3,13 @@ import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorCon
     @ValidatorConstraint({async: false})
     export class IsPostalCodeValidConstraint implements ValidatorConstraintInterface {
         validate(
-            postalCode: string
+            postalCode: string,
             ) {
 
                 const regex: RegExp = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
                 const match: RegExpExecArray = regex.exec(postalCode);
 
-                if(match) {
+                if (match) {
                     return true;
                 } else {
                     return false;
@@ -18,15 +18,15 @@ import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorCon
     }
 
     export function IsPostalCodeValid(
-        validationOptions?: ValidationOptions
+        validationOptions?: ValidationOptions,
         ) {
             return function(object: Object, propertyName: string) {
                 registerDecorator({
                     target: object.constructor,
-                    propertyName: propertyName,
+                    propertyName,
                     options: validationOptions,
                     constraints: [],
-                    validator: IsPostalCodeValidConstraint
+                    validator: IsPostalCodeValidConstraint,
                 });
         };
     }
