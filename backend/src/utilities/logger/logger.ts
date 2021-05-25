@@ -1,4 +1,3 @@
-  
 import buildDevLogger from "./dev-logger";
 import buildProdLogger from "./prod-logger";
 
@@ -8,7 +7,5 @@ if (process.env.NODE_ENV === "production") {
 } else {
   logger = buildDevLogger();
 }
-
-module.exports = logger;
 
 export default logger;

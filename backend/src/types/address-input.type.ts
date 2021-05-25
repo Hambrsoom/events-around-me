@@ -24,5 +24,5 @@ export class AddressInput extends Address {
   public country: Country;
 
   @Field({nullable: true})
-  public appartmentNumber: number;
+  public appartmentNumber?: number;
 }

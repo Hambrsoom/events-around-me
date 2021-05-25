@@ -138,7 +138,6 @@ type Query {
   getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
   getEvents(cursor: CursorInput!): PaginatedResponseClass!
-  getEventsAtDistance(distance: Float!): [Event!]!
   getEventsAtDistnace(desiredDistanceInKm: Float!, userCoordinates: CoordinatesInput!): [Event!]!
   getNewAccessToken(refreshToken: String!): LoginResponse!
   getOrganizationById(id: ID!): Organization!

@@ -11,10 +11,6 @@ import { EventInput } from "../types/event-input.type";
 import { CursorInput } from "../types/pagination/cursor-input.type";
 import PaginatedResponseClass from "../types/pagination/pagination-response.type";
 
-// @ObjectType()
-// export class PaginatedEventResponse extends PaginatedResponse(Event) {
-// }
-
 @Resolver(() => Event)
 export class EventResolver {
 
@@ -41,14 +37,6 @@ export class EventResolver {
     @Arg("organizationId", () => ID) OrganizationId: string,
     ): Promise<Event[]> {
       return EventService.getAllEventsForOrganization(OrganizationId);
-  }
-
-  @Query(() => [Event])
-  @Authorized()
-  public async getEventsAtDistance(
-    @Arg("distance") distance: number,
-  ): Promise<Event[]> {
-    return null;
   }
 
   @Query(() => Event)

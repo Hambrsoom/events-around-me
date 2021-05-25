@@ -1,5 +1,6 @@
-import { getRepository } from "typeorm";
+import { getCustomRepository, getRepository } from "typeorm";
 import { Event } from "../entities/event.entity";
+import { EventRepository } from "../repositories/event.repository";
 import { EventCashingService } from "./event/event-caching.service";
 
 export class SearchService {
@@ -11,13 +12,8 @@ export class SearchService {
       if (events !== undefined && events.length > 0) {
           return events;
       } else {
-          return await getRepository(Event).createQueryBuilder("event")
-          .select()
-          .leftJoinAndSelect("event.address", "address")
-          .leftJoinAndSelect("event.images", "images")
-          .where("(title LIKE :title AND date > :date)",
-          {title: `%${text}%`, date: new Date()})
-          .getMany();
+        const eventRepository = getCustomRepository(EventRepository);
+        return await eventRepository.findEventsByText(text);
       }
   }
 }

@@ -8,12 +8,12 @@ import { SearchResolver } from "../../resolvers/search.resolver";
 import { customAuthChecker } from "./authChecker";
 
 export const createSchema = async() => await buildSchema({
-        resolvers: [ OrganizationResolver,
-            AuthResolver,
-            EventResolver,
-            ImageResolver,
-            SearchResolver,
-        ],
-        emitSchemaFile: true,
-        authChecker: customAuthChecker,
-    });
+  resolvers: [ OrganizationResolver,
+      AuthResolver,
+      EventResolver,
+      ImageResolver,
+      SearchResolver,
+  ],
+  emitSchemaFile: true,
+  authChecker: customAuthChecker,
+});

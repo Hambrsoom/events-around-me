@@ -8,8 +8,9 @@ export function isImage(
       case "bmp":
       case "png":
         return true;
+      default:
+        return false;
     }
-    return false;
 };
 
 function getExtension(

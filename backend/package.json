@@ -49,8 +49,10 @@
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
+    "typedi": "^0.10.0",
     "typeorm": "^0.2.30",
     "typeorm-naming-strategies": "^2.0.0",
+    "typeorm-typedi-extensions": "^0.4.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {

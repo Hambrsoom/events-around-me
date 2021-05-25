@@ -7,5 +7,3 @@ export const getUserIdFromJwt = (jwt: string) => {
 export const getUsernameFromJwt = (jwt: string) => {
     return (jwt_decode(jwt)["username"]);
 };
-
-
