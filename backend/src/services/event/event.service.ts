@@ -72,10 +72,10 @@ export class EventService {
       if (event) {
         return event;
       } else {
-          const eventRepository = getCustomRepository(EventRepository);
-          event = await eventRepository.findEventById(eventId);
-          EventCashingService.setNotUpToDate();
-          return event;
+        const eventRepository = getCustomRepository(EventRepository);
+        event = await eventRepository.findEventById(eventId);
+        EventCashingService.setNotUpToDate();
+        return event;
       }
   }
 
@@ -110,16 +110,13 @@ export class EventService {
           event.address.id = event.address.id;
       }
       const eventRepository = getCustomRepository(EventRepository);
-      const newEvent: Event = await eventRepository.saveEvent(
-        event,
-        event.organizer,
-      );
+      const newEvent: Event = await eventRepository.editEvent(event);
       EventCashingService.setNotUpToDate();
 
       return newEvent;
   }
 
-  public static async getEventsOfUser(
+  public static async getUserEvents(
     userId: string,
     ): Promise<Event[]> {
       const eventRepository = getCustomRepository(EventRepository);

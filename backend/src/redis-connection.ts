@@ -13,7 +13,7 @@ export const runRedis = () =>  {
   });
 };
 
-export const existAsync: any = promisify(redisClient.exists).bind(redisClient);
-export const setAsync: any = promisify(redisClient.set).bind(redisClient);
-export const getAsync: any = promisify(redisClient.get).bind(redisClient);
-export const delAsync: any = promisify(redisClient.del).bind(redisClient);
+export const exist: any = promisify(redisClient.exists).bind(redisClient);
+export const cache: any = promisify(redisClient.set).bind(redisClient);
+export const readCache: any = promisify(redisClient.get).bind(redisClient);
+export const del: any = promisify(redisClient.del).bind(redisClient);

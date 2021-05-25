@@ -1,7 +1,5 @@
 import { getCustomRepository } from "typeorm";
 import { Organization } from "../entities/organization.entity";
-import NotFoundError from "../error-handlers/not-found.error-handler";
-import PersistenceError from "../error-handlers/persistence-error.error-handler";
 import { OrganizationRepository } from "../repositories/organization.repository";
 import { OrganizationInput } from "../types/organization-input.type";
 
@@ -40,6 +38,6 @@ export class OrganizationService {
           organization.address.id = organization.address.id;
       }
       const organizationRepository = getCustomRepository(OrganizationRepository);
-      return await organizationRepository.saveOrganization(organization);
+      return await organizationRepository.editOrganization(organization);
   }
 }

@@ -1,13 +1,12 @@
-import { IsUrl, MaxLength } from "class-validator";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Field, ID, ObjectType } from "type-graphql";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Address } from "./address/address.entity";
 import { Event } from "./event.entity";
 import { User } from "./user/user.entity";
 
 @ObjectType()
 @Entity()
-export class Organization extends BaseEntity {
+export class Organization {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   public id?: string;

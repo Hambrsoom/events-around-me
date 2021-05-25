@@ -67,13 +67,23 @@ export class EventRepository extends Repository<Event> {
         organizer,
       });
       return await this.save(event);
-    } catch(err) {
+    } catch (err) {
+      throw new PersistenceError("event", err.message);
+    }
+  }
+
+  public async editEvent(
+    event: Event,
+  ): Promise<Event> {
+    try {
+      return await this.save(event);
+    } catch (err) {
       throw new PersistenceError("event", err.message);
     }
   }
 
   public async findUserEvents(
-    userId: string
+    userId: string,
     ): Promise<Event[]> {
       try {
         return await this.createQueryBuilder("event")

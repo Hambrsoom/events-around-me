@@ -83,7 +83,7 @@ export class ImageService {
     userId: string,
     imageIds: string[],
     ): Promise<boolean> {
-      const eventsOfUser: Event[] = await EventService.getEventsOfUser(userId);
+      const eventsOfUser: Event[] = await EventService.getUserEvents(userId);
       let eventIds: string[] = [];
       eventsOfUser.forEach((event) => eventIds.push(event.id));
 

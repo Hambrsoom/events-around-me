@@ -1,8 +1,8 @@
-import { createConnection, Db } from "typeorm";
+import { createConnection } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import config from "../../config/config";
 
-export const testConn = async(drop = false) => {
+export const testConnection = async(drop = false) => {
   return await createConnection({
     name: "default",
     type: "mysql",
@@ -18,6 +18,6 @@ export const testConn = async(drop = false) => {
     "./src/entities/user/*.entity.ts",
     "src/entities/address/*.entity.ts"
   ],
-    namingStrategy:  new SnakeNamingStrategy()
+    namingStrategy:  new SnakeNamingStrategy(),
   });
 };

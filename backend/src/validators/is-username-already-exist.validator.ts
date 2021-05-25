@@ -1,12 +1,14 @@
 import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
-import { User } from "../entities/user/user.entity";
+import { getCustomRepository } from "typeorm";
+import { UserRepository } from "../repositories/user.repository";
 
 @ValidatorConstraint({ async: true })
 export class IsUsernameAlreadyExistConstraint implements ValidatorConstraintInterface {
   public validate(
     username: string,
     ) {
-      return User.findOne({ where: { username } }).then((user) => {
+      const userRepository = getCustomRepository(UserRepository);
+      return userRepository.findOne({ where: { username } }).then((user) => {
         if (user) {
           return false;
         }

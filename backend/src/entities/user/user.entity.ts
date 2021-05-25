@@ -1,12 +1,12 @@
 import * as bcrypt from "bcryptjs";
 import { Authorized, Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Organization } from "../organization.entity";
 import { Role } from "./user-role.enum";
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
+export class User {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   public id?: string;

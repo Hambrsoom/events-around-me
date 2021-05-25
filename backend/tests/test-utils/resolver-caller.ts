@@ -1,5 +1,4 @@
 import { graphql } from "graphql";
-
 import { createSchema } from "../../src/utilities/server/createSechema";
 
 interface IOptions {
@@ -13,6 +12,6 @@ export const callResolver = async ({ source, variableValues, contextValue }: IOp
     schema: await createSchema(),
     source,
     variableValues,
-    contextValue
+    contextValue,
   });
 };

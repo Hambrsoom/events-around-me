@@ -1,5 +1,5 @@
-  
-import { createLogger, format, transports, config } from "winston";
+
+import { config, createLogger, format, transports } from "winston";
 const { timestamp, combine, printf, errors } = format;
 
 function buildDevLogger() {

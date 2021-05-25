@@ -1,10 +1,10 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Event } from "./event.entity";
 
 @ObjectType()
 @Entity()
-export class Image extends BaseEntity {
+export class Image {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   public id?: string;

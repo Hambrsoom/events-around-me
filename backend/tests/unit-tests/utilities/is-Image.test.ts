@@ -1,5 +1,4 @@
-import { isImage } from "../../../../src/utilities/isImage";
-
+import { isImage } from "../../../src/utilities/isImage";
 
 describe("Test the isImage functionalities", () => {
     test("verify if the file type is image successfully and returns true", async() => {

@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import findCoordinates from "../../services/geocoding.service";
 import CoordinatesInput from "../../types/coordinates-input.type";
 import { City } from "./city.enum";
@@ -8,7 +8,7 @@ import { Province } from "./province.enum";
 
 @ObjectType()
 @Entity()
-export class Address extends BaseEntity {
+export class Address {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   public id?: string;
@@ -56,19 +56,18 @@ export class Address extends BaseEntity {
   public equal(
     address: Address,
     ): boolean {
-        return (
-            JSON.stringify(this) === JSON.stringify(address)
-        );
+      return (
+        JSON.stringify(this) === JSON.stringify(address)
+      );
   }
 
   public convertAddressToString(
   ): string {
-    const appartment: string = this.appartmentNumber ? this.appartmentNumber + "-" : "";
     const city = this.city ? this.city : "Montreal";
     const province = this.country ? this.province : "Quebec";
     const country = this.country ? this.country : "Canada";
 
-    return appartment + this.street + ", " + city + ", " +
+    return this.street + ", " + city + ", " +
             province + ", " + country;
   }
 }

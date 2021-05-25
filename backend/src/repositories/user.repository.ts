@@ -7,25 +7,28 @@ import PersistenceError from "../error-handlers/persistence-error.error-handler"
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
 
-  public static async save(
+  public async saveUser(
     username: string,
     password: string,
     role: Role,
     ): Promise<User> {
       try {
-        return await this.save(username,
+        const user = this.create({
+          username,
           password,
-          role);
+          role,
+        });
+        return await this.save(user);
       } catch (err) {
         throw new PersistenceError("user", err.message);
       }
   }
 
-  public static async findOneOrFail(
-    userId: string
+  public async findUser(
+    userId: string,
     ) {
       try {
-        return await User.findOneOrFail(userId, {
+        return await this.findOneOrFail(userId, {
             relations: ["organization"],
         });
       } catch (err) {

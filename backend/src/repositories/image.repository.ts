@@ -1,9 +1,7 @@
 import { EntityRepository, MoreThan, Repository } from "typeorm";
 import { Image } from "../entities/image.entity";
-import { Organization } from "../entities/organization.entity";
 import NotFoundError from "../error-handlers/not-found.error-handler";
 import PersistenceError from "../error-handlers/persistence-error.error-handler";
-import { OrganizationInput } from "../types/organization-input.type";
 
 @EntityRepository(Image)
 export class ImageRepository extends Repository<Image> {
@@ -11,7 +9,7 @@ export class ImageRepository extends Repository<Image> {
     imageIds: string[],
   ): Promise<Image[]> {
     try {
-        return await Image.findByIds(imageIds);
+        return await this.findByIds(imageIds);
     } catch (err) {
         throw new NotFoundError(JSON.stringify(imageIds), "images");
     }
@@ -41,7 +39,7 @@ export class ImageRepository extends Repository<Image> {
     eventIds: string[],
     imageId: string,
   ): Promise<Image> {
-    return await Image.createQueryBuilder()
+    return await this.createQueryBuilder()
       .select()
       .where("id = :id and event_id IN (:...ids)", { id: imageId, ids: eventIds })
       .getOne();

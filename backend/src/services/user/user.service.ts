@@ -51,7 +51,7 @@ export class UserService {
   }
 
   public static isAccessTokenValid(
-    token: string
+    token: string,
     ): boolean {
       verify(
           token,
@@ -82,7 +82,8 @@ export class UserService {
     password: string,
     role: Role = Role.regular,
     ): Promise<User> {
-      return await UserRepository.save(
+      const userRepository = getCustomRepository(UserRepository);
+      return await userRepository.saveUser(
         username,
         password,
         role);
@@ -91,7 +92,8 @@ export class UserService {
   public static async getUserByID(
     userId: string,
     ): Promise<User> {
-      return UserRepository.findOneOrFail(userId);
+      const userRepository = getCustomRepository(UserRepository);
+      return userRepository.findUser(userId);
   }
 
   public static async getUserByUsernameAndPassword(

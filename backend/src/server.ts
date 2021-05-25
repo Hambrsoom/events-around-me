@@ -24,8 +24,8 @@ async function main() {
     context: ({ req, res }) => ({
       req,
       res,
-      jwt: req.headers["authorization"],
-      userId: req.headers["authorization"] ? getUserIdFromJwt(req.headers["authorization"]) : null,
+      jwt: req.headers.authorization,
+      userId: req.headers.authorization ? getUserIdFromJwt(req.headers.authorization) : null,
     }),
     debug: false,
     validationRules,

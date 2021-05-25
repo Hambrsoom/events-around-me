@@ -1,8 +1,5 @@
 import { EntityRepository, MoreThan, Repository } from "typeorm";
-import { Event } from "../entities/event.entity";
 import { Organization } from "../entities/organization.entity";
-import { Role } from "../entities/user/user-role.enum";
-import { User} from "../entities/user/user.entity";
 import NotFoundError from "../error-handlers/not-found.error-handler";
 import PersistenceError from "../error-handlers/persistence-error.error-handler";
 import { OrganizationInput } from "../types/organization-input.type";
@@ -14,8 +11,8 @@ export class OrganizationRepository extends Repository<Organization> {
     ): Promise<Organization> {
       try {
         return await this.findOneOrFail({
-          relations: ["address", "events"],
           where: { id: organizationId },
+          relations: ["address", "events"],
         });
       } catch (err) {
           throw new NotFoundError(organizationId, "organization", err.message);
@@ -24,7 +21,7 @@ export class OrganizationRepository extends Repository<Organization> {
 
   public async findOrganizations(
     ): Promise<Organization[]> {
-      return await Organization.find({
+      return await this.find({
         relations: ["address", "events"],
       });
   }
@@ -33,11 +30,22 @@ export class OrganizationRepository extends Repository<Organization> {
     { name, url, address }: OrganizationInput,
     ): Promise<Organization> {
       try {
-        return await Organization.create({
+        const organization = this.create({
           name,
           url,
           address,
-        }).save();
+        });
+        return await this.save(organization);
+      } catch (err) {
+        throw new PersistenceError("organization", err.message);
+      }
+  }
+
+  public async editOrganization(
+    organization: Organization,
+    ): Promise<Organization> {
+      try {
+        return await this.save(organization);
       } catch (err) {
         throw new PersistenceError("event", err.message);
       }
