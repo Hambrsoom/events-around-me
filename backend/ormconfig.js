@@ -2,11 +2,11 @@ const typeormNamingStrategies = require('typeorm-naming-strategies');
 
 module.exports = {
    "type": "mysql",
-   "host": "localhost",
-   "port": 3306,
-   "username": "root",
-   "password": "password",
-   "database": "events-around-me",
+   "host": process.env.DB_HOST,
+   "port": process.env.DB_PORT,
+   "username": process.env.DB_USERNAME,
+   "password": process.env.DB_PASSWORD,
+   "database": process.env.DB_NAME,
    "synchronize": true,
    "logging": false,
    "entities": [

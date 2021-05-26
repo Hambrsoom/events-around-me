@@ -33,7 +33,7 @@ export class EventResolver {
 
   @Query(() => [Event])
   @Authorized()
-  public async getAllEventsForOrganization(
+  public async getUpcomingEventsForOrganization(
     @Arg("organizationId", () => ID) OrganizationId: string,
     ): Promise<Event[]> {
       return EventService.getAllEventsForOrganization(OrganizationId);

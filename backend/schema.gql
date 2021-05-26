@@ -135,13 +135,13 @@ enum Province {
 }
 
 type Query {
-  getAllEventsForOrganization(organizationId: ID!): [Event!]!
   getEventById(id: ID!): Event!
   getEvents(cursor: CursorInput!): PaginatedResponseClass!
   getEventsAtDistnace(desiredDistanceInKm: Float!, userCoordinates: CoordinatesInput!): [Event!]!
   getNewAccessToken(refreshToken: String!): LoginResponse!
   getOrganizationById(id: ID!): Organization!
   getOrganizations: [Organization!]!
+  getUpcomingEventsForOrganization(organizationId: ID!): [Event!]!
   isAccessTokenValid(accessToken: String!): Boolean!
   searchForEvents(text: String!): [Event!]!
 }

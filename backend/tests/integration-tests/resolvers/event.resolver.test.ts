@@ -2,7 +2,6 @@ import { Connection } from "typeorm";
 import { Role } from "../../../src/entities/user/user-role.enum";
 import { User } from "../../../src/entities/user/user.entity";
 import { EventInput } from "../../../src/types/event-input.type";
-import { getUserIdFromJwt } from "../../../src/utilities/decoding-jwt";
 import { EventMockedData } from "../../mock-data/events";
 import { UserMockedData } from "../../mock-data/user";
 import { ContextTest } from "../../test-utils/context";
@@ -11,7 +10,7 @@ import { insertEvent } from "../../test-utils/event-helper-methods";
 import { insertOrganization } from "../../test-utils/organisation-helper-methods";
 import { callResolver } from "../../test-utils/resolver-caller";
 import { testConnection } from "../../test-utils/test-connection";
-import { getAccessToken, insertUser, registerUser } from "../../test-utils/user-helper-methods";
+import { insertUser, registerUser } from "../../test-utils/user-helper-methods";
 
 let connection: Connection;
 

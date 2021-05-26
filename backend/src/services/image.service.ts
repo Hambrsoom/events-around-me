@@ -1,14 +1,13 @@
-import { ForbiddenError, UserInputError } from "apollo-server-errors";
 import { createWriteStream } from "fs";
 import fs from "fs";
 import { getCustomRepository } from "typeorm";
-import config  from "../../config/config";
 import { Event } from "../entities/event.entity";
 import { Image } from "../entities/image.entity";
 import OwnershipError from "../error-handlers/ownership.error-handler";
+import UserInputError from "../error-handlers/user-input.error-handler";
 import { ImageRepository } from "../repositories/image.repository";
 import { IUpload } from "../types/upload.type";
-import { isImage } from "../utilities/isImage";
+import { isImage } from "../utilities/is-image";
 import { EventService } from "./event/event.service";
 
 export class ImageService {
@@ -45,7 +44,7 @@ export class ImageService {
     ): Promise<Image> {
       let image: Image = new Image();
       const event: Event = await EventService.getEventById(eventId);
-      image.path = `${config.url}${config.appPort}/images/${filename}`;
+      image.path = `${process.env.URL}${process.env.PORT}/images/${filename}`;
       image.event = event;
 
       const imageRepository = getCustomRepository(ImageRepository);

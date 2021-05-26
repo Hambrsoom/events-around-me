@@ -12,7 +12,6 @@ export const findCoordinates = async(addressInString: string): Promise<Coordinat
     latitude: result[0].latitude,
     longitude: result[0].longitude,
   };
-
 };
 
 export default findCoordinates;

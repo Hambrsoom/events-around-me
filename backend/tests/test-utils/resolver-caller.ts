@@ -1,5 +1,5 @@
 import { graphql } from "graphql";
-import { createSchema } from "../../src/utilities/server/createSechema";
+import { createSchema } from "../../src/utilities/server/create-schema";
 
 interface IOptions {
   source: string;

@@ -1,17 +1,17 @@
 import { Event } from "../../entities/event.entity";
 import { cache, del, readCache } from "../../redis-connection";
 
-export class EventCashingService {
+export class EventCachingService {
   public static async getEvents(
     ): Promise<Event[]> {
-      const isValid: boolean = await EventCashingService.isValid();
+      const isValid: boolean = await EventCachingService.isValid();
       if (isValid) {
         let events: any = await readCache("events");
         return events ? JSON.parse(events) : null;
       }
   }
 
-  public static async setEvents(
+  public static async cachingEvents(
     events: Event[],
     ): Promise<void> {
       await cache("events", JSON.stringify(events));
@@ -32,7 +32,7 @@ export class EventCashingService {
   public static async getEventById(
     eventId: string,
     ): Promise<Event> {
-      const isValid: boolean = await EventCashingService.isValid();
+      const isValid: boolean = await EventCachingService.isValid();
       if (isValid) {
         let events: Event[] = JSON.parse(await readCache("events"));
         if (events !== undefined) {
@@ -44,7 +44,7 @@ export class EventCashingService {
   public static async getEventsByTitle(
     text: string,
     ): Promise<Event[]> {
-      const isValid: boolean = await EventCashingService.isValid();
+      const isValid: boolean = await EventCachingService.isValid();
 
       if (isValid) {
         let events: Event[] = JSON.parse(await readCache("events"));
@@ -60,7 +60,7 @@ export class EventCashingService {
   public static async getAllEventsForOrganization(
     organizerId: string,
     ): Promise<Event[]> {
-      const isValid: boolean = await EventCashingService.isValid();
+      const isValid: boolean = await EventCachingService.isValid();
 
       if (isValid) {
         let events: Event[] = JSON.parse(await readCache("events"));

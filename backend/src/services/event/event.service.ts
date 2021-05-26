@@ -1,5 +1,4 @@
 import { getCustomRepository, getRepository, MoreThan } from "typeorm";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { Event } from "../../entities/event.entity";
 import { Organization } from "../../entities/organization.entity";
 import OwnershipError from "../../error-handlers/ownership.error-handler";
@@ -9,13 +8,13 @@ import PaginatedResponseClass from "../../types/pagination/pagination-response.t
 import getDistanceFromCoordinatesInKm from "../../utilities/distance-calculator";
 import { OrganizationService } from "../organization.service";
 import { PaginationService } from "../pagination.service";
-import { EventCashingService } from "./event-caching.service";
+import { EventCachingService } from "./event-caching.service";
 
 export class EventService {
 
   public static async getAllEvents(
     ): Promise<Event[]> {
-      let events: Event[] = await EventCashingService.getEvents();
+      let events: Event[] = await EventCachingService.getEvents();
 
       if (events && events.length) {
           return events;
@@ -23,7 +22,7 @@ export class EventService {
         const eventRepository = getCustomRepository(EventRepository);
         events = await eventRepository.findUpcomingEvents();
 
-        EventCashingService.setEvents(events);
+        EventCachingService.cachingEvents(events);
         return events;
       }
   }
@@ -52,7 +51,7 @@ export class EventService {
   public static async getAllEventsForOrganization(
     organizationId: string,
     ): Promise <Event[]> {
-      let events: Event[] = await EventCashingService.getAllEventsForOrganization(organizationId);
+      let events: Event[] = await EventCachingService.getAllEventsForOrganization(organizationId);
 
       if (events !== undefined && events.length > 0) {
           return events;
@@ -67,14 +66,13 @@ export class EventService {
   public static async getEventById(
     eventId: string,
     ): Promise <Event> {
-      let event: Event = await EventCashingService.getEventById(eventId);
+      let event: Event = await EventCachingService.getEventById(eventId);
 
       if (event) {
         return event;
       } else {
         const eventRepository = getCustomRepository(EventRepository);
         event = await eventRepository.findEventById(eventId);
-        EventCashingService.setNotUpToDate();
         return event;
       }
   }
@@ -90,8 +88,6 @@ export class EventService {
         {title, url, date, address, description},
         organizer,
       );
-      EventCashingService.setNotUpToDate();
-
       return newEvent;
   }
 
@@ -111,8 +107,6 @@ export class EventService {
       }
       const eventRepository = getCustomRepository(EventRepository);
       const newEvent: Event = await eventRepository.editEvent(event);
-      EventCashingService.setNotUpToDate();
-
       return newEvent;
   }
 
@@ -128,9 +122,10 @@ export class EventService {
     eventId: string,
     ): Promise<boolean> {
       const eventRepository = getCustomRepository(EventRepository);
-      const eventExists: boolean = await eventRepository.isEventBelongToUser(
+      const eventExists: boolean = await eventRepository.isEventOwner(
         userId,
-        eventId);
+        eventId,
+      );
 
       if (!eventExists) {
         throw new OwnershipError(eventId, "event");

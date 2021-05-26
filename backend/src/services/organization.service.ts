@@ -38,6 +38,6 @@ export class OrganizationService {
           organization.address.id = organization.address.id;
       }
       const organizationRepository = getCustomRepository(OrganizationRepository);
-      return await organizationRepository.editOrganization(organization);
+      return await organizationRepository.saveOrganization(organization);
   }
 }

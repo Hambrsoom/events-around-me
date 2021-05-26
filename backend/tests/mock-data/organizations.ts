@@ -52,6 +52,7 @@ export class OrganizationMockedData {
       organization.name = "CLSC";
       organization.url = "https://santemontreal.qc.ca/en/public/montreals-institutions-at-a-glance/clscs/";
       organization.address = address;
+      organization.id = "2";
       return organization;
   };
 

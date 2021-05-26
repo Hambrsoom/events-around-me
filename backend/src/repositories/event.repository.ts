@@ -96,7 +96,7 @@ export class EventRepository extends Repository<Event> {
       }
   }
 
-  public async isEventBelongToUser(
+  public async isEventOwner(
     userId: string,
     eventId: string,
   ): Promise<boolean> {

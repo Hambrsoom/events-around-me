@@ -3,14 +3,13 @@ import cors from "cors";
 import Express from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import  config  from "../config/config";
 import { runRedis } from "./redis-connection";
 import { getUserIdFromJwt } from "./utilities/decoding-jwt";
 import logger from "./utilities/logger/logger";
-import { createSchema } from "./utilities/server/createSechema";
-import { validationRules } from "./utilities/server/queryComplexity";
+import { createSchema } from "./utilities/server/create-schema";
+import { validationRules } from "./utilities/server/query-complexity";
 
-const port: number = config.appPort || 5000;
+const port: number = Number(process.env.APP_PORT) || 5000;
 
 async function main() {
   const schema = await createSchema();
@@ -33,7 +32,7 @@ async function main() {
 
   apolloServer.applyMiddleware({ app, path: "/graphql" });
 
-  createConnection().then(async (connection) => {
+  createConnection().then(async () => {
     app.listen(port, () =>
       logger.info({
         message: `Server is running on http://localhost:${port}/graphql`,

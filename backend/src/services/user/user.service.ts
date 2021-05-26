@@ -10,7 +10,7 @@ import { UserRepository } from "../../repositories/user.repository";
 import LoginResponse from "../../types/login-reponse.type";
 import { LoginUserInput } from "../../types/login-user-input.type";
 import { getUserIdFromJwt, getUsernameFromJwt } from "../../utilities/decoding-jwt";
-import { UserCashingService } from "./user-cashing.service";
+import { UserCachingService } from "./user-caching.service";
 
 export class UserService {
 
@@ -67,7 +67,7 @@ export class UserService {
       const userId: string = getUserIdFromJwt(refreshToken);
       const username: string = getUsernameFromJwt(refreshToken);
 
-      if (await UserCashingService.isrefreshTokenValid(userId, refreshToken)) {
+      if (await UserCachingService.isRefreshTokenValidInCache(userId, refreshToken)) {
         let loginResponse: LoginResponse = {
             accessToken: UserService.getAccessToken(username, userId),
         };
@@ -102,7 +102,6 @@ export class UserService {
     ): Promise<User> {
       try {
         const userRepository = getCustomRepository(UserRepository);
-
         const user: User = await userRepository.findOneOrFail({
               where: { username },
         });
@@ -117,7 +116,7 @@ export class UserService {
     refreshToken: string,
     userId: string,
     ): Promise<void> {
-      await UserCashingService.addUser(refreshToken, userId);
+      await UserCachingService.cachingUser(refreshToken, userId);
   }
 
   public static async isPasswordValid(
@@ -135,8 +134,8 @@ export class UserService {
   public static async logout(
     userId: string,
     ): Promise<boolean> {
-      if (await UserCashingService.isUserExist(userId) !== 0) {
-        return await UserCashingService.removeUser(userId);
+      if (await UserCachingService.isUserIdCached(userId) !== 0) {
+        return await UserCachingService.removeUserFromCache(userId);
       } else {
         throw new NotAuthenticatedError();
       }

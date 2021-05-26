@@ -1,13 +1,13 @@
 import { getCustomRepository, getRepository } from "typeorm";
 import { Event } from "../entities/event.entity";
 import { EventRepository } from "../repositories/event.repository";
-import { EventCashingService } from "./event/event-caching.service";
+import { EventCachingService } from "./event/event-caching.service";
 
 export class SearchService {
   public static async getEventsByTitle(
     text: string,
     ): Promise <Event[]> {
-      const events: Event[] = await EventCashingService.getEventsByTitle(text);
+      const events: Event[] = await EventCachingService.getEventsByTitle(text);
 
       if (events !== undefined && events.length > 0) {
           return events;

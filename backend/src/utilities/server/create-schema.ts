@@ -5,15 +5,15 @@ import { EventResolver } from "../../resolvers/event.resolver";
 import { ImageResolver } from "../../resolvers/image.resolver";
 import { OrganizationResolver } from "../../resolvers/organization.resolver";
 import { SearchResolver } from "../../resolvers/search.resolver";
-import { customAuthChecker } from "./authChecker";
+import { customAuthChecker } from "./auth-checker";
 
 export const createSchema = async() => await buildSchema({
+  authChecker: customAuthChecker,
+  emitSchemaFile: true,
   resolvers: [ OrganizationResolver,
       AuthResolver,
       EventResolver,
       ImageResolver,
       SearchResolver,
   ],
-  emitSchemaFile: true,
-  authChecker: customAuthChecker,
 });

@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { EventCachingService } from "../services/event/event-caching.service";
 import INode from "../types/node.type";
 import { Address } from "./address/address.entity";
 import { Image } from "./image.entity";
@@ -39,4 +40,11 @@ export class Event extends INode {
   @Field(() => [Image])
   @OneToMany(() => Image, (image) => image.event)
   public images?: Image[];
+
+  @AfterUpdate()
+  @AfterRemove()
+  @AfterInsert()
+  public invalidateCache() {
+    EventCachingService.setNotUpToDate();
+  }
 }
