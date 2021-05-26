@@ -7,7 +7,7 @@ export class SearchService {
   public static async getEventsByTitle(
     text: string,
     ): Promise <Event[]> {
-      const events: Event[] = await EventCachingService.getEventsByTitle(text);
+      const events: Event[] = await EventCachingService.getEventsByTitleFromCache(text);
 
       if (events !== undefined && events.length > 0) {
           return events;

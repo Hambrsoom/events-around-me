@@ -45,6 +45,6 @@ export class Event extends INode {
   @AfterRemove()
   @AfterInsert()
   public invalidateCache() {
-    EventCachingService.setNotUpToDate();
+    EventCachingService.setCacheNotValid();
   }
 }

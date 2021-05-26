@@ -14,7 +14,7 @@ export class EventService {
 
   public static async getAllEvents(
     ): Promise<Event[]> {
-      let events: Event[] = await EventCachingService.getEvents();
+      let events: Event[] = await EventCachingService.getCachedEvents();
 
       if (events && events.length) {
           return events;
@@ -51,7 +51,7 @@ export class EventService {
   public static async getAllEventsForOrganization(
     organizationId: string,
     ): Promise <Event[]> {
-      let events: Event[] = await EventCachingService.getAllEventsForOrganization(organizationId);
+      let events: Event[] = await EventCachingService.getEventsForOrganizationFromCache(organizationId);
 
       if (events !== undefined && events.length > 0) {
           return events;
@@ -66,7 +66,7 @@ export class EventService {
   public static async getEventById(
     eventId: string,
     ): Promise <Event> {
-      let event: Event = await EventCachingService.getEventById(eventId);
+      let event: Event = await EventCachingService.getEventByIdFromCache(eventId);
 
       if (event) {
         return event;
